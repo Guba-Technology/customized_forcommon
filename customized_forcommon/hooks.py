@@ -9,7 +9,7 @@ app_license = "mit"
 # ------------------
 
 required_apps = ["erpnext"]
-# email_brand_image = "assets/erpnext/images/erpnext-logo.jpg"
+email_brand_image = "assets/customized_forcommon/images/gift.png"
 default_mail_footer = """
 	<span>
 		Sent via
@@ -18,10 +18,10 @@ default_mail_footer = """
 		</a>
 	</span>
 """
-# website_context = {
-# 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
-# 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
-# }
+website_context = {
+	"favicon": "assets/customized_forcommon/images/gift.png",
+	"splash_image": "assets/customized_forcommon/images/gift.png",
+}
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
