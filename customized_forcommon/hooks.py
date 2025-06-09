@@ -9,7 +9,7 @@ app_license = "mit"
 # ------------------
 
 required_apps = ["erpnext"]
-email_brand_image = "assets/customized_forcommon/images/gift.png"
+email_brand_image = "/assets/customized_forcommon/images/gift.png"
 default_mail_footer = """
 	<span>
 		Sent via
@@ -19,8 +19,8 @@ default_mail_footer = """
 	</span>
 """
 website_context = {
-	"favicon": "assets/customized_forcommon/images/gift.png",
-	"splash_image": "assets/customized_forcommon/images/gift.png",
+	"favicon": "/assets/customized_forcommon/images/gift.png",
+	"splash_image": "/assets/customized_forcommon/images/gift.png",
 }
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
