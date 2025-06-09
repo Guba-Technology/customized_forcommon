@@ -8,8 +8,20 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
-
+required_apps = ["erpnext"]
+# email_brand_image = "assets/erpnext/images/erpnext-logo.jpg"
+default_mail_footer = """
+	<span>
+		Sent via
+		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
+			ERP
+		</a>
+	</span>
+"""
+# website_context = {
+# 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
+# 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
+# }
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
@@ -47,7 +59,10 @@ app_license = "mit"
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
-
+override_doctype_class = {
+    "Payment Request": "customization_manager.overrides.payment_request.CustomPaymentRequest",
+    "Payment Entry": "customization_manager.overrides.payment_entry.CustomPaymentEntry",
+}
 # Svg Icons
 # ------------------
 # include app icons in desk
