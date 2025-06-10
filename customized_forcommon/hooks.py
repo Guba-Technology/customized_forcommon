@@ -18,6 +18,18 @@ default_mail_footer = """
 		</a>
 	</span>
 """
+
+fixtures = [
+    {
+        "dt": "Workspace",
+        "filters": [
+            ["name", "in", ["Accounting", "HR", "Buying", "Selling",
+                            "Manufacturing", "Stock", "Assets","ERPNext Settings","ERPNext Integrations","Integrations",
+                            ]],
+        ],
+        "strict": False # do not check for existing records
+    },
+    ] 
 # website_context = {
 # 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
 # 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
