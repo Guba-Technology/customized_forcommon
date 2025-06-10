@@ -18,12 +18,11 @@ default_mail_footer = """
 		</a>
 	</span>
 """
-<<<<<<< HEAD
 website_context = {
 	"favicon": "/assets/customized_forcommon/images/gift.png",
 	"splash_image": "/assets/customized_forcommon/images/gift.png",
 }
-=======
+
 
 fixtures = [
     {
@@ -40,7 +39,7 @@ fixtures = [
 # 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
 # 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
 # }
->>>>>>> 34e0ef7ebd0165f2226a4ee83644fdf725513371
+#>>>>>>> 34e0ef7ebd0165f2226a4ee83644fdf725513371
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
