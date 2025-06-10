@@ -60,8 +60,8 @@ default_mail_footer = """
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 override_doctype_class = {
-    "Payment Request": "customization_manager.overrides.payment_request.CustomPaymentRequest",
-    "Payment Entry": "customization_manager.overrides.payment_entry.CustomPaymentEntry",
+    "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
+    "Payment Entry": "customized_forcommon.overrides.payment_entry.CustomPaymentEntry",
 }
 # Svg Icons
 # ------------------
