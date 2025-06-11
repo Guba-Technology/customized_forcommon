@@ -25,11 +25,124 @@ fixtures = [
         "filters": [
             ["name", "in", ["Accounting", "HR", "Buying", "Selling",
                             "Manufacturing", "Stock", "Assets","ERPNext Settings","ERPNext Integrations","Integrations",
+                            
+                            "Employee Lifecycle","Recruitment","Leaves", "Procurement",
+                            "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                            "Expense Claims", "Shift & Attendance", "Performance",
                             ]],
         ],
         "strict": False # do not check for existing records
     },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
+                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                          "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
+                          "Purchase Receipt", "Training Program", "Purchase Reciept",
+                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
+                          "Workstation", "Routing", "Quality Inspection Reading",
+                          ]],
+        ]
+    },
+    {
+        "dt": "Server Script",
+        "filters":[
+            ["reference_doctype", "in", ["Employee", "Employee External Work History", "Purchase Invoice",
+                                         ]]    
+        ]
+
+    },
+
+    {
+        "dt": "Client Script",
+        "filters":[
+            ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
+                          "BOM", "Quality Inspection", "Sales Order", "Material Request",
+
+                          ]]
+        ]
+    }, 
+    # Client Scripts using the name field
+    # {
+    #     "dt": "Client Script",
+    #     "filters": [
+    #         ["name", "in", [
+    #             "Sales Invoice-Form",
+    #             "Employee-Form",
+    #             "Quality Inspection-Form"
+    #         ]]
+    #     ]
+    # },
+
+     {
+        "dt": "Print Format", 
+        "filters": [
+            ["name", "in", ["Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
+                            "Quotation Print Format",]]
+        ]
+    },
+    {
+        "dt": "Workflow",
+        "filters": [["name", "in", ["Preventive Maintenance Workflow", "Material Request workflow"]]]
+    },
+    {
+        "dt": "Workflow State"
+    },
+    {
+        "dt": "Workflow Action Master"
+    },
+
+    {
+        "dt": "Report",
+        "filters": [
+            ["name", "in", ["Job Card Status Report"]]
+        ]
+    },
+    {
+        "dt": "Property Setter",
+        "filters": [
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
+                            
+                            
+            ]]
+        ]
+    
+    },
+
     ] 
+
+#  this will be applied after the app is migrated
+after_migrate = "customized_forcommon.patches.remove_job_card_summary.execute"
+
+
+doc_events = {
+    "Purchase Receipt": {
+        "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
+    },
+    "Item": {
+        "autoname": "customized_forcommon.Item.custom_item_autoname",
+        "on_update": "customized_forcommon.Item.custom_item_autoname"
+    }
+}
+
+
+override_doctype_class = {
+    "Employee": "customized_forcommon.overrides.employee.CustomEmployee",
+    "Employee Promotion": "customized_forcommon.overrides.employee_promotion.CustomEmployeePromotion",
+    "Employee Separation": "customized_forcommon.overrides.employee_separation.CustomEmployeeSeparation",
+    "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
+    "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
+    "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
+    
+    
+}
+
+app_include_js = [
+    "/assets/customized_forcommon/js/material_request.js"
+]
+
 # website_context = {
 # 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
 # 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
