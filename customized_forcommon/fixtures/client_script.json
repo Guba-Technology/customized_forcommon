@@ -68,17 +68,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Employee",
-  "enabled": 1,
-  "modified": "2025-05-02 14:21:12.338859",
-  "module": "Common Customization",
-  "name": "Adding camp option for current and permanet address in employee",
-  "script": "frappe.ui.form.on('Employee', {\r\n    onload: function(frm) {\r\n        const field1 = frm.fields_dict.current_accommodation_type;\r\n        const field2 = frm.fields_dict.permanent_accommodation_type;\r\n        const new_option = 'Camp';\r\n\r\n        if (!field1.df.options.includes(new_option)) {\r\n            field1.df.options += '\\n' + new_option;\r\n            field1.refresh();\r\n        }\r\n        if (!field2.df.options.includes(new_option)) {\r\n            field2.df.options += '\\n' + new_option;\r\n            field2.refresh();\r\n        }\r\n    }\r\n});\r\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "BOM",
   "enabled": 1,
   "modified": "2025-05-19 10:50:45.670645",
