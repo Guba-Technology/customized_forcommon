@@ -7,7 +7,6 @@ class CustomEmployee(Employee):
         super().validate()
         # frappe.msgprint("CustomEmployee.validate triggered for CTC setting")
         self.set_ctc_from_grade()
-
         self.validate_18_years_old()
 
     def set_ctc_from_grade(self):
@@ -35,3 +34,5 @@ class CustomEmployee(Employee):
                 frappe.throw(
                     frappe._("Employee must be at least 18 years old. Current age: {} years").format(age),
                 )
+                )
+
