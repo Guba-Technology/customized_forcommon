@@ -78,9 +78,9 @@ fixtures = [
     },
     {
         "dt": "Workflow",
-        "filters": [
-            ["name", "in", ["Preventive Maintenance Workflow", "Material Request workflow"]]
-        ]
+
+        "filters": [["name", "in", ["Material Request workflow"]]]
+
     },
     {"dt": "Workflow State"},
     {"dt": "Workflow Action Master"},
