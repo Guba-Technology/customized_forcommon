@@ -174,7 +174,7 @@ app_include_js = [
 
 # required_apps = []
 
->>>>>>> 7d53a59b2f6dcac1e060ade52ecc6a585060bef3
+#>>>>>>> 7d53a59b2f6dcac1e060ade52ecc6a585060bef3
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
