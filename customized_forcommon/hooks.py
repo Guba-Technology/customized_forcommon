@@ -149,7 +149,6 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js"
 ]
 
-<<<<<<< HEAD
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
@@ -158,12 +157,6 @@ app_include_js = [
 
 # required_apps = []
 
-=======
-# website_context = {
-# 	"favicon": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
-# 	"splash_image": "/assets/one_fm/assets/images/ONEFM_Identity_Gray.png",
-# }
->>>>>>> db946fbe976e32f1896014bfd7a0de9e1e4f68f4
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
