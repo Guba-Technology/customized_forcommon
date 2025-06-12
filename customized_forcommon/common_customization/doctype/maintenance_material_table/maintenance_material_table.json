@@ -1,0 +1,35 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-26 09:59:13.710246",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "maintenance_material"
+ ],
+ "fields": [
+  {
+   "fieldname": "maintenance_material",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Maintenance Material",
+   "options": "Asset",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-06-02 09:07:07.548851",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Maintenance Material Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

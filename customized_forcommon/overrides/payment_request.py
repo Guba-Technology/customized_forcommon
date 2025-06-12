@@ -225,3 +225,4 @@ class CustomPaymentRequest(PaymentRequest):
             logger.error(f"[{self.name}] Error creating Payment Entry: {e}")
             frappe.log_error(frappe.get_traceback(), _("Error while creating Payment Entry from Payment Request"))
             raise
+
