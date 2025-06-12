@@ -23,7 +23,7 @@ class CustomEmployee(Employee):
                     frappe.msgprint(f"CTC set to {self.ctc} from Grade {self.grade}")
             except Exception as e:
                 frappe.msgprint(f"Error fetching grade: {e}")
-                
+
     def validate_18_years_old(self):
         """Validate if the employee is at least 18 years old."""
         if self.date_of_birth:
@@ -34,3 +34,4 @@ class CustomEmployee(Employee):
                 frappe.throw(
                     frappe._("Employee must be at least 18 years old. Current age: {} years").format(age),
                 )
+
