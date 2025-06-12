@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:job_applicant",
+ "creation": "2025-04-24 09:02:16.200718",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "job_applicant",
+  "applicant_name",
+  "job_opening",
+  "column_break_uolp",
+  "written_test_score",
+  "practical_test_score",
+  "date",
+  "section_break_dwnh",
+  "detail_description",
+  "section_break_jkmr",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_jkmr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Applicant Test Result",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Job Applicant",
+   "options": "Job Applicant",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_uolp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_dwnh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "detail_description",
+   "fieldtype": "Text Editor",
+   "label": "Detail Description"
+  },
+  {
+   "fetch_from": "job_applicant.applicant_name",
+   "fieldname": "applicant_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Applicant Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "practical_test_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Practical Test Score",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_opening",
+   "fieldtype": "Link",
+   "label": "Job Opening",
+   "options": "Job Opening"
+  },
+  {
+   "fieldname": "written_test_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Written Test Score",
+   "non_negative": 1,
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-24 10:44:29.200193",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Applicant Test Result",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,344 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-04-15 11:27:48.382666",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "basic_information_section",
+  "naming_series",
+  "training_subject",
+  "trainer",
+  "training_cost",
+  "type",
+  "column_break_lnww",
+  "training_location",
+  "no_of_female_trainee",
+  "no_of_male_trainee",
+  "total_trainee",
+  "status",
+  "training_priority",
+  "section_break_unvj",
+  "skill_gap_reason",
+  "column_break_kkrk",
+  "expected_outcome",
+  "section_break_pxtc",
+  "employee",
+  "column_break_pdhw",
+  "department",
+  "training_time_period_section",
+  "1st_quarter_column",
+  "july",
+  "augest",
+  "september",
+  "column_break_hdep",
+  "october",
+  "november",
+  "december",
+  "column_break_euic",
+  "january",
+  "february",
+  "march",
+  "4th_quarter_column",
+  "april",
+  "may",
+  "june",
+  "section_break_se7b",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_se7b",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Training Plan",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_lnww",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trainer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Trainer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Training Cost",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Training Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nApproved\nCompleted"
+  },
+  {
+   "fieldname": "section_break_pxtc",
+   "fieldtype": "Section Break",
+   "label": "Stakeholders"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Table",
+   "label": "Employee",
+   "options": "Employee For Training Plan"
+  },
+  {
+   "fieldname": "column_break_pdhw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Table",
+   "label": "Department",
+   "options": "Department for Training Plan"
+  },
+  {
+   "fieldname": "section_break_unvj",
+   "fieldtype": "Section Break",
+   "label": "Gap & Outcome"
+  },
+  {
+   "fieldname": "skill_gap_reason",
+   "fieldtype": "Small Text",
+   "label": "Skill Gap Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_kkrk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expected_outcome",
+   "fieldtype": "Small Text",
+   "label": "Expected Outcome",
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_priority",
+   "fieldtype": "Select",
+   "label": "Training Priority",
+   "options": "Low\nMedium\nHigh"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "TRAINING-PLAN-.YYYY.-",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "basic_information_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "training_subject",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Training Subject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_time_period_section",
+   "fieldtype": "Section Break",
+   "label": "Training Time Period"
+  },
+  {
+   "default": "0",
+   "fieldname": "july",
+   "fieldtype": "Check",
+   "label": "July"
+  },
+  {
+   "fieldname": "column_break_hdep",
+   "fieldtype": "Column Break",
+   "label": "2nd Quarter"
+  },
+  {
+   "default": "0",
+   "fieldname": "augest",
+   "fieldtype": "Check",
+   "label": "Augest"
+  },
+  {
+   "fieldname": "column_break_euic",
+   "fieldtype": "Column Break",
+   "label": "3rd Quarter"
+  },
+  {
+   "default": "0",
+   "fieldname": "september",
+   "fieldtype": "Check",
+   "label": "September"
+  },
+  {
+   "fieldname": "1st_quarter_column",
+   "fieldtype": "Column Break",
+   "label": "1st Quarter"
+  },
+  {
+   "default": "0",
+   "fieldname": "october",
+   "fieldtype": "Check",
+   "label": "October"
+  },
+  {
+   "default": "0",
+   "fieldname": "november",
+   "fieldtype": "Check",
+   "label": "November"
+  },
+  {
+   "default": "0",
+   "fieldname": "december",
+   "fieldtype": "Check",
+   "label": "December"
+  },
+  {
+   "fieldname": "4th_quarter_column",
+   "fieldtype": "Column Break",
+   "label": "4th Quarter"
+  },
+  {
+   "default": "0",
+   "fieldname": "january",
+   "fieldtype": "Check",
+   "label": "January"
+  },
+  {
+   "default": "0",
+   "fieldname": "february",
+   "fieldtype": "Check",
+   "label": "February"
+  },
+  {
+   "default": "0",
+   "fieldname": "march",
+   "fieldtype": "Check",
+   "label": "March"
+  },
+  {
+   "default": "0",
+   "fieldname": "april",
+   "fieldtype": "Check",
+   "label": "April"
+  },
+  {
+   "default": "0",
+   "fieldname": "may",
+   "fieldtype": "Check",
+   "label": "May"
+  },
+  {
+   "default": "0",
+   "fieldname": "june",
+   "fieldtype": "Check",
+   "label": "June"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Internal\nExternal"
+  },
+  {
+   "fieldname": "no_of_female_trainee",
+   "fieldtype": "Int",
+   "label": "No of Female Trainee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_male_trainee",
+   "fieldtype": "Int",
+   "label": "No of Male Trainee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_trainee",
+   "fieldtype": "Int",
+   "label": "Total Trainee",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-05-20 15:15:37.453778",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Training Plan",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_preview_popup": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "training_subject"
+}

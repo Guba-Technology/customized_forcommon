@@ -1,0 +1,63 @@
+import frappe
+from frappe import _
+
+# updating the status of the purchase invoice 
+@frappe.whitelist()
+def update_invoice_status(docname, new_status):
+    try:
+        doc = frappe.get_doc("Purchase Invoice", docname)
+        doc.db_set("status", new_status)  # Force update status
+        frappe.db.commit()
+        return "success"
+    except Exception as e:
+        frappe.log_error(f"Error updating status: {str(e)}", "Purchase Invoice Status Update")
+        return "error"
+
+# This function retrieves the first item from a Material Request and returns its item code.
+@frappe.whitelist()
+def get_item_for_bom(material_request):
+    doc = frappe.get_doc("Material Request", material_request)
+    if doc.items and len(doc.items) > 0:
+        message = ""
+        if len(doc.items) > 1:
+            message = f"There are {len(doc.items)} items in the Material Request. BOM will be created only for the first item."
+        return {
+            "item_code": doc.items[0].item_code,
+            "message": message
+        }
+    return None
+
+# This function retrieves the quantity of a specific item in a given reference document (Purchase Receipt or Purchase Invoice).
+@frappe.whitelist()
+def get_reference_item_qty(reference_type, reference_name, item_code):
+    if not frappe.has_permission(reference_type, "read"):
+        frappe.throw(_("Not permitted"))
+
+    # Handle child table-based references
+    child_doctype = None
+
+    if reference_type == "Purchase Receipt":
+        child_doctype = "Purchase Receipt Item"
+    elif reference_type == "Purchase Invoice":
+        child_doctype = "Purchase Invoice Item"
+    elif reference_type == "Delivery Note":
+        child_doctype = "Delivery Note Item"
+    elif reference_type == "Sales Invoice":
+        child_doctype = "Sales Invoice Item"
+    elif reference_type == "Stock Entry":
+        child_doctype = "Stock Entry Detail"
+    elif reference_type == "Job Card":
+        # Job Card is a parent DocType, get total_completed_qty directly
+        return frappe.db.get_value("Job Card", reference_name, "total_completed_qty") or 0
+    else:
+        frappe.throw(_("Unsupported Reference Type: {0}").format(reference_type))
+
+    # Fallback for child Doctypes
+    qty = frappe.db.get_value(
+        child_doctype,
+        {"parent": reference_name, "item_code": item_code},
+        "qty"
+    )
+    return qty or 0
+
+

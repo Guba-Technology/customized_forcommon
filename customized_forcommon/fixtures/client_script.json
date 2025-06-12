@@ -1,0 +1,134 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Leave Application",
+  "enabled": 1,
+  "modified": "2025-05-21 08:59:54.607636",
+  "module": "Common Customization",
+  "name": "Display Destination and Emergency Contact When Leave Days are Above 5",
+  "script": "frappe.ui.form.on('Leave Application', {\r\n    total_leave_days: function (frm) {\r\n        toggle_sections(frm);\r\n    },\r\n    from_date: function (frm) {\r\n        // Recalculate when from_date changes\r\n        toggle_sections(frm);\r\n    },\r\n    to_date: function (frm) {\r\n        // Recalculate when to_date changes\r\n        toggle_sections(frm);\r\n    },\r\n    onload: function (frm) {\r\n        toggle_sections(frm);\r\n    },\r\n    refresh: function (frm) {\r\n        toggle_sections(frm);\r\n    }\r\n});\r\n\r\nfunction toggle_sections(frm) {\r\n    const days = frm.doc.total_leave_days || 0;\r\n\r\n    const showSections = days > 5;\r\n\r\n    frm.toggle_display(\"custom_destination_address\", showSections);\r\n    frm.toggle_display(\"custom_emergency_contact\", showSections);\r\n}\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Entry",
+  "enabled": 1,
+  "modified": "2025-04-28 10:29:53.214269",
+  "module": "Common Customization",
+  "name": "Fetching Purchase Invoice Name",
+  "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Entry",
+  "enabled": 1,
+  "modified": "2025-04-28 10:44:55.936764",
+  "module": "Common Customization",
+  "name": "Fetching Sale Invoice Name",
+  "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Employee Advance",
+  "enabled": 1,
+  "modified": "2025-05-20 09:34:39.518449",
+  "module": "Common Customization",
+  "name": "Change Advance Account With Advance Type",
+  "script": "frappe.ui.form.on('Employee Advance', {\r\n    custom_advance_type: function(frm) {\r\n        if (!frm.doc.company) {\r\n            frappe.msgprint(__('Please select a Company first.'));\r\n            return;\r\n        }\r\n\r\n        frappe.db.get_doc('Company', frm.doc.company)\r\n            .then(company => {\r\n                if (frm.doc.custom_advance_type === 'For Purchase') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_purchaser_advance);\r\n                } else if (frm.doc.custom_advance_type === 'For Petty Cash') {\r\n                    frm.set_value('advance_account', company.custom_default_petty_cash_account);\r\n                } else if (frm.doc.custom_advance_type === 'For Service') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_service_advance);\r\n                }\r\n            })\r\n            .catch(err => {\r\n                console.error(err);\r\n                frappe.msgprint(__('Failed to fetch company data'));\r\n            });\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Interview",
+  "enabled": 1,
+  "modified": "2025-04-24 10:41:40.538139",
+  "module": "Common Customization",
+  "name": "Fetching Written and Practical Test Scores",
+  "script": "frappe.ui.form.on('Interview', {\r\n    job_applicant: function(frm) {\r\n        if (frm.doc.job_applicant) {\r\n            frappe.call({\r\n                method: \"customized_forcommon.common_customization.doctype.applicant_test_result.applicant_test_result.get_applicant_test_scores\",\r\n                args: {\r\n                    job_applicant: frm.doc.job_applicant\r\n                },\r\n                callback: function(r) {\r\n                    if (r.message && r.message.length > 0) {\r\n                        let result = r.message[0];\r\n                        frm.set_value('custom_written_test_score', result.written_test_score);\r\n                        frm.set_value('custom_practical_test_score', result.practical_test_score);\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Purchase Invoice",
+  "enabled": 1,
+  "modified": "2025-05-21 09:45:09.195683",
+  "module": "Common Customization",
+  "name": "Filter Paid Employee Advance",
+  "script": "frappe.ui.form.on('Purchase Invoice', {\r\n    refresh: function(frm) {\r\n    // Setup query for custom_employee_advance field\r\n    frm.set_query('custom_employee_advance', function() {\r\n        return {\r\n            filters: {\r\n                docstatus: 1,         \r\n                status: 'Paid'        \r\n            }\r\n        };\r\n    });\r\n\r\n    // Only calculate current balance if document is not submitted\r\n    if (frm.doc.docstatus === 0) {  // docstatus 0 = Draft\r\n        if (frm.doc.custom_advance_amount && frm.doc.grand_total) {\r\n            let current_balance = frm.doc.custom_advance_amount - frm.doc.grand_total;\r\n            frm.set_value(\"custom_current_balance\", current_balance);\r\n        }\r\n    }\r\n},\r\n\r\n    on_submit: function(frm) {\r\n        let advance_id = frm.doc.custom_employee_advance;\r\n        let invoiced_amount = frm.doc.grand_total;\r\n        let supplier = frm.doc.supplier;\r\n        let company = frm.doc.company;\r\n\r\n        if (!advance_id) {\r\n            // frappe.msgprint(__('Please select an Employee Advance.'));\r\n            return;\r\n        }\r\n\r\n        if (invoiced_amount <= 0 || !supplier) {\r\n            // frappe.msgprint(__('Missing Employee Advance, Supplier, or Invoice Amount is Zero'));\r\n            return;\r\n        }\r\n\r\n        // Fetch Employee Advance details first\r\n        frappe.call({\r\n            method: 'frappe.client.get',\r\n            args: {\r\n                doctype: 'Employee Advance',\r\n                name: advance_id\r\n            },\r\n            callback: function(response) {\r\n                if (!response.message) {\r\n                    frappe.msgprint(__('Error fetching Employee Advance'));\r\n                    return;\r\n                }\r\n\r\n                let advance = response.message;\r\n                let employee = advance.employee;\r\n                let advance_account = advance.advance_account;\r\n\r\n                if (!advance_account) {\r\n                    frappe.msgprint(__('No advance account found.'));\r\n                    return;\r\n                }\r\n\r\n                // Fetch Company details next\r\n                frappe.call({\r\n                    method: 'frappe.client.get',\r\n                    args: {\r\n                        doctype: 'Company',\r\n                        name: company\r\n                    },\r\n                    callback: function(company_response) {\r\n                        if (!company_response.message) {\r\n                            frappe.msgprint(__('Error fetching Company details'));\r\n                            return;\r\n                        }\r\n\r\n                        let payable_account = company_response.message.default_payable_account;\r\n\r\n                        if (!payable_account) {\r\n                            frappe.msgprint(__('No Default Payable Account found in Company.'));\r\n                            return;\r\n                        }\r\n\r\n                        // Insert First GL Entry (Debit - Supplier Payable)\r\n                        frappe.call({\r\n                            method: 'frappe.client.insert',\r\n                            args: {\r\n                                doc: {\r\n                                    doctype: 'GL Entry',\r\n                                    posting_date: frappe.datetime.nowdate(),\r\n                                    company: company,\r\n                                    voucher_type: 'Purchase Invoice',\r\n                                    voucher_no: frm.doc.name,\r\n                                    account: payable_account,\r\n                                    party_type: 'Supplier',\r\n                                    party: supplier,\r\n                                    debit: invoiced_amount,\r\n                                    credit: 0,\r\n                                    against: advance_account,\r\n                                    remarks: `Paying Supplier ${supplier} from Employee Advance`\r\n                                }\r\n                            },\r\n                            callback: function(gl_response) {\r\n                                if (!gl_response.message) {\r\n                                    frappe.msgprint(__('Error Creating First GL Entry'));\r\n                                    return;\r\n                                }\r\n\r\n                                // Insert Second GL Entry (Credit - Employee Advance)\r\n                                frappe.call({\r\n                                    method: 'frappe.client.insert',\r\n                                    args: {\r\n                                        doc: {\r\n                                            doctype: 'GL Entry',\r\n                                            posting_date: frappe.datetime.nowdate(),\r\n                                            company: company,\r\n                                            voucher_type: 'Purchase Invoice',\r\n                                            voucher_no: frm.doc.name,\r\n                                            account: advance_account,\r\n                                            party_type: 'Employee',\r\n                                            party: employee,\r\n                                            debit: 0,\r\n                                            credit: invoiced_amount,\r\n                                            against: payable_account,\r\n                                            remarks: `Clearing Employee Advance for ${employee}`\r\n                                        }\r\n                                    },\r\n                                    callback: function(gl_response2) {\r\n                                        if (!gl_response2.message) {\r\n                                            frappe.msgprint(__('Error Creating Second GL Entry'));\r\n                                            return;\r\n                                        }\r\n\r\n                                        // Finally, update Purchase Invoice status to \"Paid\"\r\n                                        frappe.call({\r\n                                            method: 'customized_forcommon.api.update_invoice_status',\r\n                                            args: {\r\n                                                docname: frm.doc.name,\r\n                                                new_status: 'Paid'\r\n                                            },\r\n                                            callback: function(status_response) {\r\n                                                if (status_response.message === 'success') {\r\n                                                    // frappe.msgprint(__('Status Updated to Paid'));\r\n                                                    frm.reload_doc();\r\n                                                } else {\r\n                                                    let error_message = status_response.error || 'Unknown error';\r\n                                                    frappe.msgprint(__('Error updating status: ' + error_message));\r\n                                                }\r\n                                            }\r\n                                        });\r\n\r\n                                    }\r\n                                });\r\n\r\n                            }\r\n                        });\r\n\r\n                    }\r\n                });\r\n            }\r\n        });\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Employee",
+  "enabled": 1,
+  "modified": "2025-05-02 14:21:12.338859",
+  "module": "Common Customization",
+  "name": "Adding camp option for current and permanet address in employee",
+  "script": "frappe.ui.form.on('Employee', {\r\n    onload: function(frm) {\r\n        const field1 = frm.fields_dict.current_accommodation_type;\r\n        const field2 = frm.fields_dict.permanent_accommodation_type;\r\n        const new_option = 'Camp';\r\n\r\n        if (!field1.df.options.includes(new_option)) {\r\n            field1.df.options += '\\n' + new_option;\r\n            field1.refresh();\r\n        }\r\n        if (!field2.df.options.includes(new_option)) {\r\n            field2.df.options += '\\n' + new_option;\r\n            field2.refresh();\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "BOM",
+  "enabled": 1,
+  "modified": "2025-05-19 10:50:45.670645",
+  "module": "Common Customization",
+  "name": "Calculating Quantity Based on Item Shape",
+  "script": "frappe.ui.form.on('BOM Item', {\r\n    custom_density: function (frm, cdt, cdn) {\r\n        set_density_value(cdt, cdn);\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_shape: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_length: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_width: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_height: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_outer_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_inner_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_number_of_sides: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_density_value: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    }\r\n});\r\n\r\n\r\n// Set density value based on selected material\r\nfunction set_density_value(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n    const density_values = {\r\n        \"Aluminum\": 2.70,\r\n        \"Brass\": 8.50,\r\n        \"Bronze\": 8.80,\r\n        \"Copper\": 8.96,\r\n        \"Gold\": 19.32,\r\n        \"Iron\": 7.87,\r\n        \"Lead\": 11.34,\r\n        \"Nickel\": 8.90,\r\n        \"Platinum\": 21.45,\r\n        \"Silver\": 10.49,\r\n        \"Stainless Steel\": 8.00,\r\n        \"Steel (Carbon)\": 7.85,\r\n        \"Titanium\": 4.51,\r\n        \"Zinc\": 7.14\r\n    };\r\n\r\n    if (row.custom_density in density_values) {\r\n        frappe.model.set_value(cdt, cdn, 'custom_density_value', density_values[row.custom_density]);\r\n    }\r\n}\r\n\r\n// Calculate quantity based on shape and dimensions\r\nfunction calculate_quantity(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n\r\n    let qty = 1;\r\n    let density = parseFloat(row.custom_density_value || 0); // in kg/m³\r\n    if (!density || !row.custom_shape) return;\r\n\r\n    // Dimensions in mm, convert to meters\r\n    let length = parseFloat(row.custom_length || 0) / 1000;\r\n    let width = parseFloat(row.custom_width || 0) / 1000;\r\n    let height = parseFloat(row.custom_height || 0) / 1000;\r\n\r\n    if (row.custom_shape === \"Rectangle\") {\r\n        let volume_m3 = length * width * height;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Circular\") {\r\n        let diameter = parseFloat(row.custom_diameter || 0) / 1000;\r\n        let radius = diameter / 2;\r\n        let volume_m3 = Math.PI * Math.pow(radius, 2) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Tube\") {\r\n        let outer_d = parseFloat(row.custom_outer_diameter || 0) / 1000;\r\n        let inner_d = parseFloat(row.custom_inner_diameter || 0) / 1000;\r\n        let volume_m3 = (Math.PI / 4) * (Math.pow(outer_d, 2) - Math.pow(inner_d, 2)) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Polygon\") {\r\n        let n_sides = parseInt(row.custom_number_of_sides || 0);\r\n        let side_length = parseFloat(row.custom_width || 0) / 1000;\r\n        let area = (n_sides * Math.pow(side_length, 2)) / (4 * Math.tan(Math.PI / n_sides));\r\n        let volume_m3 = area * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n\r\n    frappe.model.set_value(cdt, cdn, 'qty', Math.floor(qty));\r\n}\r\n\r\n\r\n\r\nfrappe.ui.form.on('BOM Item', {\r\n\trefresh(frm) {\r\n\t\t// your code here\r\n\t}\r\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Order",
+  "enabled": 1,
+  "modified": "2025-06-04 16:06:42.686440",
+  "module": "Common Customization",
+  "name": "Adding \"Manufactured Sale\" option in order type",
+  "script": "frappe.ui.form.on('Sales Order', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.order_type;\n        const new_option = 'Manufactured Sale';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Material Request",
+  "enabled": 1,
+  "modified": "2025-06-04 16:11:27.537199",
+  "module": "Common Customization",
+  "name": "Adding \"Material Cost\" option in Purpose",
+  "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Quality Inspection",
+  "enabled": 1,
+  "modified": "2025-06-10 09:28:31.903628",
+  "module": "Common Customization",
+  "name": "Adding \"Rework\" option in Status",
+  "script": "frappe.ui.form.on('Quality Inspection', {\n\tonload: function(frm){\n\t    const field = frm.fields_dict.status;\n\t    const new_option = \"Rework\";\n\t    \n\t    if(!field.df.options.includes(new_option)){\n\t        field.df.options += '\\n' + new_option;\n\t        field.refresh()\n\t    }\n\t    \n\t    \n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Quality Inspection",
+  "enabled": 1,
+  "modified": "2025-06-10 11:14:47.344809",
+  "module": "Common Customization",
+  "name": "Fetching Quantity According to Reference Type",
+  "script": "frappe.ui.form.on('Quality Inspection', {\r\n    reference_name(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    item_code(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    reference_type(frm) {\r\n        fetch_custom_quantity(frm);\r\n    }\r\n});\r\n\r\nfunction fetch_custom_quantity(frm) {\r\n    const ref_type = frm.doc.reference_type;\r\n    const ref_name = frm.doc.reference_name;\r\n    const item = frm.doc.item_code;\r\n\r\n    const supported_types = [\r\n        \"Purchase Receipt\",\r\n        \"Purchase Invoice\",\r\n        \"Delivery Note\",\r\n        \"Sales Invoice\",\r\n        \"Stock Entry\",\r\n        \"Job Card\"\r\n    ];\r\n\r\n    if (supported_types.includes(ref_type) && ref_name && (ref_type === \"Job Card\" || item)) {\r\n        frappe.call({\r\n            method: \"customized_forcommon.api.get_reference_item_qty\",\r\n            args: {\r\n                reference_type: ref_type,\r\n                reference_name: ref_name,\r\n                item_code: item || \"\"\r\n            },\r\n            callback: function (r) {\r\n                if (r.message !== undefined) {\r\n                    frm.set_value(\"custom_quantity\", r.message);\r\n                } else {\r\n                    frm.set_value(\"custom_quantity\", null);\r\n                }\r\n            }\r\n        });\r\n    } else {\r\n        frm.set_value(\"custom_quantity\", null);\r\n    }\r\n}",
+  "view": "Form"
+ }
+]

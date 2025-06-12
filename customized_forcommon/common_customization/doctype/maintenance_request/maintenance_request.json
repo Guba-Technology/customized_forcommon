@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-05-26 09:54:50.841315",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "requesting_department",
+  "requested_quantity",
+  "requesting_date",
+  "requesting_department_internal_phone",
+  "column_break_gxyh",
+  "requester",
+  "material_type",
+  "section_break_tbum",
+  "maintenance_department",
+  "column_break_nxgk",
+  "employee_name",
+  "section_break_bpki",
+  "recipient",
+  "recipient_name",
+  "date_of_repaired_and_returned",
+  "column_break_gxqg",
+  "approved_by",
+  "date"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "M-R-.YYYY.-"
+  },
+  {
+   "fieldname": "requesting_department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Requesting Department",
+   "options": "Department",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requesting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Requesting Date",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "requested_quantity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requested Quantity"
+  },
+  {
+   "fieldname": "material_type",
+   "fieldtype": "Table",
+   "label": "Material Type",
+   "options": "Maintenance Material Table",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requesting_department_internal_phone",
+   "fieldtype": "Phone",
+   "label": "Requesting Department Internal Phone"
+  },
+  {
+   "fieldname": "requester",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Requester",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_tbum",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "maintenance_department",
+   "fieldtype": "Table",
+   "label": "Maintenance Department",
+   "options": "Maintenance Department"
+  },
+  {
+   "fieldname": "column_break_nxgk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Table",
+   "label": "Employee Name",
+   "options": "Maintenance Employee"
+  },
+  {
+   "fieldname": "section_break_bpki",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "recipient.employee_name",
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "label": "Recipient Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_of_repaired_and_returned",
+   "fieldtype": "Date",
+   "label": "Date of Repaired and Returned",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_gxqg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_gxyh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "recipient",
+   "fieldtype": "Link",
+   "label": "Recipient",
+   "options": "Employee",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-03 09:02:02.993699",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Maintenance Request",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "requesting_department"
+}
