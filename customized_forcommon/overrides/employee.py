@@ -34,5 +34,4 @@ class CustomEmployee(Employee):
                 frappe.throw(
                     frappe._("Employee must be at least 18 years old. Current age: {} years").format(age),
                 )
-                )
 
