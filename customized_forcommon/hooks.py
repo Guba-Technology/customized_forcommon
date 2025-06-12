@@ -42,7 +42,7 @@ fixtures = [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
                           "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
-                          "Purchase Receipt", "Leave Application", "Training Program", "Purchase Reciept",
+                          "Purchase Receipt", "Training Program", "Purchase Reciept",
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading",
@@ -53,7 +53,7 @@ fixtures = [
         "dt": "Server Script",
         "filters":[
             ["reference_doctype", "in", ["Employee", "Employee External Work History", "Purchase Invoice",
-                                         "Leave Application", "Employee Lifecycle",
+                                         "Employee Lifecycle",
                                          ]]    
         ]
 
@@ -62,7 +62,7 @@ fixtures = [
         "dt": "Client Script",
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "BOM", "Leave Application", "Quality Inspection",
+                          "Sales Invoice", "Employee", "BOM", "Quality Inspection",
                           "Sales Order", "Material Request",
 
                           ]]
