@@ -1,0 +1,40 @@
+[
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Save",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2025-04-23 10:21:37.683823",
+  "module": "Common Customization",
+  "name": "From Date and To Date Validation for Employee",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Employee",
+  "script": "if doc.external_work_history:\r\n    for work_history in doc.external_work_history:\r\n        if work_history.custom_from_date and work_history.custom_to_date:\r\n            if frappe.utils.getdate(work_history.custom_to_date) <= frappe.utils.getdate(work_history.custom_from_date):\r\n                frappe.throw(\"To Date must be greater than From Date\")\r\n",
+  "script_type": "DocType Event"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Save",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2025-05-20 10:28:16.742411",
+  "module": "Common Customization",
+  "name": "Comparing Current Balance with Grand Total of Purchase Invoice",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Purchase Invoice",
+  "script": "if doc.custom_employee_advance:\n    if doc.grand_total > float(doc.custom_advance_amount):\n        frappe.throw(\"Grand Total cannot be greater than Current Balance \")",
+  "script_type": "DocType Event"
+ }
+]
