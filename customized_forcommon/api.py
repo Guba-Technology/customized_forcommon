@@ -60,4 +60,7 @@ def get_reference_item_qty(reference_type, reference_name, item_code):
     )
     return qty or 0
 
-
+# checking CSRF Token
+@frappe.whitelist(allow_guest=True)
+def get_csrf_token():
+    return frappe.local.session.csrf_token
