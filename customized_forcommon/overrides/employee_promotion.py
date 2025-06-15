@@ -14,10 +14,17 @@ class CustomEmployeePromotion(EmployeePromotion):
             # Check if the property is "Grade" and if a new value is set
             if row.property == "Grade" and row.new:
                 try:
-                    grade_doc = frappe.get_doc("Employee Grade", row.new)
-                    # If the Grade has a custom default salary, set it as revised_ctc
-                    if grade_doc.custom_default_salary:
-                        self.revised_ctc = grade_doc.custom_default_salary
+                    grade_current = frappe.get_doc("Employee Grade", row.current)
+                    grade_new = frappe.get_doc("Employee Grade", row.new)
+
+                    # If the new Grade has a custom default salary greater than the current Grade's custom default salary,
+                    # set it as revised_ctc, otherwise keep the current Grade's custom default salary
+                    if grade_new.custom_default_salary > grade_current.custom_default_salary:
+                        self.revised_ctc = grade_new.custom_default_salary
+                        grade_found = True
+                        break
+                    else:
+                        self.revised_ctc = grade_current.custom_default_salary
                         grade_found = True
                         break
                 except Exception as e:
