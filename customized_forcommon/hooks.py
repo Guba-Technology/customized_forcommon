@@ -148,70 +148,9 @@ override_doctype_class = {
 app_include_js = [
     "/assets/customized_forcommon/js/material_request.js"
 ]
-standard_navbar_items = [
-	{
-		"item_label": "My Profile",
-		"item_type": "Route",
-		"route": "/app/user-profile",
-		"is_standard": 1,
-	},
-	{
-		"item_label": "My Settings",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.route_to_user()",
-		"is_standard": 1,
-	},
-	{
-		"item_label": "Session Defaults",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.setup_session_defaults()",
-		"is_standard": 1,
-	},
-	{
-		"item_label": "Reload",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.clear_cache()",
-		"is_standard": 1,
-	},
-	{
-		"item_label": "View Website",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.view_website()",
-		"is_standard": 1,
-	},
-	{
-		"item_label": "Toggle Full Width",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.toggle_full_width()",
-		"is_standard": 1,
-	},
-	{
-		"item_type": "Separator",
-		"is_standard": 1,
-		"item_label": "",
-	},
-	{
-		"item_label": "Log out",
-		"item_type": "Action",
-		"action": "frappe.app.logout()",
-		"is_standard": 1,
-	},
-]
+standard_navbar_items = "customized_forcommon.navbar.get_standard_navbar_items"
+standard_help_items = "customized_forcommon.navbar.get_standard_help_items"
 
-standard_help_items = [
-	# {
-	# 	"item_label": "About",
-	# 	"item_type": "Action",
-	# 	"action": "frappe.ui.toolbar.show_about()",
-	# 	"is_standard": 1,
-	# },
-	{
-		"item_label": "Keyboard Shortcuts",
-		"item_type": "Action",
-		"action": "frappe.ui.toolbar.show_shortcuts(event)",
-		"is_standard": 1,
-	},
-]
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
