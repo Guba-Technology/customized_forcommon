@@ -38,6 +38,7 @@ class Clearance(Document):
 
 			if all_approved:
 				self.status = 'Approved'
+				self.docstatus = 1  # Set the document status to 'Submitted'
 				frappe.msgprint("All clearance items are approved. Clearance status is Updated to 'Approved'.")
 			else:
 				self.status = 'Pending'
