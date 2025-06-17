@@ -12,45 +12,54 @@ class CustomEmployee(Employee):
     def set_ctc_from_grade_and_promotion(self):
         """Set CTC from Employee Grade and Promotion if available."""
 
+        promotion_salary = None  # Initialize in case no promotion is found
+
         # Check if the employee has a promotion and fetch the revised CTC
         promotion_list = frappe.get_list(
-                "Employee Promotion",
-                filters={
-                    "employee": self.name,
-                    "docstatus": 1
-                },
-                fields=["name"],
-                order_by="creation desc"
-            )
+            "Employee Promotion",
+            filters={
+                "employee": self.name,
+                "docstatus": 1
+            },
+            fields=["name"],
+            order_by="creation desc",
+            limit_page_length=1
+        )
 
+        promotion = None
         if promotion_list:
             promotion = frappe.get_doc("Employee Promotion", promotion_list[0].name)
-            
-
-        # get the revised CTC from the latest promotion
-        promotion_salary = promotion.revised_ctc if promotion else 0
+            promotion_salary = promotion.revised_ctc
 
         # Fetch the CTC from the Employee Grade
-        grade = frappe.get_doc("Employee Grade", self.grade)
-        default_salary = grade.custom_default_salary if grade else 0
-
-        if grade and promotion:
-            # If both grade and promotion exist, set CTC from the latest promotion
-
-            self.ctc = promotion_salary
-            frappe.msgprint(
-                f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.",
-                alert=True
-            )
-        elif grade and not promotion:
-            # If no promotion, set CTC from Employee Grade
+        grade = None
+        default_salary = None
+        if self.grade:
+            grade = frappe.get_doc("Employee Grade", self.grade)
+            default_salary = grade.custom_default_salary
+             
+        # If no promotion, set CTC from Employee Grade
+        if grade and not promotion:
             self.ctc = default_salary
             frappe.msgprint(
                 f"CTC set to {default_salary} from Employee Grade: {self.grade}.",
                 alert=True
             )
-        
-        else:
+        # If no grade but a promotion exists, set CTC from the latest promotion
+        elif not grade and promotion:
+            self.ctc = promotion_salary
+            frappe.msgprint(
+                f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.",
+                alert=True
+            )
+        elif grade and promotion:
+            self.ctc = promotion_salary
+            frappe.msgprint(
+                f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.",
+                alert=True
+            )
+        # If neither grade nor promotion exists, show an alert
+        elif not grade and not promotion:
             frappe.msgprint(
                 "No Employee Grade or Promotion found to set CTC.",
                 alert=True
@@ -66,4 +75,3 @@ class CustomEmployee(Employee):
                 frappe.throw(
                     frappe._("Employee must be at least 18 years old. Current age: {} years").format(age),
                 )
-
