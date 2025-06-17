@@ -136,8 +136,17 @@ override_doctype_class = {
 app_include_js = [
     "/assets/customized_forcommon/js/material_request.js"
 ]
-standard_navbar_items = "customized_forcommon.navbar.get_standard_navbar_items"
-standard_help_items = "customized_forcommon.navbar.get_standard_help_items"
+standard_navbar_items =[
+    "customized_forcommon.navbar.get_standard_navbar_items"
+]
+standard_help_items = [
+    "customized_forcommon.navbar.get_standard_help_items"
+]
+
+after_migrate = [
+    "customized_forcommon.after_migrate.rename_workspaces.run"
+]
+
 
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
