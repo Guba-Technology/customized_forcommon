@@ -71,7 +71,16 @@ class Clearance(Document):
 				row.approver = employee
 				row.approver_name = employee_name
 				row.approver_salutation = frappe.get_value("Employee", employee, "salutation")
+				row.approver_responsibility = frappe.get_value("Employee", employee, "designation")
 				row.date = nowdate()
+				if not row.approver_name:
+					frappe.throw(
+						_("Approver name is required when status is changed to Approved.")
+					)
+				if not row.approver_responsibility:
+					frappe.throw(
+						_("Approver responsibility/designation is required when status is changed to Approved.")
+					)
 			# Status changed from Approved → Pending
 			elif prev_status == "Approved" and row.status == "Pending":
 				if row.approver_name != employee_name:
