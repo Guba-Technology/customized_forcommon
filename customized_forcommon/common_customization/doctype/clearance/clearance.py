@@ -9,6 +9,7 @@ from frappe.utils import nowdate
 class Clearance(Document):
 	def validate(self):
 		self.check_existing_clearance()
+		self.check_active_warranty_request()
 		self.change_status_to_approved()
 		self.fetching_approver_details()
 		self.set_employee_status_to_left()
@@ -27,6 +28,24 @@ class Clearance(Document):
 			frappe.throw(
 				_("An approved clearance already exists for this employee: {0}").format(self.employee)
 			)
+	# Check if there is an active warranty request for the employee
+	def check_active_warranty_request(self):
+		"""Check if there is an active warranty request for the employee."""
+		active_warranty = frappe.get_all(
+			"Warranty Request",
+			filters={
+				"employee": self.employee,
+				"status": "Active"
+			}
+		)
+		if active_warranty:
+			link = ", ".join([
+				f'<a href="/app/warranty-request/{warranty.name}">{warranty.name}</a>'
+				for warranty in active_warranty
+			])
+			frappe.throw(
+				_("There is an active warranty request for this employee: {0}").format(link)
+			)
 
 	def change_status_to_approved(self):
 		if self.clearance_table:
@@ -38,8 +57,8 @@ class Clearance(Document):
 
 			if all_approved:
 				self.status = 'Approved'
-				self.docstatus = 1  # Set the document status to 'Submitted'
 				frappe.msgprint("All clearance items are approved. Clearance status is Updated to 'Approved'.")
+				self.docstatus = 1  # Set the document status to 'Submitted'
 			else:
 				self.status = 'Pending'
 		else:

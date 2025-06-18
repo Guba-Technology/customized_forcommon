@@ -7,6 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "template_name",
+  "column_break_erqh",
+  "company",
+  "section_break_ljxn",
   "clearance_template_table"
  ],
  "fields": [
@@ -23,12 +26,29 @@
    "label": "Template Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "column_break_erqh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ljxn",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-17 12:40:09.637702",
+ "modified": "2025-06-18 13:48:32.768478",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Clearance Template",
