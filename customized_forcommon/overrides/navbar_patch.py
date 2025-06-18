@@ -31,7 +31,3 @@ def custom_add_standard_navbar_items():
     })
 
     navbar_settings.save(ignore_permissions=True)
-
-def apply_navbar_patch():
-    import frappe.utils.install
-    frappe.utils.install.add_standard_navbar_items = custom_add_standard_navbar_items
