@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-17 09:26:51.689342",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "department",
+  "approver_name",
+  "approver_salutation",
+  "approver_responsibility",
+  "approver_signature",
+  "status",
+  "date",
+  "remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Department",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approver_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Approver Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nApproved"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remark",
+   "fieldtype": "Data",
+   "label": "Remark"
+  },
+  {
+   "fieldname": "approver_salutation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Approver Salutation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approver_responsibility",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Approver Responsibility",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approver_signature",
+   "fieldtype": "Signature",
+   "in_list_view": 1,
+   "label": "Approver Signature"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-06-18 09:52:41.975621",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Clearance Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
