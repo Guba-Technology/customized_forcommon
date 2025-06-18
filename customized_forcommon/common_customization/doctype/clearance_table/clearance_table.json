@@ -59,7 +59,8 @@
    "fieldname": "approver_responsibility",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Approver Responsibility"
+   "label": "Approver Responsibility",
+   "read_only": 1
   },
   {
    "fieldname": "approver_signature",
@@ -72,7 +73,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-06-17 14:45:01.251980",
+ "modified": "2025-06-18 09:52:41.975621",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Clearance Table",
