@@ -8,3 +8,4 @@ customized_forcommon.patches.v1.gender_patch
 customized_forcommon.patches.v1.allow_payment_request_creation
 customized_forcommon.patches.v1.allow_import_for_stockreconcilation
 customized_forcommon.patches.v1.rename_erpnext_user_id_label
+customized_forcommon.patches.v1.navbar_patch

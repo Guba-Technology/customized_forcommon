@@ -149,12 +149,7 @@ override_doctype_class = {
 app_include_js = [
     "/assets/customized_forcommon/js/material_request.js"
 ]
-standard_navbar_items =[
-    "customized_forcommon.navbar.get_standard_navbar_items"
-]
-standard_help_items = [
-    "customized_forcommon.navbar.get_standard_help_items"
-]
+
 # boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
 
 after_migrate = [
