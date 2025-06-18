@@ -1,26 +1,32 @@
 import frappe
 
 def execute():
-    # Step 1: Delete unwanted items (optional)
-    frappe.db.sql("""DELETE FROM `tabNavbar Item` WHERE parent = 'Navbar Settings'""")
-    frappe.db.commit()
+    """Reset and configure the standard Navbar items (Settings & Help) for all users."""
+    try:
+        navbar_settings = frappe.get_single("Navbar Settings")
 
-    # Step 2: Add custom standard items
-    navbar_settings = frappe.get_single("Navbar Settings")
+        # Step 1: Clear existing dropdowns (safe way without delete validation errors)
+        navbar_settings.set("settings_dropdown", [])
+        navbar_settings.set("help_dropdown", [])
 
-    navbar_settings.settings_dropdown = []
-    navbar_settings.help_dropdown = []
+        # Step 2: Append standard custom items
+        for item in get_standard_navbar_items():
+            navbar_settings.append("settings_dropdown", item)
 
-    for item in get_standard_navbar_items():
-        navbar_settings.append("settings_dropdown", item)
+        for item in get_standard_help_items():
+            navbar_settings.append("help_dropdown", item)
 
-    for item in get_standard_help_items():
-        navbar_settings.append("help_dropdown", item)
+        # Step 3: Save and refresh cache
+        navbar_settings.save(ignore_permissions=True)
+        frappe.clear_cache()
 
-    navbar_settings.save(ignore_permissions=True)
-    frappe.clear_cache()
+        frappe.msgprint("Navbar settings updated successfully.")
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Navbar Setup Failed")
+        frappe.throw("Failed to set up Navbar Settings. See error log.")
 
 def get_standard_navbar_items():
+    """Return list of standard settings items for the Navbar."""
     return [
         {
             "item_label": "My Profile",
@@ -60,8 +66,8 @@ def get_standard_navbar_items():
         },
         {
             "item_type": "Separator",
-            "is_standard": 1,
             "item_label": "",
+            "is_standard": 1,
         },
         {
             "item_label": "Log out",
@@ -72,6 +78,7 @@ def get_standard_navbar_items():
     ]
 
 def get_standard_help_items():
+    """Return list of standard help items for the Navbar."""
     return [
         {
             "item_label": "Keyboard Shortcuts",
