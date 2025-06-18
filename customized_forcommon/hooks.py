@@ -142,7 +142,7 @@ standard_navbar_items =[
 standard_help_items = [
     "customized_forcommon.navbar.get_standard_help_items"
 ]
-boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
+# boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
 
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run"
