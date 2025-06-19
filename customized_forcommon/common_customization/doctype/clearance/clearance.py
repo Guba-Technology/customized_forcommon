@@ -21,7 +21,8 @@ class Clearance(Document):
 				"employee": self.employee,
 				# "docstatus": 1, 
 				"name": ["!=", self.name],
-				"status": "Approved"
+				"status": "Approved",
+				"docstatus": 1  # Ensure we only check for submitted documents
 			}
 		)
 		if employee:
@@ -119,4 +120,8 @@ class Clearance(Document):
 					f'<a href="/app/employee/{employee.name}">{employee.name}</a>'
 				])
 				frappe.msgprint(_(f"{link} status has been updated to 'Left'."))
-
+	
+	# Don't allow cancellation of approved clearance
+	def before_cancel(self):
+		if self.status == "Approved":
+			frappe.throw(_("Can't cancel approved clearance"))
