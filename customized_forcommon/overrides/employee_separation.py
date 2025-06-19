@@ -28,3 +28,8 @@ class CustomEmployeeSeparation(EmployeeSeparation):
                 _("Employee cannot be separated as there is active warranty request: {0}").format(links),
                 title="Active Warranty Requests"
             )
+    def on_submit(self):
+        # if `boarding_status` is the relevant field, set it to "Completed".
+        self.db_set("boarding_status", "Completed") # Assuming 'Completed' is a valid status for separation
+        self.reload()
+
