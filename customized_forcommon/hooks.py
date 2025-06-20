@@ -133,6 +133,7 @@ scheduler_events = {
 #     "customized_forcommon.patches.v1.update_field_option_for_employee_status"
 # ]
 override_doctype_class = {
+    "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
     "Gender": "customized_forcommon.overrides.gender.CustomGender",
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
     "Employee": "customized_forcommon.overrides.employee.CustomEmployee",
