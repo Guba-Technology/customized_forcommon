@@ -9,6 +9,8 @@
   "naming_series",
   "employee",
   "full_name",
+  "current_user",
+  "linked_employee",
   "column_break_oyvd",
   "reason_for_clearance",
   "status",
@@ -84,12 +86,25 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "current_user",
+   "fieldtype": "Link",
+   "label": "Current User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_employee",
+   "fieldtype": "Data",
+   "label": "Linked Employee",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-17 12:40:21.359142",
+ "modified": "2025-06-20 15:02:10.370974",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Clearance",
