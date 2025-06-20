@@ -22,6 +22,38 @@ frappe.ui.form.on('Clearance', {
         }, 100); // A small delay to ensure the grid elements are rendered
 
         frm.refresh_field('clearance_table');
+
+        // Set the current user as default if not already set
+        if (!frm.doc.current_user) {
+            const current_user = frappe.session.user;
+            frm.set_value('current_user', current_user);
+
+            // Fetch linked employee using async call
+            frappe.call({
+                method: "frappe.client.get_value",
+                args: {
+                    doctype: "Employee",
+                    filters: {
+                        user_id: current_user
+                    },
+                    fieldname: "name"
+                },
+                callback: function(r) {
+                    if (r.message && r.message.name) {
+                        frm.set_value('linked_employee', r.message.name);
+                    } else {
+                        // Set a fallback if no link found
+                        frm.set_value('linked_employee', 'Not Linked');
+                        frappe.msgprint({
+                            title: __('No Linked Employee'),
+                            message: __('No employee is linked to the current user.'),
+                            indicator: 'red'
+                        });
+                    }
+                    frm.refresh_field('linked_employee');
+                }
+            });
+        }
     },
 
     refresh: function(frm) {
@@ -36,6 +68,38 @@ frappe.ui.form.on('Clearance', {
         }, 100);
 
         frm.refresh_field('clearance_table');
+
+         // Set the current user as default if not already set
+        if (!frm.doc.current_user) {
+            const current_user = frappe.session.user;
+            frm.set_value('current_user', current_user);
+
+            // Fetch linked employee using async call
+            frappe.call({
+                method: "frappe.client.get_value",
+                args: {
+                    doctype: "Employee",
+                    filters: {
+                        user_id: current_user
+                    },
+                    fieldname: "name"
+                },
+                callback: function(r) {
+                    if (r.message && r.message.name) {
+                        frm.set_value('linked_employee', r.message.name);
+                    } else {
+                        // Set a fallback if no link found
+                        frm.set_value('linked_employee', 'Not Linked');
+                        frappe.msgprint({
+                            title: __('No Linked Employee'),
+                            message: __('No employee is linked to the current user.'),
+                            indicator: 'red'
+                        });
+                    }
+                    frm.refresh_field('linked_employee');
+                }
+            });
+        }
     },
 
     add_template: function (frm) {
@@ -90,5 +154,5 @@ frappe.ui.form.on('Clearance', {
         },
         __('Select Template'),
         __('Apply'));
-    }
+    },
 });

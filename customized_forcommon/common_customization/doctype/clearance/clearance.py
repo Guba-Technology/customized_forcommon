@@ -67,12 +67,6 @@ class Clearance(Document):
 	
 	# Fetching approver details when status changes from Pending to Approved
 	def fetching_approver_details(self):
-		""" Fetching approver details when status changes from Pending to Approved
-		or from Approved to Pending
-		1. If status changes from Pending to Approved, set approver details
-		2. If status changes from Approved to Pending, check if the current user is the original approver
-		3. If not, throw an error
-		"""
 		current_user = frappe.session.user
 		employee = frappe.get_value("Employee", {"user_id": current_user}, "name")
 		employee_name = frappe.get_value("Employee", employee, "employee_name")
@@ -81,32 +75,49 @@ class Clearance(Document):
 			frappe.throw("Your user is not linked to any Employee record.")
 
 		prev_doc = self.get_doc_before_save()
+		prev_rows = {row.department: row for row in prev_doc.clearance_table} if prev_doc else {}
 
-		for idx, row in enumerate(self.clearance_table):
-			prev_status = None
-			if prev_doc and len(prev_doc.clearance_table) > idx:
-				prev_status = prev_doc.clearance_table[idx].status
-			# Status changed from Pending → Approved
-			if prev_status == "Pending" and row.status == "Approved":
+		for row in self.clearance_table:
+			prev_status = prev_rows.get(row.department).status if prev_rows.get(row.department) else None
+			prev_approver_name = prev_rows.get(row.department).approver_name if prev_rows.get(row.department) else None
+
+			# 1. New row or changed to Approved
+			if (not prev_status and row.status == "Approved") or (prev_status == "Pending" and row.status == "Approved"):
 				row.approver = employee
 				row.approver_name = employee_name
 				row.approver_salutation = frappe.get_value("Employee", employee, "salutation")
 				row.approver_responsibility = frappe.get_value("Employee", employee, "designation")
 				row.date = nowdate()
+
+				# Required fields check
+				missing_fields = []
 				if not row.approver_name:
-					frappe.throw(
-						_("Approver name is required when status is changed to Approved.")
-					)
+					missing_fields.append("Approver Name")
 				if not row.approver_responsibility:
-					frappe.throw(
-						_("Approver responsibility/designation is required when status is changed to Approved.")
-					)
-			# Status changed from Approved → Pending
+					missing_fields.append("Approver Responsibility")
+				if not row.date:
+					missing_fields.append("Date")
+
+				if missing_fields:
+					link = ", ".join([
+						f'<a href="/app/employee/{employee}">{employee_name}</a>'
+					])
+					if len(missing_fields) == 1 and missing_fields[0] == "Approver Responsibility":
+						frappe.throw(_("The Employee designation is required for the employee {0} linked with the current user when approving a row.").format(link))
+					elif len(missing_fields) == 1:
+						frappe.throw(_("The following field is required for the employee {0} linked with the current user when approving a row: {1}").format(link, missing_fields[0]))
+					else:
+						frappe.throw(
+							_("The following fields are required for the employee {0} linked with the current user when approving a row: {1}").format(link, ", ".join(missing_fields))
+						)
+
+			# 2. Approved → Pending
 			elif prev_status == "Approved" and row.status == "Pending":
-				if row.approver_name != employee_name:
+				if prev_approver_name != employee_name:
 					frappe.throw(
-						f"Only the original approver ({row.approver_name}) can revert this status."
-					)
+						f"Only the original approver ({prev_approver_name or 'Unknown'}) can revert this status."
+				)
+
 
 	def set_employee_status_to_left(self):
 		if self.status == "Approved":
@@ -120,8 +131,8 @@ class Clearance(Document):
 					f'<a href="/app/employee/{employee.name}">{employee.name}</a>'
 				])
 				frappe.msgprint(_(f"{link} status has been updated to 'Left'."))
-	
-	# Don't allow cancellation of approved clearance
+
 	def before_cancel(self):
 		if self.status == "Approved":
 			frappe.throw(_("Can't cancel approved clearance"))
+
