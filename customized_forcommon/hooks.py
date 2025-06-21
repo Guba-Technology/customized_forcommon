@@ -139,7 +139,7 @@ override_doctype_class = {
     "Employee": "customized_forcommon.overrides.employee.CustomEmployee",
     "Employee Promotion": "customized_forcommon.overrides.employee_promotion.CustomEmployeePromotion",
     "Employee Separation": "customized_forcommon.overrides.employee_separation.CustomEmployeeSeparation",
-    "Payment Entry": "customized_forcommon.overrides.payment_entry.CustomPaymentEntry",
+    "Payment Entry": "customized_forcommon.overrides.wrapped_payment_entry.WrappedPaymentEntry",
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
