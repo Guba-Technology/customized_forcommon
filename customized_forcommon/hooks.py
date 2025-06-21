@@ -61,7 +61,7 @@ default_mail_footer = """
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 override_doctype_class = {
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
-    "Payment Entry": "customized_forcommon.overrides.payment_entry.CustomPaymentEntry",
+    "Payment Entry": "customized_forcommon.overrides.wrapped_payment_entry.WrappedPaymentEntry",
 }
 # Svg Icons
 # ------------------
