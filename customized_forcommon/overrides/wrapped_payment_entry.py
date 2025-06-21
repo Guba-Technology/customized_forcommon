@@ -6,7 +6,12 @@ from customized_forcommon.overrides.payment_entry import CustomPaymentEntry
 class WrappedPaymentEntry(OriginalPaymentEntry):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._resolved = self._resolve_delegate()
+
+        # Prevent infinite recursion if already one of the special subclasses
+        if isinstance(self, (EmployeePaymentEntry, CustomPaymentEntry)):
+            self._resolved = self
+        else:
+            self._resolved = self._resolve_delegate()
 
     def _resolve_delegate(self):
         references = self.get("references") or []
@@ -18,12 +23,12 @@ class WrappedPaymentEntry(OriginalPaymentEntry):
         has_payment_request = any(ref.reference_doctype == "Payment Request" for ref in references)
 
         if has_employee_doc:
-            return EmployeePaymentEntry(self._document)
+            return EmployeePaymentEntry(self)
         elif has_payment_request:
-            return CustomPaymentEntry(self._document)
-        return self  # use original methods if no special reference
+            return CustomPaymentEntry(self)
+        return self  # use original if no special references
 
-    # Delegate only the necessary methods
+    # Delegate methods
     def get_valid_reference_doctypes(self):
         if hasattr(self._resolved, "get_valid_reference_doctypes"):
             return self._resolved.get_valid_reference_doctypes()
