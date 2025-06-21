@@ -1,11 +1,22 @@
 import frappe
 from frappe import _, scrub
 from frappe.utils import comma_or, flt
-from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry, get_outstanding_reference_documents
-from erpnext.accounts.doctype.invoice_discounting.invoice_discounting import get_party_account_based_on_invoice_discounting
+from erpnext.accounts.doctype.payment_entry.payment_entry import (
+    PaymentEntry, get_outstanding_reference_documents
+)
+from erpnext.accounts.doctype.invoice_discounting.invoice_discounting import (
+    get_party_account_based_on_invoice_discounting
+)
 
 class CustomPaymentEntry(PaymentEntry):
+
+    def has_payment_request_reference(self):
+        return any(d.reference_doctype == "Payment Request" for d in self.get("references", []))
+
     def get_valid_reference_doctypes(self):
+        if not self.has_payment_request_reference():
+            return super().get_valid_reference_doctypes()
+
         return {
             "Customer": ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning", "Payment Entry", "Payment Request"),
             "Supplier": ("Purchase Order", "Purchase Invoice", "Journal Entry", "Payment Entry", "Payment Request"),
@@ -14,6 +25,9 @@ class CustomPaymentEntry(PaymentEntry):
         }.get(self.party_type, ())
 
     def validate_reference_documents(self):
+        if not self.has_payment_request_reference():
+            return super().validate_reference_documents()
+
         valid_doctypes = self.get_valid_reference_doctypes()
         if not valid_doctypes:
             return
@@ -22,11 +36,10 @@ class CustomPaymentEntry(PaymentEntry):
             if not d.allocated_amount or d.reference_doctype == "Payment Request":
                 continue
 
-            # Validate reference doctype
             if d.reference_doctype not in valid_doctypes:
                 frappe.throw(
                     _("Reference Doctype must be one of {0}").format(
-                        comma_or(_(dt) for dt in valid_doctypes)
+                        comma_or([_(dt) for dt in valid_doctypes])
                     )
                 )
 
@@ -35,7 +48,6 @@ class CustomPaymentEntry(PaymentEntry):
 
             ref_doc = frappe.get_doc(d.reference_doctype, d.reference_name)
 
-            # Validate party association
             if d.reference_doctype != "Journal Entry" and self.party != ref_doc.get(scrub(self.party_type)):
                 frappe.throw(
                     _("{0} {1} is not associated with {2} {3}").format(
@@ -67,16 +79,10 @@ class CustomPaymentEntry(PaymentEntry):
                     _("{0} {1} must be submitted").format(_(d.reference_doctype), d.reference_name)
                 )
 
-    def get_reference_party_account(self, ref_doc, doctype, name):
-        if self.party_type == "Customer":
-            return get_party_account_based_on_invoice_discounting(name) or ref_doc.get("debit_to")
-        elif self.party_type == "Supplier":
-            return ref_doc.get("credit_to")
-        elif self.party_type == "Employee":
-            return ref_doc.get("payable_account")
-        return None
-
     def validate_allocated_amount_with_latest_data(self):
+        if not self.has_payment_request_reference():
+            return super().validate_allocated_amount_with_latest_data()
+
         if not self.references:
             return
 
@@ -120,7 +126,6 @@ class CustomPaymentEntry(PaymentEntry):
                     .format(frappe.bold(d.reference_name), frappe.bold(idx))
                 )
 
-            # Check over-allocation for term-based or general
             if d.payment_term and flt(d.allocated_amount) > flt(latest_term_data.payment_term_outstanding):
                 frappe.throw(
                     _("Row #{0}: Allocated amount {1} is greater than outstanding {2} for Payment Term {3}")
@@ -139,3 +144,12 @@ class CustomPaymentEntry(PaymentEntry):
             d = frappe._dict(d)
             grouped.setdefault((d.voucher_type, d.voucher_no), {}).setdefault(d.payment_term, d)
         return grouped
+
+    def get_reference_party_account(self, ref_doc, doctype, name):
+        if self.party_type == "Customer":
+            return get_party_account_based_on_invoice_discounting(name) or ref_doc.get("debit_to")
+        elif self.party_type == "Supplier":
+            return ref_doc.get("credit_to")
+        elif self.party_type == "Employee":
+            return ref_doc.get("payable_account")
+        return None
