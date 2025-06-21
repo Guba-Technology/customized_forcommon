@@ -4,52 +4,44 @@ from hrms.overrides.employee_payment_entry import EmployeePaymentEntry
 from customized_forcommon.overrides.payment_entry import CustomPaymentEntry
 
 class WrappedPaymentEntry(OriginalPaymentEntry):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Prevent infinite recursion if already one of the special subclasses
-        if isinstance(self, (EmployeePaymentEntry, CustomPaymentEntry)):
-            self._resolved = self
-        else:
-            self._resolved = self._resolve_delegate()
-
-    def _resolve_delegate(self):
+    def _get_delegate_cls(self):
+        """Determine delegate class based on current references"""
         references = self.get("references") or []
-
+        
         has_employee_doc = any(
             ref.reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity")
             for ref in references
         )
-        has_payment_request = any(ref.reference_doctype == "Payment Request" for ref in references)
+        has_payment_request = any(
+            ref.reference_doctype == "Payment Request" 
+            for ref in references
+        )
 
         if has_employee_doc:
-            return EmployeePaymentEntry(self)
+            return EmployeePaymentEntry
         elif has_payment_request:
-            return CustomPaymentEntry(self)
-        return self  # use original if no special references
+            return CustomPaymentEntry
+        return None
 
-    # Delegate methods
+    def _delegate_method(self, method_name, *args, **kwargs):
+        """Delegate method call to appropriate class if exists"""
+        delegate_cls = self._get_delegate_cls()
+        if delegate_cls and hasattr(delegate_cls, method_name):
+            method = getattr(delegate_cls, method_name)
+            return method(self, *args, **kwargs)
+        return super().method_name(*args, **kwargs)
+
     def get_valid_reference_doctypes(self):
-        if hasattr(self._resolved, "get_valid_reference_doctypes"):
-            return self._resolved.get_valid_reference_doctypes()
-        return super().get_valid_reference_doctypes()
+        return self._delegate_method('get_valid_reference_doctypes')
 
     def validate_reference_documents(self):
-        if hasattr(self._resolved, "validate_reference_documents"):
-            return self._resolved.validate_reference_documents()
-        return super().validate_reference_documents()
+        return self._delegate_method('validate_reference_documents')
 
     def validate_allocated_amount_with_latest_data(self):
-        if hasattr(self._resolved, "validate_allocated_amount_with_latest_data"):
-            return self._resolved.validate_allocated_amount_with_latest_data()
-        return super().validate_allocated_amount_with_latest_data()
+        return self._delegate_method('validate_allocated_amount_with_latest_data')
 
     def set_missing_ref_details(self, *args, **kwargs):
-        if hasattr(self._resolved, "set_missing_ref_details"):
-            return self._resolved.set_missing_ref_details(*args, **kwargs)
-        return super().set_missing_ref_details(*args, **kwargs)
+        return self._delegate_method('set_missing_ref_details', *args, **kwargs)
 
     def get_reference_party_account(self, *args, **kwargs):
-        if hasattr(self._resolved, "get_reference_party_account"):
-            return self._resolved.get_reference_party_account(*args, **kwargs)
-        return super().get_reference_party_account(*args, **kwargs)
+        return self._delegate_method('get_reference_party_account', *args, **kwargs)
