@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:promotion_test_name",
+ "creation": "2025-06-19 14:54:06.906429",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "promotion_test_name",
+  "column_break_wudd",
+  "status",
+  "section_break_zdha",
+  "employees_for_promotion_test",
+  "rank_section",
+  "promotion_test_rank",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "promotion_test_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Promotion Test Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_zdha",
+   "fieldtype": "Section Break",
+   "label": "Employees"
+  },
+  {
+   "fieldname": "employees_for_promotion_test",
+   "fieldtype": "Table",
+   "label": "Employees For Promotion Test",
+   "options": "Promotion Test Employees"
+  },
+  {
+   "fieldname": "rank_section",
+   "fieldtype": "Section Break",
+   "label": "Rank"
+  },
+  {
+   "fieldname": "promotion_test_rank",
+   "fieldtype": "Table",
+   "label": "Promotion Test Rank",
+   "options": "Promotion Test Rank",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wudd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nFinished"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Promotion Test",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-19 15:27:08.387582",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Promotion Test",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

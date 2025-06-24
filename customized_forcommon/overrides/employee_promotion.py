@@ -42,6 +42,8 @@ class CustomEmployeePromotion(EmployeePromotion):
     def set_revised_ctc_from_step(self):
         grade_row = step_row = None
 
+        suppress_msg = frappe.flags.suppress_revised_ctc_message if hasattr(frappe.flags, 'suppress_revised_ctc_message') else False
+
         # First, find the Grade and Step rows (if any)
         for row in self.promotion_details:
             if row.property == "Grade":
@@ -76,6 +78,8 @@ class CustomEmployeePromotion(EmployeePromotion):
                     frappe.throw(_("New Step salary cannot be less than the Current Step salary"))
                 else:
                     self.revised_ctc = step_new.salary
+                    if not suppress_msg:
+                          frappe.msgprint(_(f"New Step salary {self.revised_ctc} set as Revised CTC"), alert=True)
 
             elif not step_current and step_new:
                 # If no current step, check the last promotion's revised CTC
@@ -95,7 +99,9 @@ class CustomEmployeePromotion(EmployeePromotion):
                     frappe.throw(_(f"New Step salary cannot be less than the Revised CTC of the last promotion of {self.employee}."))
                 else:
                     self.revised_ctc = step_new.salary
+                    if not suppress_msg:
+                        frappe.msgprint(_(f"New Step salary {self.revised_ctc} set as Revised CTC"), alert=True)
 
             # Update employee step
             frappe.db.set_value("Employee", self.employee, "custom_step", step_new.name)
-            frappe.msgprint(_(f"New Step salary {self.revised_ctc} set as Revised CTC"), alert=True)
+          
