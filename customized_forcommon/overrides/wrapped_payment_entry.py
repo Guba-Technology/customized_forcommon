@@ -26,10 +26,17 @@ class WrappedPaymentEntry(OriginalPaymentEntry):
     def _delegate_method(self, method_name, *args, **kwargs):
         """Delegate method call to appropriate class if exists"""
         delegate_cls = self._get_delegate_cls()
+
         if delegate_cls and hasattr(delegate_cls, method_name):
             method = getattr(delegate_cls, method_name)
             return method(self, *args, **kwargs)
-        return super().method_name(*args, **kwargs)
+
+        # Fallback to superclass method
+        method = getattr(super(type(self), self), method_name, None)
+        if callable(method):
+            return method(*args, **kwargs)
+
+        raise AttributeError(f"Method '{method_name}' not found in superclass or delegate class.")
 
     def get_valid_reference_doctypes(self):
         return self._delegate_method('get_valid_reference_doctypes')
