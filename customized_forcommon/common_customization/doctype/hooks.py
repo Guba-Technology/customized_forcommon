@@ -1,89 +1,72 @@
-app_name = "customized_forcommon"
-app_title = "Customized Forcommon"
-app_publisher = "Guba Technology"
-app_description = "customizations for common operations"
-app_email = "sewunet.abebaw@gubatech.com"
+app_name = "customization_manager"
+app_title = "Customization Manager"
+app_publisher = "Guba Technologies"
+app_description = "This app is used to customize apps, doctypes, and forms"
+app_email = "info@guba.com"
 app_license = "mit"
-
-# Required Apps
-required_apps = ["erpnext", "hrms"]
-
-# Branding
-email_brand_image = "/assets/customized_forcommon/images/gift.png"
-default_mail_footer = """
-	<span>
-		Sent via
-		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
-			ERP
-		</a>
-	</span>
-"""
-website_context = {
-	"favicon": "/assets/customized_forcommon/images/gift.png",
-	"splash_image": "/assets/customized_forcommon/images/gift.png",
-}
-
-# Fixtures
+required_apps = ["erpnext","hrms"]
 fixtures = [
     {
         "dt": "Workspace",
         "filters": [
-            ["name", "in", [
-                "Accounting", "HR", "Buying", "Selling", "Manufacturing", "ERPNext Settings", "ERPNext Integrations",
-                "Integrations", "Employee Lifecycle", "Recruitment", "Leaves", "Procurement", "Stock", "Assets",
-                "Sales and Marketing", "Expense Claims", "Shift & Attendance", "Performance",
-            ]],
+            ["name", "in", ["Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
+                            "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                            "Expense Claims", "Shift & Attendance", "Performance",
+                            
+                            ]],
         ],
-        "strict": False
-    },
+        "strict": False # do not check for existing records
+    }, 
     {
         "dt": "Custom Field",
         "filters": [
-            ["dt", "in", [
-                "Employee", "Employee External Work History", "Employee Separation", "Interview", "Asset", "Purchase Invoice",
-                "Purchase Order", "Quotation", "Material Request", "Workstation", "Company", "Employee Advance",
-                "Sales Invoice", "Payment Entry", "Purchase Receipt", "Training Program", "Purchase Reciept",
-                "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
-                "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
-                "Workstation", "Routing", "Quality Inspection Reading",
-            ]],
+            ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
+                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                          "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
+                          "Purchase Receipt", "Leave Application", "Training Program", "Purchase Reciept",
+                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
+                          "Workstation", "Routing", "Quality Inspection Reading",
+                          ]],
         ]
     },
     {
         "dt": "Server Script",
-        "filters": [
-            ["reference_doctype", "in", [
-                "Employee", "Employee External Work History", "Purchase Invoice", "Employee Lifecycle",
-            ]]
+        "filters":[
+            ["reference_doctype", "in", ["Employee", "Employee External Work History", "Purchase Invoice",
+                                         "Leave Application", "Employee Lifecycle",
+                                         ]]    
         ]
+
     },
     {
         "dt": "Client Script",
-        "filters": [
-            ["dt", "in", [
-                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                "Sales Invoice", "Employee", "BOM", "Quality Inspection",
-                "Sales Order", "Material Request",
-            ]]
+        "filters":[
+            ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
+                          "Sales Invoice", "Employee", "BOM", "Leave Application", "Quality Inspection",
+                          "Sales Order", "Material Request",
+
+                          ]]
         ]
-    },
+    }, 
     {
-        "dt": "Print Format",
+        "dt": "Print Format", 
         "filters": [
-            ["name", "in", [
-                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                "Quotation Print Format",
-            ]]
+            ["name", "in", ["Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
+                            "Quotation Print Format",]]
         ]
     },
     {
         "dt": "Workflow",
-
-        "filters": [["name", "in", ["Material Request workflow"]]]
-
+        "filters": [["name", "in", ["Preventive Maintenance Workflow", "Material Request workflow"]]]
     },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
+    {
+        "dt": "Workflow State"
+    },
+    {
+        "dt": "Workflow Action Master"
+    },
+
     {
         "dt": "Report",
         "filters": [
@@ -93,61 +76,61 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", [
-                "Workstation Type-workstation_type-Label",
-                "Workstation-description-type",
-                "Quality Inspection-status-reqd",
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
+                            "Leave Application-half_day_date-label", "Leave Application-half_day_date-mandatory_depends_on",
             ]]
         ]
+
     }
+
+
 ]
 
-# Hooks
-after_migrate = "customized_forcommon.patches.remove_job_card_summary.execute"
+#  this will be applied after the app is migrated
+after_migrate = "customization_manager.patches.remove_job_card_summary.execute"
+
+
+# in your custom app, in hooks.py
 
 doc_events = {
     "Purchase Receipt": {
-        "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
+        "on_submit": "customization_manager.doc_events.purchase_receipt.update_stock_ledger_with_department",
     },
     "Item": {
-        "autoname": "customized_forcommon.Item.custom_item_autoname",
-        "on_update": "customized_forcommon.Item.custom_item_autoname",
-    }
+        "autoname": "customization_manager.Item.custom_item_autoname",
+        "on_update": "customization_manager.Item.custom_item_autoname"
+    },
 }
 
 scheduler_events = {
     "daily": [
-        "customized_forcommon.scheduler.leave_auto_extend.auto_extend_leave_allocations",
-    ]
+        "customization_manager.scheduler.leave_auto_extend.auto_extend_leave_allocations",
+    ],
+
 }
 
+# patches = [
+#     "customization_manager.patches.v1.update_field_option_for_employee_status"
+# ]
 override_doctype_class = {
-    "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
-    "Gender": "customized_forcommon.overrides.gender.CustomGender",
-    "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
-    "Employee": "customized_forcommon.overrides.employee.CustomEmployee",
-    "Employee Promotion": "customized_forcommon.overrides.employee_promotion.CustomEmployeePromotion",
-    "Employee Separation": "customized_forcommon.overrides.employee_separation.CustomEmployeeSeparation",
-    "Payment Entry": "customized_forcommon.overrides.wrapped_payment_entry.WrappedPaymentEntry",
-    "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
-    "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
-    "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
+    "Employee Onboarding": "customization_manager.overrides.employee_onboarding.CustomEmployeeOnboarding",
+    "Gender": "customization_manager.overrides.gender.CustomGender",
+    "Employee Group": "customization_manager.overrides.employee_group.CustomEmployeeGroup",
+    "Payment Request": "customization_manager.overrides.payment_request.CustomPaymentRequest",
+    "Employee": "customization_manager.overrides.employee.CustomEmployee",
+    "Employee Promotion": "customization_manager.overrides.employee_promotion.CustomEmployeePromotion",
+    "Employee Separation": "customization_manager.overrides.employee_separation.CustomEmployeeSeparation",
+    "Payment Entry": "customization_manager.overrides.payment_entry.CustomPaymentEntry",
+    "Material Request": "customization_manager.overrides.material_request.CustomMaterialRequest",
+    "Sales Order": "customization_manager.overrides.sales_order.CustomSalesOrder",
+    "Quality Inspection": "customization_manager.overrides.quality_inspection.CustomQualityInspection",
+    
+    
 }
 
 app_include_js = [
-    "/assets/customized_forcommon/js/material_request.js"
+    "/assets/customization_manager/js/material_request.js"
 ]
-
-doctype_js = {
-    "Bom Creator": "public/js/bom_creator.js",
-}
-
-# boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
-
-after_migrate = [
-    "customized_forcommon.after_migrate.rename_workspaces.run"
-]
-
 
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
