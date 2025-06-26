@@ -1,26 +1,7 @@
+from erpnext.manufacturing.doctype.bom_creator.bom_creator import BOM_FIELDS, BOM_ITEM_FIELDS
 from erpnext.manufacturing.doctype.bom_creator.bom_creator import BOMCreator
 import frappe
-
-BOM_FIELDS = [
-    "company",
-    "rm_cost_as_per",
-    "project",
-    "currency",
-    "conversion_rate",
-    "buying_price_list",
-]
-
-BOM_ITEM_FIELDS = [
-    "item_code",
-    "qty",
-    "uom",
-    "rate",
-    "stock_qty",
-    "stock_uom",
-    "conversion_factor",
-    "do_not_explode",
-    "operation",
-]
+import traceback
 
 class CustomBom(BOMCreator):
     def create_bom(self, row, production_item_wise_rm):
@@ -41,7 +22,7 @@ class CustomBom(BOMCreator):
         bom.update({
             "item": row.item_code,
             "bom_type": "Production",
-            "quantity": row.qty,
+            "quantity": row.qty or 0,
             "allow_alternative_item": 1,
             "bom_creator": self.name,
             "bom_creator_item": bom_creator_item,
@@ -53,10 +34,18 @@ class CustomBom(BOMCreator):
             bom.transfer_material_against = "Work Order"
 
         for field in BOM_FIELDS:
-            if self.get(field) is not None:
-                bom.set(field, self.get(field))
+            val = self.get(field)
+            if val is not None:
+                bom.set(field, val)
 
-        for item in production_item_wise_rm[(row.item_code, row.name)]["items"]:
+        for item in production_item_wise_rm.get((row.item_code, row.name), {}).get("items", []):
+            if not item.get("item_code") or not item.get("qty") or not item.get("uom"):
+                frappe.log_error(
+                    message=f"Skipping BOM item due to missing required fields: {item.as_dict() if hasattr(item, 'as_dict') else item}",
+                    title="Invalid BOM Item in create_bom"
+                )
+                continue
+
             bom_no = ""
             item.do_not_explode = 1
 
@@ -79,4 +68,6 @@ class CustomBom(BOMCreator):
             bom.submit()
             production_item_wise_rm[(row.item_code, row.name)].bom_no = bom.name
         except Exception:
-            frappe.log_error(frappe.get_traceback(), f"Failed to create BOM for item {row.item_code}")
+            traceback_str = traceback.format_exc()
+            frappe.log_error(traceback_str, f"Failed to create BOM for item {row.item_code}")
+            frappe.throw(f"Failed to create BOM for item {row.item_code}: {traceback_str}")
