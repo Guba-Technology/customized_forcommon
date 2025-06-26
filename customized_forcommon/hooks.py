@@ -143,7 +143,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    
+    "BOM Creator": "customized_forcommon.overrides.bom_creator",    
     
 }
 
@@ -152,7 +152,7 @@ app_include_js = [
 ]
 
 doctype_js = {
-    "Bom Creator": "public/js/bom_creator.js",
+    "BOM Creator": "public/js/bom_creator.js",
 }
 
 # boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
