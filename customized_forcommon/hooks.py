@@ -151,6 +151,10 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js"
 ]
 
+doctype_js = {
+    "Bom Creator": "public/js/bom_creator.js",
+}
+
 # boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
 
 after_migrate = [
