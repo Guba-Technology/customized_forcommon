@@ -152,7 +152,7 @@ app_include_js = [
 ]
 
 doctype_js = {
-    "BOM Creator": "public/js/bom_creator_extend.js"
+    "BOM Creator": "public/js/bom_creator_extended.js"
 }
 
 
