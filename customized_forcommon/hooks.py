@@ -148,12 +148,13 @@ override_doctype_class = {
 }
 
 app_include_js = [
-    "/assets/customized_forcommon/js/material_request.js", "public/js/bom_creator.js",
+    "/assets/customized_forcommon/js/material_request.js"
 ]
 
-# doctype_js = {
-   
-# }
+doctype_js = {
+    "BOM Creator": "public/js/bom_creator_extend.js"
+}
+
 
 # boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
 
