@@ -63,7 +63,7 @@ fixtures = [
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
                           "Sales Invoice", "Employee", "BOM", "Quality Inspection",
-                          "Sales Order", "Material Request",
+                          "Sales Order", "Material Request", "Leave Application",
 
                           ]]
         ]
@@ -95,8 +95,8 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
-                            
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
+                            "Leave Application-main-mandatory_depends_on",                         
                             
             ]]
         ]
@@ -107,8 +107,10 @@ fixtures = [
 ]
 
 #  this will be applied after the app is migrated
-after_migrate = "customized_forcommon.patches.remove_job_card_summary.execute"
-
+after_migrate = [
+    "customized_forcommon.after_migrate.rename_workspaces.run",
+    "customized_forcommon.patches.remove_job_card_summary.execute"
+]
 
 # in your custom app, in hooks.py
 
@@ -133,6 +135,9 @@ scheduler_events = {
 #     "customized_forcommon.patches.v1.update_field_option_for_employee_status"
 # ]
 override_doctype_class = {
+    "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
+    "User": "customized_forcommon.overrides.user.CustomUser",
+    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
     "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
     "Gender": "customized_forcommon.overrides.gender.CustomGender",
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
@@ -155,12 +160,14 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js"
 }
 
+# this is used to override the get_leaves_for_period method in leave_application
+# this is used to customize the leave balance calculation logic when half day leaves are used
+import hrms.hr.doctype.leave_application.leave_application as leave_application_module
+import customized_forcommon.overrides.leave_balance as custom_module
 
-# boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
+leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
-after_migrate = [
-    "customized_forcommon.after_migrate.rename_workspaces.run"
-]
+
 
 
 # migrations = [
