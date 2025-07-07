@@ -29,10 +29,14 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting", "HR", "Buying", "Selling", "Manufacturing", "ERPNext Settings", "ERPNext Integrations",
-                "Integrations", "Employee Lifecycle", "Recruitment", "Leaves", "Procurement", "Stock", "Assets",
-                "Sales and Marketing", "Expense Claims", "Shift & Attendance", "Performance",
-            ]],
+                "Accounting", "HR", "Buying", "Selling", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                
+                "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
+                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                "Expense Claims", "Shift & Attendance", "Performance", "Users"
+                            
+                            ]],
+>
         ],
         "strict": False
     },
@@ -59,6 +63,16 @@ fixtures = [
     },
     {
         "dt": "Client Script",
+        "filters":[
+            ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
+                          "Sales Invoice", "Employee", "BOM", "Quality Inspection",
+                          "Sales Order", "Material Request", "Leave Application",
+
+                          ]]
+        ]
+    },
+    {
+        "dt": "Print Format",
         "filters": [
             ["dt", "in", [
                 "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
@@ -93,17 +107,19 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", [
-                "Workstation Type-workstation_type-Label",
-                "Workstation-description-type",
-                "Quality Inspection-status-reqd",
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
+                            "Leave Application-main-mandatory_depends_on",
             ]]
         ]
     }
 ]
 
 # Hooks
-after_migrate = "customized_forcommon.patches.remove_job_card_summary.execute"
+after_migrate = [
+    "customized_forcommon.after_migrate.rename_workspaces.run",
+    "customized_forcommon.patches.remove_job_card_summary.execute"
+]
+
 
 doc_events = {
     "Purchase Receipt": {
@@ -122,6 +138,9 @@ scheduler_events = {
 }
 
 override_doctype_class = {
+    "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
+    "User": "customized_forcommon.overrides.user.CustomUser",
+    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
     "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
     "Gender": "customized_forcommon.overrides.gender.CustomGender",
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
@@ -143,12 +162,14 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js"
 }
 
+# this is used to override the get_leaves_for_period method in leave_application
+# this is used to customize the leave balance calculation logic when half day leaves are used
+import hrms.hr.doctype.leave_application.leave_application as leave_application_module
+import customized_forcommon.overrides.leave_balance as custom_module
 
-# boot_session = "customized_forcommon.patches.navbar_patch.apply_navbar_patch"
+leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
-after_migrate = [
-    "customized_forcommon.after_migrate.rename_workspaces.run"
-]
+
 
 
 # migrations = [
