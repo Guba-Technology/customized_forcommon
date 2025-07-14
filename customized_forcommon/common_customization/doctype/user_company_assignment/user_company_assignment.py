@@ -89,7 +89,11 @@ class UserCompanyAssignment(Document):
                 # Save with ignore_permissions=True to ensure it works even if the script context
                 # doesn't have direct write permissions to the User DocType.
                 user_doc.save(ignore_permissions=True)
-                frappe.msgprint(f"User '{user_doc.full_name}' has been enabled due to Company Assignment.")
+                link = " ".join([
+                    f'<a href="/app/user/{user_doc.email}" style="text-decoration: underline" >{user_doc.full_name}</a>',
+                    'to assign the user to a company.'
+                ])
+                frappe.msgprint(f"User '{link}' has been enabled due to Company Assignment.")
     def on_trash(self):
         """
         This method is called when a document is deleted.

@@ -1,4 +1,5 @@
 from erpnext.accounts.general_ledger import make_gl_entries
+from frappe.utils.nestedset import get_descendants_of
 import frappe
 from frappe import _
 from frappe.utils import today
@@ -82,13 +83,44 @@ def get_available_users_for_assignment(doctype, txt, searchfield, start, page_le
     })
 
 
+# This function retrieves the count of employees and job openings for a given designation, company, and optional department.
+@frappe.whitelist()
+def get_designation_counts(designation, company, department=None):
+    if not designation:
+        return {"employee_count": 0, "job_openings": 0}
+
+    company_set = get_descendants_of("Company", company)
+    company_set.append(company)
+
+    employee_filters = {
+        "designation": designation,
+        "status": "Active",
+        "company": ("in", company_set),
+    }
+
+    if department:
+        employee_filters["department"] = department
+
+    employee_count = frappe.db.count("Employee", employee_filters)
+
+    job_filters = {
+        "designation": designation,
+        "status": "Open",
+        "company": ("in", company_set),
+    }
+
+    if department:
+        job_filters["department"] = department
+
+    job_openings = frappe.db.count("Job Opening", job_filters)
+
+    return {
+        "employee_count": employee_count,
+        "job_openings": job_openings
+    }
 
 
-
-
-
-
-
+# This function retrieves employee advances for a given employee, filtering by specific advance types.
 @frappe.whitelist()
 def get_employee_advances(employee):
     if not employee:
@@ -114,12 +146,7 @@ def get_employee_advances(employee):
 
     return employee_advances
 
-
-
-
-
-
-
+# This function creates GL entries from a Purchase Invoice, linking it to employee advances.
 @frappe.whitelist()
 def create_gl_entries_from_invoice(invoice_name):
     invoice = frappe.get_doc("Purchase Invoice", invoice_name)

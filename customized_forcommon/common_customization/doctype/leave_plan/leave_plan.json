@@ -13,8 +13,17 @@
   "leave_planned_by",
   "column_break_chry",
   "fiscal_year",
+  "section_break_rmqr",
   "month1",
+  "month1_leave_days",
+  "column_break_mrbk",
   "month2",
+  "month2_leave_days",
+  "column_break_ydqy",
+  "month3",
+  "month3_leave_days",
+  "section_break_zckm",
+  "total_leave_days",
   "section_break_akbl",
   "amended_from"
  ],
@@ -73,15 +82,14 @@
    "fieldname": "month1",
    "fieldtype": "Select",
    "label": "Month1",
-   "options": "\nJuly\nAugest\nSeptember\nOctober\nNovember\nDecember\nJanuary\nFebruary\nMarch\nApril\nMay\nJune",
+   "options": "\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember\nJanuary\nFebruary\nMarch\nApril\nMay\nJune",
    "reqd": 1
   },
   {
    "fieldname": "month2",
    "fieldtype": "Select",
    "label": "Month2",
-   "mandatory_depends_on": "eval:doc.month1 != \"June\";",
-   "options": "\nJuly\nAugest\nSeptember\nOctober\nNovember\nDecember\nJanuary\nFebruary\nMarch\nApril\nMay\nJune"
+   "options": "\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember\nJanuary\nFebruary\nMarch\nApril\nMay\nJune"
   },
   {
    "fetch_from": "employee.date_of_joining",
@@ -95,13 +103,59 @@
    "fieldtype": "Data",
    "label": "Leave Planned By",
    "read_only": 1
+  },
+  {
+   "fieldname": "month3",
+   "fieldtype": "Select",
+   "label": "Month3",
+   "options": "\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember\nJanuary\nFebruary\nMarch\nApril\nMay\nJune"
+  },
+  {
+   "fieldname": "section_break_rmqr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_mrbk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zckm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ydqy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_leave_days",
+   "fieldtype": "Data",
+   "label": "Total Leave Days",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.month1",
+   "fieldname": "month1_leave_days",
+   "fieldtype": "Float",
+   "label": "Leave Days"
+  },
+  {
+   "depends_on": "eval:doc.month2",
+   "fieldname": "month2_leave_days",
+   "fieldtype": "Float",
+   "label": "Leave Days"
+  },
+  {
+   "depends_on": "eval:doc.month3",
+   "fieldname": "month3_leave_days",
+   "fieldtype": "Float",
+   "label": "Leave Days"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-02 14:04:13.651704",
+ "modified": "2025-07-09 12:45:35.697408",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Leave Plan",
