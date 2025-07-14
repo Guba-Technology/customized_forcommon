@@ -78,8 +78,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Training Cost",
-   "non_negative": 1,
-   "reqd": 1
+   "non_negative": 1
   },
   {
    "fieldname": "training_location",
@@ -269,14 +268,12 @@
   {
    "fieldname": "no_of_female_trainee",
    "fieldtype": "Int",
-   "label": "No of Female Trainee",
-   "reqd": 1
+   "label": "No of Female Trainee"
   },
   {
    "fieldname": "no_of_male_trainee",
    "fieldtype": "Int",
-   "label": "No of Male Trainee",
-   "reqd": 1
+   "label": "No of Male Trainee"
   },
   {
    "fieldname": "total_trainee",
@@ -288,7 +285,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-20 15:15:37.453778",
+ "modified": "2025-07-08 16:16:57.269442",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Plan",
