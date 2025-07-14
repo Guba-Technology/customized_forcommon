@@ -74,7 +74,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Practical Test Score",
-   "reqd": 1
+   "non_negative": 1
   },
   {
    "fieldname": "job_opening",
@@ -87,15 +87,14 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Written Test Score",
-   "non_negative": 1,
-   "reqd": 1
+   "non_negative": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-24 10:44:29.200193",
+ "modified": "2025-07-14 10:36:41.676729",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Applicant Test Result",

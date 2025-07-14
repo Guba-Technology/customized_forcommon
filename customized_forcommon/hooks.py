@@ -40,14 +40,16 @@ fixtures = [
     {
         "dt": "Custom Field",
         "filters": [
-            ["dt", "in", [
-                "Employee", "Employee External Work History", "Employee Separation", "Interview", "Asset",
-                "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", "Workstation", "Company",
-                "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", "Training Program",
-                "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
-                "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
-                "Routing", "Quality Inspection Reading"
-            ]]
+            ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
+                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                          "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
+                          "Purchase Receipt", "Training Program", "Purchase Reciept",
+                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
+                          "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
+                          "Training Event"
+                          ]],
+
         ]
     },
     {
@@ -100,9 +102,9 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", [
-                "Workstation Type-workstation_type-Label", "Workstation-description-type",
-                "Quality Inspection-status-reqd", "Leave Application-main-mandatory_depends_on"
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
+                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",                 
+                            
             ]]
         ]
     }
@@ -121,6 +123,18 @@ doc_events = {
     "Item": {
         "autoname": "customized_forcommon.Item.custom_item_autoname",
         "on_update": "customized_forcommon.Item.custom_item_autoname"
+    },
+    "Interview": {
+        "validate": "customized_forcommon.doc_events.interview_score.calculate_total_criteria_score",
+    },
+    "Leave Application": {
+        "validate": "customized_forcommon.doc_events.set_leave_application_return_date.set_custom_return_date",
+    },
+    "Training Event":{
+        "validate": "customized_forcommon.doc_events.traning_event_attendance.validate_training_event",
+    },
+    "Staffing Plan": {
+        "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     }
 }
 
@@ -131,6 +145,7 @@ scheduler_events = {
 }
 
 override_doctype_class = {
+    "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
     "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
     "User": "customized_forcommon.overrides.user.CustomUser",
     "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
@@ -153,9 +168,12 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js"
 ]
 
+# js files to be included in the doctype views
 doctype_js = {
     "Material Request": "public/js/material_request.js",
-    "BOM Creator": "public/js/bom_creator_extended.js"
+    "BOM Creator": "public/js/bom_creator_extended.js",
+    "Staffing Plan": "public/js/staffing_plan.js",
+
 }
 
 # WARNING: Monkey patching HRMS method; revisit on upgrade
