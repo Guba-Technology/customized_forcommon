@@ -147,7 +147,12 @@ override_doctype_class = {
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBOMCreator"
 }
 
-# Include JS only for specific doctypes
+#Include JS only for specific doctypes
+app_include_js = [
+    "/assets/customized_forcommon/js/material_request.js",
+    "/assets/customized_forcommon/js/whitelabel.js"
+]
+
 doctype_js = {
     "Material Request": "public/js/material_request.js",
     "BOM Creator": "public/js/bom_creator_extended.js"
