@@ -1,6 +1,6 @@
 import frappe
 from frappe.utils import cint, flt
-from customization_manager.api import get_designation_counts  # import your method
+from customized_forcommon.api import get_designation_counts  # import your method
 
 def calculate_counts(doc, method):
     doc.total_estimated_budget = 0
