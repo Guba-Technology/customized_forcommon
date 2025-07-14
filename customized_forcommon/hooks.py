@@ -153,7 +153,8 @@ override_doctype_class = {
 }
 
 app_include_js = [
-    "/assets/customized_forcommon/js/material_request.js"
+    "/assets/customized_forcommon/js/material_request.js",
+    "/assets/customized_forcommon/js/whitelabel.js"
 ]
 
 doctype_js = {
