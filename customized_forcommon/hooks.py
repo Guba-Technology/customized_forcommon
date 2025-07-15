@@ -113,8 +113,8 @@ after_migrate = [
     "customized_forcommon.patches.remove_job_card_summary.execute"
 ]
 
-# in your custom app, in hooks.py
-
+# Doc Events that will be triggered on specific actions in the specified DocTypes
+# For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
