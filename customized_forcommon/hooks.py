@@ -47,7 +47,7 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event"
+                          "Training Event", "Leave Application",
                           ]],
 
         ]
@@ -116,6 +116,9 @@ after_migrate = [
     "customized_forcommon.patches.remove_job_card_summary.execute"
 ]
 
+
+# Doc Events that will be triggered on specific actions in the specified DocTypes
+# For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department"

@@ -68,12 +68,18 @@ def get_reference_item_qty(reference_type, reference_name, item_code):
 @frappe.whitelist()
 def get_available_users_for_assignment(doctype, txt, searchfield, start, page_len, filters):
     return frappe.db.sql("""
-        SELECT u.name, CONCAT(u.first_name, ' ', IFNULL(u.last_name, ''), IF(u.enabled = 0, ' (Disabled)', ''))
+        SELECT 
+            u.name, 
+            CONCAT(u.first_name, ' ', IFNULL(u.last_name, ''), IF(u.enabled = 0, ' (Disabled)', '')) AS full_name
         FROM `tabUser` u
-        WHERE u.name NOT IN (
-            SELECT DISTINCT user FROM `tabUser Company Assignment`
+        WHERE (
+            u.name = 'Administrator' OR u.name NOT IN (
+                SELECT user FROM `tabUser Company Assignment`
+            )
         )
-        AND (u.name LIKE %(txt)s OR u.first_name LIKE %(txt)s OR u.last_name LIKE %(txt)s)
+        AND (u.name LIKE %(txt)s 
+            OR u.first_name LIKE %(txt)s 
+            OR u.last_name LIKE %(txt)s)
         ORDER BY u.creation DESC
         LIMIT %(start)s, %(page_len)s
     """, {
@@ -81,7 +87,6 @@ def get_available_users_for_assignment(doctype, txt, searchfield, start, page_le
         "start": start,
         "page_len": page_len
     })
-
 
 # This function retrieves the count of employees and job openings for a given designation, company, and optional department.
 @frappe.whitelist()

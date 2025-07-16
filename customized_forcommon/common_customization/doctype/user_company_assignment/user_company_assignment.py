@@ -93,7 +93,7 @@ class UserCompanyAssignment(Document):
                     f'<a href="/app/user/{user_doc.email}" style="text-decoration: underline" >{user_doc.full_name}</a>',
                     'to assign the user to a company.'
                 ])
-                frappe.msgprint(f"User '{link}' has been enabled due to Company Assignment.")
+                frappe.msgprint(f"User '{user_doc.full_name}' has been enabled due to Company Assignment.")
     def on_trash(self):
         """
         This method is called when a document is deleted.
