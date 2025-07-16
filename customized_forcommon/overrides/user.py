@@ -27,7 +27,5 @@ class CustomUser(BaseUser):
             assignments = frappe.get_all("User Company Assignment", filters={"user": self.name}, pluck="name")
             for assignment_name in assignments:
                 frappe.delete_doc("User Company Assignment", assignment_name, ignore_permissions=True)
-            if assignments and len(assignments) == 1:
-                frappe.msgprint("User has been disabled. User has been removed from User Company Assignment.", indicator='red')
-            elif assignments and len(assignments) > 1:
-                frappe.msgprint("Users have been disabled. Users have been removed from all User Company Assignments.", indicator='red')
+            if assignments and len(assignments):
+                frappe.msgprint("User has been disabled and removed from all User Company Assignment.", indicator='red')
