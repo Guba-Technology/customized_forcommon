@@ -140,6 +140,7 @@ doc_events = {
 scheduler_events = {
     "daily": [
         "customized_forcommon.scheduler.leave_auto_extend.auto_extend_leave_allocations",
+        "customized_forcommon.scheduler.custom_next_leave_increment_year.execute"
     ],
 
 }
