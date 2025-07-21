@@ -30,6 +30,10 @@ class BulkEmployeePromotion(Document):
             if current_step_salary >= new_step_salary:
                 frappe.throw(_("New step salary must be greater than the current step salary."))
 
+    def on_submit(self):
+        if self.status !=  "Approved":
+            frappe.throw("You can't submit with no Approved status")
+
     def on_trash(self):
         if self.status == "Approved" and self.docstatus == 1:
             frappe.throw(_("Cannot delete a submitted Bulk Employee Promotion document."))
