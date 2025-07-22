@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Leave Allocation Auto Increment", {
     onload(frm) {
-        frm.trigger("get_employees");
+        // frm.trigger("get_employees");
         // Disable adding rows programmatically to the employees table when the form loads
         frm.fields_dict.employees.grid.cannot_add_rows = true;
    },
@@ -83,7 +83,7 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
     },
 
     get_employees(frm) {
-        const increment_filter = frm.doc.filter_by_increment || "All Allocated";
+        const increment_filter = frm.doc.filter_by_increment;
         console.log("Filter selected:", increment_filter);  // <-- Debug log here
         console.log("Form dirty state after update:", frm.dirty);
 
@@ -113,11 +113,6 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
                         });
 
                         frm.refresh_field("employees");
-                         // Prevent dirty state only if form is not dirty already
-                        if (!frm.dirty) {
-                            frm.doc.__unsaved = 0;  // ✅ safest way to say "no changes yet"
-                            frappe.model.set_doc_dirty(frm.doc, false);
-                        }
                     });
                 }
             }
