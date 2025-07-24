@@ -29,11 +29,13 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting", "HR", "Buying", "Selling", "Manufacturing", "ERPNext Settings",
-                "ERPNext Integrations", "Integrations", "Employee Lifecycle", "Recruitment", "Leaves",
-                "Procurement", "Stock", "Assets", "Sales and Marketing", "Expense Claims", 
-                "Shift & Attendance", "Performance", "Users"
-            ]]
+                "Accounting", "HR", "Buying", "Selling", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
+                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                "Expense Claims", "Shift & Attendance", "Performance", "Users"
+                "Accounting", "Payables"
+            ]],
+
         ],
         "strict": False
     },
@@ -103,7 +105,8 @@ fixtures = [
         "dt": "Property Setter",
         "filters": [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
-                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",                 
+                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
+                            "Employee-custom_leave_increment_period-Label",         
                             
             ]]
         ]
@@ -142,8 +145,9 @@ doc_events = {
 }
 
 scheduler_events = {
-    "daily": [
-        "customized_forcommon.scheduler.leave_auto_extend.auto_extend_leave_allocations"
+    "Hourly":
+    [
+        "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
     ]
 }
 

@@ -1,0 +1,177 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-07-18 09:59:59.084316",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "date_range_based_on",
+  "leave_period",
+  "from_date",
+  "to_date",
+  "column_break_mptb",
+  "leave_type",
+  "max_days_of_leave_type",
+  "filter_by_increment",
+  "leaves_to_be_allocated",
+  "status",
+  "section_break_vluo",
+  "employees",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "options": "LAAI-.YYYY.-"
+  },
+  {
+   "fieldname": "column_break_mptb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_range_based_on",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Date Range Based On",
+   "options": "Leave Period\nCustom Range",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "mandatory_depends_on": "eval:doc.date_range_based_on == \"Custom Range\"",
+   "read_only_depends_on": "eval:doc.date_range_based_on == \"Leave Period\""
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "mandatory_depends_on": "eval:doc.date_range_based_on == \"Custom Range\"",
+   "read_only_depends_on": "eval:doc.date_range_based_on == \"Leave Period\""
+  },
+  {
+   "depends_on": "eval:doc.date_range_based_on == \"Leave Period\"",
+   "fieldname": "leave_period",
+   "fieldtype": "Link",
+   "label": "Leave Period",
+   "mandatory_depends_on": "eval:doc.date_range_based_on == \"Leave Period\"",
+   "options": "Leave Period"
+  },
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "options": "Leave Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_vluo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employees",
+   "fieldtype": "Table",
+   "label": "Employees",
+   "options": "Leave Auto Increment Employees"
+  },
+  {
+   "fieldname": "max_days_of_leave_type",
+   "fieldtype": "Float",
+   "label": "Max Days of Leave Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "filter_by_increment",
+   "fieldtype": "Select",
+   "label": "Filter By Increment",
+   "options": "\nAll Allocated\nIncrement This Year\nNot Increment This Year\nNot Allocated Before",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nAllocated"
+  },
+  {
+   "depends_on": "eval:doc.filter_by_increment == \"Not Allocated Before\"",
+   "fieldname": "leaves_to_be_allocated",
+   "fieldtype": "Float",
+   "label": "Leaves To be Allocated",
+   "mandatory_depends_on": "eval:doc.filter_by_increment == \"Not Allocated Before\""
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Leave Allocation Auto Increment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-07-22 10:05:31.694026",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Leave Allocation Auto Increment",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

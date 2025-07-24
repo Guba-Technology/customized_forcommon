@@ -11,7 +11,6 @@ class CustomEmployee(Employee):
 
     def set_ctc_from_grade_and_promotion(self):
         """Set CTC from Employee Grade and Promotion if available."""
-
         # If suppression flag is set, skip showing messages
         suppress_msg = frappe.flags.suppress_ctc_message if hasattr(frappe.flags, "suppress_ctc_message") else False
 
@@ -36,22 +35,40 @@ class CustomEmployee(Employee):
             grade = frappe.get_doc("Employee Grade", self.grade)
             default_salary = grade.custom_default_salary
 
+        step = None
+        step_salary = None
+        if self.custom_step:
+            step = frappe.get_doc("Employee Step", self.custom_step)
+            step_salary = step.salary
+
         # CTC assignment logic
-        if grade and not promotion:
+        if promotion:
+            self.ctc = promotion_salary
+            if not suppress_msg:
+                frappe.msgprint(f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.", alert=True)
+        elif step and grade:
+            if step_salary < default_salary:
+                self.ctc = default_salary
+                if not suppress_msg:
+                    frappe.msgprint(f"CTC set to {default_salary} from grade: {self.grade}.", alert=True)
+            else:
+                self.ctc = step_salary
+                if not suppress_msg:
+                    frappe.msgprint(f"CTC set to {step_salary} from step: {self.custom_step}.", alert=True)
+
+        elif not grade and step:
+            self.ctc = step_salary
+            if not suppress_msg:
+                    frappe.msgprint(f"CTC set to {step_salary} from step: {self.custom_step}.", alert=True)
+        elif not step and grade:
             self.ctc = default_salary
             if not suppress_msg:
-                frappe.msgprint(f"CTC set to {default_salary} from Employee Grade: {self.grade}.", alert=True)
-        elif not grade and promotion:
-            self.ctc = promotion_salary
+                    frappe.msgprint(f"CTC set to {default_salary} from grade: {self.grade}.", alert=True)
+        else:
+            self.ctc = 0
             if not suppress_msg:
-                frappe.msgprint(f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.", alert=True)
-        elif grade and promotion:
-            self.ctc = promotion_salary
-            if not suppress_msg:
-                frappe.msgprint(f"CTC set to {promotion_salary} from latest promotion: {promotion.name}.", alert=True)
-        elif not grade and not promotion:
-            if not suppress_msg:
-                frappe.msgprint("No Employee Grade or Promotion found to set CTC.", alert=True)
+                frappe.msgprint("No Employee Grade or Step or Promotion found to set CTC.", alert=True)
+
 
     def validate_18_years_old(self):
         """Validate if the employee is at least 18 years old."""
