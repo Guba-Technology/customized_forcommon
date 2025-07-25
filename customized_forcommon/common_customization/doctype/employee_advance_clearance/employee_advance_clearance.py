@@ -9,17 +9,11 @@ class EmployeeAdvanceClearance(Document):
 	def validate(self):
 		# Calculate unpaid amount
 		if self.advance_amount and self.returned_amount is not None:
-			self.unpaid_amount = self.advance_amount - self.returned_amount
+			self.unreturned_amount = self.advance_amount - self.returned_amount
 		else:
-			self.unpaid_amount = self.advance_amount  # fallback if returned_amount not set
+			self.unreturned_amount = self.advance_amount  # fallback if returned_amount not set
 
-		# Check if unpaid amount matches invoiced amount
-		if self.unpaid_amount != self.invoiced_amount:
-			difference = self.unpaid_amount - self.invoiced_amount
-			frappe.msgprint(
-				msg=f"There is a mismatch of {difference} between unpaid amount and invoiced amount.",
-				indicator="orange"
-			)
+	
 
 
 	def on_submit(self):
@@ -30,19 +24,32 @@ class EmployeeAdvanceClearance(Document):
 		pass
 
 	def create_journal_entry(self):
+			# Check if unpaid amount matches invoiced amount
+		if self.unreturned_amount != self.invoiced_amount:
+			difference = self.unreturned_amount - self.invoiced_amount
+			frappe.msgprint(
+				msg="There is a mismatch of {:,.2f} between unpaid amount and invoiced amount.".format(difference),
+				indicator="orange"
+			)
+
+
 		# 1. create a new Journal Entry with type "Journal Entry"
 		journal_entry = frappe.new_doc("Journal Entry")
 		journal_entry.voucher_type = "Journal Entry"
 		journal_entry.company = self.company
 		journal_entry.posting_date = today()
 
-		if self.unpaid_amount and self.invoiced_amount:
-			difference = self.unpaid_amount - self.invoiced_amount
-			if difference > 0:
+		# Initialize amount and difference safely
+		difference = 0
+		amount = 0
+
+		if self.unreturned_amount and self.invoiced_amount:
+			difference = self.unreturned_amount - self.invoiced_amount
+			if difference >= 0:
 				amount = self.invoiced_amount
-			elif difference == 0:
-				amount = self.advance_amount
-		
+			else:
+				frappe.throw("Invoiced amount cannot exceed unreturned advance amount.")
+
 		# 2. Append Purchase Invoice Detail in Accounting Entries
 		journal_entry.append("accounts", {
 			"account": self.payable_account,
@@ -71,7 +78,6 @@ class EmployeeAdvanceClearance(Document):
 		frappe.db.commit()
 		link = "".join([f'<a href="/app/journal-entry/{journal_entry.name}" style="text-decoration: underline" target=_blank >{journal_entry.name}</a>'])
 		frappe.msgprint(f"Journal Entry {link} is successfully created")
-
 
 	def cancel_journal_entry(self):
 		if not self.created_journal_entry:
