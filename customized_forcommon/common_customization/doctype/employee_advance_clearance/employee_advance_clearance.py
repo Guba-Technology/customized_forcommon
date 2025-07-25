@@ -15,8 +15,8 @@ class EmployeeAdvanceClearance(Document):
 		
 	def on_submit(self):
 		self.create_journal_entry()
-	def before_cancel(self):
-		pass
+	def on_cancel(self):
+		self.cancel_journal_entry()
 	def on_trash(self):
 		pass
 
@@ -62,5 +62,22 @@ class EmployeeAdvanceClearance(Document):
 		frappe.db.commit()
 		link = "".join([f'<a href="/app/journal-entry/{journal_entry.name}" style="text-decoration: underline" target=_blank >{journal_entry.name}</a>'])
 		frappe.msgprint(f"Journal Entry {link} is successfully created")
+
+
+	def cancel_journal_entry(self):
+		if not self.created_journal_entry:
+			frappe.msgprint("No linked Journal Entry to cancel.")
+			return
+
+		try:
+			journal_entry = frappe.get_doc("Journal Entry", self.created_journal_entry)
+			if journal_entry.docstatus == 1:
+				journal_entry.cancel()
+
+				frappe.msgprint(f"Linked Journal Entry {journal_entry.name} has been cancelled.")
+			else:
+				frappe.msgprint(f"Journal Entry {journal_entry.name} is already cancelled or in draft.")
+		except frappe.DoesNotExistError:
+			frappe.msgprint(f"Journal Entry {self.created_journal_entry} not found.")
 
 	
