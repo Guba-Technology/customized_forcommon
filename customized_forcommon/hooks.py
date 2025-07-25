@@ -171,7 +171,9 @@ override_doctype_class = {
 
 app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
+    "/assets/customized_forcommon/js/purchase_invoice.js"
     "/assets/customized_forcommon/js/whitelabel.js"
+
 ]
 
 # js files to be included in the doctype views

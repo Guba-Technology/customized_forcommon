@@ -74,6 +74,10 @@ class EmployeeAdvanceClearance(Document):
 		journal_entry.insert()
 		self.db_set("created_journal_entry", journal_entry.name)
 		self.db_set("difference_of_invoice_and_advance_amount", difference)
+		if self.unreturned_amount == 0:
+			self.db_set("status", "Cleared")
+		elif self.unreturned_amount > 0:
+			self.db_set("status", "Partly Cleared")
 		journal_entry.submit()
 		frappe.db.commit()
 		link = "".join([f'<a href="/app/journal-entry/{journal_entry.name}" style="text-decoration: underline" target=_blank >{journal_entry.name}</a>'])
@@ -88,6 +92,7 @@ class EmployeeAdvanceClearance(Document):
 			journal_entry = frappe.get_doc("Journal Entry", self.created_journal_entry)
 			if journal_entry.docstatus == 1:
 				journal_entry.cancel()
+				self.db_set("status", "Cancelled")
 
 				frappe.msgprint(f"Linked Journal Entry {journal_entry.name} has been cancelled.")
 			else:

@@ -30,6 +30,12 @@ def get_item_for_bom(material_request):
         }
     return None
 
+@frappe.whitelist()
+def purchase_invoice_id(purchase_invoice):
+    doc = frappe.get_doc("Purchase Invoice", purchase_invoice)
+    return {"purchase_invoice_id": doc.name}
+    
+
 # This function retrieves the quantity of a specific item in a given reference document (Purchase Receipt or Purchase Invoice).
 @frappe.whitelist()
 def get_reference_item_qty(reference_type, reference_name, item_code):
