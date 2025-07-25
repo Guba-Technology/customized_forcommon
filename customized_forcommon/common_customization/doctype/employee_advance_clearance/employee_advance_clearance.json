@@ -140,7 +140,8 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Draft\nCleared\nCancelled"
+   "options": "Draft\nCleared\nCancelled",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_lfaj",
@@ -218,7 +219,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-25 13:43:49.203544",
+ "modified": "2025-07-25 13:46:20.153612",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Employee Advance Clearance",
