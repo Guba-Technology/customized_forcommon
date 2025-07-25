@@ -101,17 +101,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Purchase Invoice",
-  "enabled": 1,
-  "modified": "2025-06-27 09:24:48.768269",
-  "module": "Common Customization",
-  "name": "get_unallocated_employee_advances",
-  "script": "frappe.ui.form.on('Purchase Invoice', {\r\n  \r\n    custom_get_employee_advances: function(frm) {\r\n        if (!frm.doc.custom_employee) {\r\n            frappe.msgprint(\"Please select an Employee first.\");\r\n            return;\r\n        }\r\n\r\n        frappe.call({\r\n            method: \"customized_forcommon.api.get_employee_advances\",\r\n            args: {\r\n                employee: frm.doc.custom_employee\r\n            },\r\n            callback: function(r) {\r\n                if (r.message) {\r\n                    // Append employee advances without clearing existing advances\r\n                    r.message.forEach(function(adv) {\r\n                        // Prevent duplicates\r\n                        let exists = frm.doc.custom_employee_advance_details.some(function(d) {\r\n                            return d.reference_type === adv.reference_type && d.reference_name === adv.reference_name;\r\n                        });\r\n                        if (!exists) {\r\n                            let row = frm.add_child(\"custom_employee_advance_details\");\r\n                            row.reference_type = adv.reference_type;\r\n                            row.reference_name = adv.reference_name;\r\n                            row.remarks = adv.remarks;\r\n                            row.advance_amount = adv.advance_amount;\r\n                            row.allocated_amount = adv.allocated_amount || 0;\r\n                            row.posting_date = adv.posting_date;\r\n                        }\r\n                    });\r\n                    frm.refresh_field(\"custom_employee_advance_details\");\r\n\r\n                }\r\n            }\r\n        });\r\n    },\r\n     on_submit: function (frm) {\r\n        frappe.call({\r\n            method: 'customized_forcommon.api.create_gl_entries_from_invoice',\r\n            args: {\r\n                invoice_name: frm.doc.name\r\n            },\r\n            callback: function (r) {\r\n                if (r.message === \"success\") {\r\n                    frappe.msgprint(__('GL Entries created successfully and status updated to Paid.'));\r\n                    frm.reload_doc();\r\n                } else {\r\n                    frappe.msgprint(__('Error creating GL Entries'));\r\n                }\r\n            }\r\n        });\r\n    }\r\n});\r\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Leave Application",
   "enabled": 1,
   "modified": "2025-07-02 15:19:56.821320",
