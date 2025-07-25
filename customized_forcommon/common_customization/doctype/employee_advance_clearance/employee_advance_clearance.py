@@ -5,14 +5,23 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import today
 
-
 class EmployeeAdvanceClearance(Document):
 	def validate(self):
-		if self.advance_amount != self.invoiced_amount:
-			difference = self.advance_amount - self.invoiced_amount
-			frappe.msgprint(f"There is a remaining amount of {difference} in the employee advance")
+		# Calculate unpaid amount
+		if self.advance_amount and self.returned_amount is not None:
+			self.unpaid_amount = self.advance_amount - self.returned_amount
+		else:
+			self.unpaid_amount = self.advance_amount  # fallback if returned_amount not set
 
-		
+		# Check if unpaid amount matches invoiced amount
+		if self.unpaid_amount != self.invoiced_amount:
+			difference = self.unpaid_amount - self.invoiced_amount
+			frappe.msgprint(
+				msg=f"There is a mismatch of {difference} between unpaid amount and invoiced amount.",
+				indicator="orange"
+			)
+
+
 	def on_submit(self):
 		self.create_journal_entry()
 	def on_cancel(self):
@@ -27,12 +36,12 @@ class EmployeeAdvanceClearance(Document):
 		journal_entry.company = self.company
 		journal_entry.posting_date = today()
 
-		if self.advance_amount and self.invoiced_amount:
-			difference = self.advance_amount - self.invoiced_amount
+		if self.unpaid_amount and self.invoiced_amount:
+			difference = self.unpaid_amount - self.invoiced_amount
 			if difference > 0:
-				advance_amount = self.invoiced_amount
+				amount = self.invoiced_amount
 			elif difference == 0:
-				advance_amount = self.advance_amount
+				amount = self.advance_amount
 		
 		# 2. Append Purchase Invoice Detail in Accounting Entries
 		journal_entry.append("accounts", {
@@ -49,7 +58,7 @@ class EmployeeAdvanceClearance(Document):
 			"account": self.advance_account,
 			"party_type": "Employee",
 			"party": self.employee,
-			"credit_in_account_currency": advance_amount,
+			"credit_in_account_currency": amount,
 			"debit_in_account_currency": 0,
 			"reference_type": "Employee Advance",
 			"reference_name": self.employee_advance
