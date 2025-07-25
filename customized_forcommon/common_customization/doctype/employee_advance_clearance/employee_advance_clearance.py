@@ -74,9 +74,9 @@ class EmployeeAdvanceClearance(Document):
 		journal_entry.insert()
 		self.db_set("created_journal_entry", journal_entry.name)
 		self.db_set("difference_of_invoice_and_advance_amount", difference)
-		if difference == 0:
+		if self.unreturned_amount == 0:
 			self.db_set("status", "Cleared")
-		elif difference > 0:
+		elif self.unreturned_amount > 0:
 			self.db_set("status", "Partly Cleared")
 		journal_entry.submit()
 		frappe.db.commit()
