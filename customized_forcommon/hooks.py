@@ -154,7 +154,6 @@ override_doctype_class = {
     "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
     "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
     "User": "customized_forcommon.overrides.user.CustomUser",
-    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
     "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
     "Gender": "customized_forcommon.overrides.gender.CustomGender",
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
