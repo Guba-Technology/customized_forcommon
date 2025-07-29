@@ -14,7 +14,7 @@ def execute():
                 fieldname="status",
                 label="Status",
                 fieldtype="Select",
-                options="Pending\nApprove\nCancelled",
+                options="Pending\nApproved\nCancelled",
                 insert_after="appraisal_cycle",
                 reqd=0
             )
