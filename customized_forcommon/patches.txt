@@ -10,4 +10,4 @@ customized_forcommon.patches.v1.allow_import_for_stockreconcilation
 customized_forcommon.patches.v1.rename_erpnext_user_id_label
 customized_forcommon.patches.v1.navbar_patch
 # customized_forcommon.patches.v1.add_routing_fields_to_bom_creator
-customized_forcommon.patches.v2.add_status_in_appraisal
+customized_forcommon.patches.v1.add_status_in_appraisal
