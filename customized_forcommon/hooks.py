@@ -26,12 +26,12 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting", "HR", "Buying", "Selling", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
-                "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
-                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
-                "Expense Claims", "Shift & Attendance", "Performance", "Users"
-                "Accounting", "Payables"
+                "Employee Lifecycle", "Recruitment", "Leaves",
+                "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
+                "Expense Claims", "Shift & Attendance", "Performance", "Users",
+                  "Payables"
                             
                             ]],
         ],
