@@ -4,13 +4,19 @@
 frappe.query_reports["pension report"] = {
 	"filters": [
 		{
+			"fieldname": "name",
+			"label": "Employee",
+			"fieldtype": "Link",
+			"options": "Employee",
+		},
+		{
 			"fieldname": "custom_employee_tin",
 			"label": "Employee TIN",
 			"fieldtype": "Data",
 			
 		},
 		{
-			"fieldname": "full_name",
+			"fieldname": "employee_name",
 			"label": "Full Name",
 			"fieldtype": "Data",
 		},
@@ -20,19 +26,25 @@ frappe.query_reports["pension report"] = {
 			"fieldtype": "Data",
 		},
 		{
-			"field type":"start_date",
+			"fieldname":"date_of_joining",
 			"label": "Start Date",
 			"fieldtype": "Date",
 		},
 		{
-			"field type":"end_date",
+			"fieldname":"relieving_date",
 			"label": "End Date",
 			"fieldtype": "Date",
+		}
+		,
+		{
+			"fieldname":"is_range",
+			"label": "Use Date Range",
+			"fieldtype": "Check"
 		},
 		{
-			"fieldname": "basic_salary",
+			"fieldname": "ctc",
 			"label": "Basic Salary",
-			"fieldtype": "float",
+			"fieldtype": "Data",
 			
 		}
 	]
