@@ -172,6 +172,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
+    "/assets/customized_forcommon/js/list_sidebar_override.js"
 
 ]
 
