@@ -1,5 +1,8 @@
+from erpnext.accounts.general_ledger import make_gl_entries
+from frappe.utils.nestedset import get_descendants_of
 import frappe
 from frappe import _
+from frappe.utils import today
 
 # updating the status of the purchase invoice 
 @frappe.whitelist()
@@ -26,6 +29,12 @@ def get_item_for_bom(material_request):
             "message": message
         }
     return None
+
+@frappe.whitelist()
+def purchase_invoice_id(purchase_invoice):
+    doc = frappe.get_doc("Purchase Invoice", purchase_invoice)
+    return {"purchase_invoice_id": doc.name}
+    
 
 # This function retrieves the quantity of a specific item in a given reference document (Purchase Receipt or Purchase Invoice).
 @frappe.whitelist()
@@ -59,4 +68,66 @@ def get_reference_item_qty(reference_type, reference_name, item_code):
         "qty"
     )
     return qty or 0
+
+
+# This function retrieves all users, including disabled and unsaved ones, for the User Company Assignment form.
+@frappe.whitelist()
+def get_available_users_for_assignment(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql("""
+        SELECT 
+            u.name, 
+            CONCAT(u.first_name, ' ', IFNULL(u.last_name, ''), IF(u.enabled = 0, ' (Disabled)', '')) AS full_name
+        FROM `tabUser` u
+        WHERE (
+            u.name = 'Administrator' OR u.name NOT IN (
+                SELECT user FROM `tabUser Company Assignment`
+            )
+        )
+        AND (u.name LIKE %(txt)s 
+            OR u.first_name LIKE %(txt)s 
+            OR u.last_name LIKE %(txt)s)
+        ORDER BY u.creation DESC
+        LIMIT %(start)s, %(page_len)s
+    """, {
+        "txt": f"%{txt}%",
+        "start": start,
+        "page_len": page_len
+    })
+
+# This function retrieves the count of employees and job openings for a given designation, company, and optional department.
+@frappe.whitelist()
+def get_designation_counts(designation, company, department=None):
+    if not designation:
+        return {"employee_count": 0, "job_openings": 0}
+
+    company_set = get_descendants_of("Company", company)
+    company_set.append(company)
+
+    employee_filters = {
+        "designation": designation,
+        "status": "Active",
+        "company": ("in", company_set),
+    }
+
+    if department:
+        employee_filters["department"] = department
+
+    employee_count = frappe.db.count("Employee", employee_filters)
+
+    job_filters = {
+        "designation": designation,
+        "status": "Open",
+        "company": ("in", company_set),
+    }
+
+    if department:
+        job_filters["department"] = department
+
+    job_openings = frappe.db.count("Job Opening", job_filters)
+
+    return {
+        "employee_count": employee_count,
+        "job_openings": job_openings
+    }
+
 

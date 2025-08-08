@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-06-23 09:11:03.379925",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "promotion_date",
+  "column_break_rvxq",
+  "status",
+  "filters_section",
+  "current_grade",
+  "column_break_sobr",
+  "current_step",
+  "section_break_ntsx",
+  "promotion_by",
+  "column_break_pdom",
+  "new_grade",
+  "new_step",
+  "section_break_gypl",
+  "employees",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "no_copy": 1,
+   "options": "BULK EMP PRO-.YYYY.-",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_rvxq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "promotion_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Promotion Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Current Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "current_step",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Current Step",
+   "options": "Employee Step"
+  },
+  {
+   "fieldname": "section_break_gypl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employees",
+   "fieldtype": "Table",
+   "label": "Employees",
+   "options": "Bulk Promotion Employee"
+  },
+  {
+   "fieldname": "filters_section",
+   "fieldtype": "Section Break",
+   "label": "Filters"
+  },
+  {
+   "fieldname": "column_break_sobr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "promotion_by",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Promotion By",
+   "options": "\nGrade\nStep",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ntsx",
+   "fieldtype": "Section Break",
+   "label": "Promotion Details"
+  },
+  {
+   "depends_on": "eval:doc.promotion_by == \"Grade\";",
+   "fieldname": "new_grade",
+   "fieldtype": "Link",
+   "label": "New Grade",
+   "mandatory_depends_on": "eval:doc.promotion_by == \"Grade\";",
+   "options": "Employee Grade"
+  },
+  {
+   "depends_on": "eval:doc.promotion_by == \"Step\";",
+   "fieldname": "new_step",
+   "fieldtype": "Link",
+   "label": "New Step",
+   "mandatory_depends_on": "eval:doc.promotion_by == \"Step\";",
+   "options": "Employee Step"
+  },
+  {
+   "fieldname": "column_break_pdom",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nApproved\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bulk Employee Promotion",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-07-21 14:22:53.478468",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Bulk Employee Promotion",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

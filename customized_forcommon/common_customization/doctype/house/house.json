@@ -1,0 +1,234 @@
+{
+ "actions": [],
+ "autoname": "field:house_code",
+ "creation": "2025-06-24 14:29:02.047856",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "house_code",
+  "project",
+  "block",
+  "column_break_ehom",
+  "floor",
+  "house_code_id",
+  "bedrooms",
+  "additional_tab",
+  "section_break_cona",
+  "master_bedroom_m2",
+  "bedroom_2_m2",
+  "bedroom_3_m2",
+  "column_break_wzkk",
+  "maids_room_m2",
+  "living_room_m2",
+  "kitchen_m2",
+  "section_break_dcze",
+  "corridor_m2",
+  "store_m2",
+  "master_toilet_m2",
+  "column_break_izlt",
+  "common_toilet_m2",
+  "balcony_m2",
+  "wall_area_m2",
+  "total_area_with_wall",
+  "totals_and_vat_tab",
+  "section_break_zaim",
+  "total_area_with_common",
+  "selling_price_before_vat",
+  "column_break_biqy",
+  "vat_15",
+  "selling_price_with_vat",
+  "detail_description_tab",
+  "detail_description"
+ ],
+ "fields": [
+  {
+   "fieldname": "house_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "House Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project"
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Int",
+   "label": "Block"
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Int",
+   "label": "Floor"
+  },
+  {
+   "fieldname": "house_code_id",
+   "fieldtype": "Int",
+   "label": "House Code ID"
+  },
+  {
+   "fieldname": "bedrooms",
+   "fieldtype": "Int",
+   "label": "Number of Bed rooms"
+  },
+  {
+   "fieldname": "master_bedroom_m2",
+   "fieldtype": "Float",
+   "label": "Master Bed room (m\u00b2)"
+  },
+  {
+   "fieldname": "bedroom_2_m2",
+   "fieldtype": "Float",
+   "label": "Bedroom 2 (m\u00b2)"
+  },
+  {
+   "fieldname": "bedroom_3_m2",
+   "fieldtype": "Float",
+   "label": "Bedroom 3 (m\u00b2)"
+  },
+  {
+   "fieldname": "maids_room_m2",
+   "fieldtype": "Float",
+   "label": "Maids Room (m\u00b2)"
+  },
+  {
+   "fieldname": "living_room_m2",
+   "fieldtype": "Float",
+   "label": "Living Room (m\u00b2)"
+  },
+  {
+   "fieldname": "kitchen_m2",
+   "fieldtype": "Float",
+   "label": "Kitchen (m\u00b2)"
+  },
+  {
+   "fieldname": "store_m2",
+   "fieldtype": "Float",
+   "label": "Store (m\u00b2)"
+  },
+  {
+   "fieldname": "master_toilet_m2",
+   "fieldtype": "Float",
+   "label": "Master Toilet (m\u00b2)"
+  },
+  {
+   "fieldname": "common_toilet_m2",
+   "fieldtype": "Float",
+   "label": "Common Toilet (m\u00b2)"
+  },
+  {
+   "fieldname": "balcony_m2",
+   "fieldtype": "Float",
+   "label": "Balcony (m\u00b2)"
+  },
+  {
+   "fieldname": "wall_area_m2",
+   "fieldtype": "Float",
+   "label": "Wall Area (m\u00b2)"
+  },
+  {
+   "fieldname": "total_area_with_wall",
+   "fieldtype": "Float",
+   "label": "Total Area Including Wall (m\u00b2)"
+  },
+  {
+   "fieldname": "total_area_with_common",
+   "fieldtype": "Float",
+   "label": "Total Area incl. Common (m\u00b2)"
+  },
+  {
+   "fieldname": "selling_price_before_vat",
+   "fieldtype": "Currency",
+   "label": "Selling Price before VAT"
+  },
+  {
+   "fieldname": "vat_15",
+   "fieldtype": "Currency",
+   "label": "15% VAT"
+  },
+  {
+   "fieldname": "selling_price_with_vat",
+   "fieldtype": "Currency",
+   "label": "Selling Price with VAT"
+  },
+  {
+   "fieldname": "section_break_dcze",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_izlt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zaim",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_biqy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ehom",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cona",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_wzkk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "corridor_m2",
+   "fieldtype": "Float",
+   "label": "Corridor (m\u00b2)"
+  },
+  {
+   "fieldname": "additional_tab",
+   "fieldtype": "Tab Break",
+   "label": "Additionals"
+  },
+  {
+   "fieldname": "totals_and_vat_tab",
+   "fieldtype": "Tab Break",
+   "label": "Totals and VAT"
+  },
+  {
+   "fieldname": "detail_description_tab",
+   "fieldtype": "Tab Break",
+   "label": "Detail Description"
+  },
+  {
+   "fieldname": "detail_description",
+   "fieldtype": "Text Editor",
+   "label": "Detail Description"
+  }
+ ],
+ "links": [],
+ "modified": "2025-06-30 09:36:32.943284",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "House",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1
+}
