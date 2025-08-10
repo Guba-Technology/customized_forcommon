@@ -1,5 +1,9 @@
 import frappe
-
+from frappe.utils import flt
+from customized_forcommon.custom_report.my_utilities.get_company_info import GetCompanyInfo
+from customized_forcommon.custom_report.my_utilities.get_last_day import GetLastDay
+import datetime
+get_company_info = GetCompanyInfo()
 def get_salary_components(component_type):
     return frappe.get_all(
         "Salary Component",
@@ -18,24 +22,20 @@ def get_columns(components, deductibles):
     ]
 
     dynamic_columns = [{"label": comp.name, "fieldname": frappe.scrub(comp.name), "fieldtype": "Currency", "width": 120} for comp in components]
-
     summary_columns = [
         {"label": ded.name, "fieldname": frappe.scrub(ded.name), "fieldtype": "Currency", "width": 120} for ded in deductibles
     ] + [
         {"label": "Taxable Total", "fieldname": "total_taxable", "fieldtype": "Currency", "width": 130},
-        {"label":"Total non-taxable", "fieldname": "total_non_taxable", "fieldtype": "Currency", "width": 130},
-        {"label": "Tax Withheld", "fieldname": "tax_withheld", "fieldtype": "Currency", "width": 130},
+        {"label": "Total non-taxable", "fieldname": "total_non_taxable", "fieldtype": "Currency", "width": 130},
+        # {"label": "Tax Withheld", "fieldname": "tax_withheld", "fieldtype": "Currency", "width": 130},
         {"label": "Net Payable", "fieldname": "net_payable", "fieldtype": "Currency", "width": 130},
         {"label": "Gross Payable", "fieldname": "gross_payable", "fieldtype": "Currency", "width": 130},
-      
     ]
 
     return base_columns + dynamic_columns + summary_columns
 
 def process_salary_slip(slip, components, deductibles):
-    slip_doc = frappe.get_doc("Salary Slip", slip.name)
     employee = frappe.get_doc("Employee", slip.employee)
-    
     row = {
         "employee_name": slip.employee,
         "full_name": slip.employee_name,
@@ -43,60 +43,59 @@ def process_salary_slip(slip, components, deductibles):
         "pension_id": employee.get("custom_pid"),
         "start_date": employee.get("date_of_joining"),
         "end_date": employee.get("relieving_date"),
-        "net_payable": slip_doc.net_pay,
-        "gross_payable": slip_doc.gross_pay,
+        "net_payable": slip.net_pay,
+        "gross_payable": slip.gross_pay,
         "total_taxable": 0,
         "tax_withheld": 0,
         "total_non_taxable": 0
     }
-    
+
     for comp in components:
         row[frappe.scrub(comp.name)] = 0
-
     for ded in deductibles:
         row[frappe.scrub(ded.name)] = 0
 
     taxable, non_taxable = 0, 0
-    for earning in slip_doc.earnings:
+    for earning in slip.earnings:
         is_taxable = frappe.get_value("Salary Component", earning.salary_component, "is_tax_applicable")
         key = frappe.scrub(earning.salary_component)
-        row[key] = row.get(key, 0) + earning.amount
+        row[key] += flt(earning.amount)
         if is_taxable:
-            row["total_taxable"] += earning.amount
-            taxable += earning.amount
+            row["total_taxable"] += flt(earning.amount)
+            taxable += flt(earning.amount)
         else:
-            non_taxable += earning.amount
-            row["total_non_taxable"] += earning.amount
+            row["total_non_taxable"] += flt(earning.amount)
+            non_taxable += flt(earning.amount)
 
-    for deduction in slip_doc.deductions:
+    for deduction in slip.deductions:
         key = frappe.scrub(deduction.salary_component)
-        row[key] = row.get(key, 0) + deduction.amount
+        row[key] += flt(deduction.amount)
         if "tax" in deduction.salary_component.lower():
-            row["tax_withheld"] += deduction.amount
+            row["tax_withheld"] += flt(deduction.amount)
 
     return row, taxable, non_taxable
 
 def execute(filters=None):
-    filters = filters or {}
-    conditions = []
+    filters = build_icome_tax_filters(filters) or {}
     components = get_salary_components("Earning")
     deductibles = get_salary_components("Deduction")
     columns = get_columns(components, deductibles)
-    conditions.append(["Salary Slip", "docstatus", "=", 1])
-    if filters.get("employee"):
-        conditions.append(["Salary Slip", "employee", "=", filters.get("employee")])
-    slips = frappe.get_all("Salary Slip", filters=conditions, fields=["name", "employee", "employee_name", "start_date", "end_date", "net_pay", "gross_pay"])
-    data, taxable, non_taxable, net_pay, total_deduction = [], 0, 0,0,0
 
-    for slip in slips:
+    # slip_filters = {"docstatus": 1}
+    # if filters.get("employee"):
+    #     slip_filters["employee"] = filters["employee"]
+
+    slips = frappe.get_all("Salary Slip", filters=filters, fields=["name", "employee", "employee_name", "start_date", "end_date", "net_pay", "gross_pay"])
+    data, taxable, non_taxable, net_pay, total_deduction = [], 0, 0, 0, 0
+
+    for slip_meta in slips:
+        slip = frappe.get_doc("Salary Slip", slip_meta.name)
         row, slip_taxable, slip_non_taxable = process_salary_slip(slip, components, deductibles)
         data.append(row)
         taxable += slip_taxable
         non_taxable += slip_non_taxable
-        ss = frappe.get_doc("Salary Slip", slip.name)
-        net_pay += ss.net_pay
-        total_deduction += ss.total_deduction
-              
+        net_pay += flt(slip.net_pay)
+        total_deduction += flt(slip.total_deduction)
 
     report_summary = [
         {"label": "Taxable", "value": "{:,.2f}".format(taxable), "indicator": "Green"},
@@ -106,4 +105,22 @@ def execute(filters=None):
     ]
 
     return columns, data, None, None, report_summary
-
+def build_icome_tax_filters(filters):
+    f = {"docstatus": 1}
+    if filters.get("employee"):
+        f["employee"] = filters["employee"]
+    if filters.get("month") :
+        lsd = GetLastDay(filters["month"])
+        year = filters.get("year") or datetime.date.today().year
+        f["posting_date"] = ["between", [
+            f"{year}-{filters['month']}-01",
+            f"{year}-{filters['month']}-{lsd.get_last_day()}"
+        ]]
+    elif filters.get("year"):
+        month = filters.get("month") or datetime.date.today().month
+        lsd = GetLastDay(month)
+        f["posting_date"] = ["between", [
+            f"{filters['year']}-{month}-01",
+            f"{filters['year']}-{month}-{lsd.get_last_day()}"
+        ]]
+    return f

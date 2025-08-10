@@ -27,7 +27,14 @@ frappe.query_reports["Sales VAT Report"] = {
 		}
 		return options.join("\n");
 	})()
-}
+},
+			{
+				"fieldname":"vat_type",
+				"label": "VAT type",
+				"fieldtype": "Select",
+				"options":"\nVAT\nNon VAT\n7.5 percent"
+			}
 
 	]
 };
+
