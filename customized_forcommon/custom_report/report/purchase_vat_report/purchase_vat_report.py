@@ -147,8 +147,8 @@ class VATPurchaseReport:
             {"label": "Total Value", "fieldname": "total_value", "fieldtype": "Currency", "value": f"{safe_sum('total_value'):,.2f}"},
             {"label": "Total VAT", "fieldname": "total_vat", "fieldtype": "Currency", "value": f"{safe_sum('vat'):,.2f}"},
             {"label": "Total Value After VAT", "fieldname": "total_after_vat", "fieldtype": "Currency", "value": f"{safe_sum('value_after_vat'):,.2f}"},
-            {"label": "Vat Payable", "fieldname":"Total_vat_payable","fieldtype":"currency","value":f"{safe_sum("vat_payable"):,.2f}"},
-            {"label": "Vat Receivable", "fieldname":"Total_vat_receivable","fieldtype":"currency","value":f"{safe_sum("vat_receivable"):,.2f}"}
+            {"label": "Vat Payable", "fieldname":"Total_vat_payable","fieldtype":"currency","value":f"{safe_sum('vat_payable'):,.2f}"},
+            {"label": "Vat Receivable", "fieldname":"Total_vat_receivable","fieldtype":"currency","value":f"{safe_sum('vat_receivable'):,.2f}"}
         ]
 
 def execute(filters=None):
