@@ -38,13 +38,10 @@ fixtures = [
                             
                             ]],
         ],
-        "strict": False
-    },
-    {
-        "dt": "Workspace Link", 
-        "filters": [["parent", "in", ["Fixed Assets"]]
-                ]
-     },
+        "strict": False # do not check for existing records
+    }, 
+    
+
     {
         "dt": "Custom Field",
         "filters": [
