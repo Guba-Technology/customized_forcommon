@@ -1509,7 +1509,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 10:40:59.410898",
+  "modified": "2025-08-12 11:21:34.258977",
   "module": "Assets",
   "name": "Fixed Assets",
   "number_cards": [],
@@ -4321,11 +4321,11 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-07-24 12:53:40.238182",
+  "modified": "2025-08-12 11:21:26.409904",
   "module": "Accounts",
   "name": "Payables",
   "number_cards": [],
-  "parent_page": "Accounting",
+  "parent_page": "Accounting & Finance",
   "public": 1,
   "quick_lists": [],
   "restrict_to_domain": "",
