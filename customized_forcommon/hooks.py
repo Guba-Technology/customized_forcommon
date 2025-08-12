@@ -5,12 +5,11 @@ app_description = "customizations for common operations"
 app_email = "sewunet.abebaw@gubatech.com"
 app_license = "mit"
 
-# Apps
-# ------------------
+# Required Apps
+required_apps = ["erpnext", "hrms"]
 
-required_apps = ["erpnext","hrms"]
-
-# email_brand_image = "assets/erpnext/images/erpnext-logo.jpg"
+# Branding
+email_brand_image = "/assets/customized_forcommon/images/gift.png"
 default_mail_footer = """
 	<span>
 		Sent via
@@ -19,8 +18,12 @@ default_mail_footer = """
 		</a>
 	</span>
 """
+website_context = {
+	"favicon": "/assets/customized_forcommon/images/gift.png",
+	"splash_image": "/assets/customized_forcommon/images/gift.png",
+}
 
-
+# Fixtures
 fixtures = [
     {
         "dt": "Workspace",
@@ -38,6 +41,7 @@ fixtures = [
         "strict": False # do not check for existing records
     }, 
     
+
     {
         "dt": "Custom Field",
         "filters": [
@@ -54,12 +58,11 @@ fixtures = [
     },
     {
         "dt": "Server Script",
-        "filters":[
-            ["reference_doctype", "in", ["Employee", "Employee External Work History", "Purchase Invoice",
-                                         "Employee Lifecycle",
-                                         ]]    
+        "filters": [
+            ["reference_doctype", "in", [
+                "Employee", "Employee External Work History", "Purchase Invoice", "Employee Lifecycle",
+            ]]
         ]
-
     },
     {
         "dt": "Client Script",
@@ -74,21 +77,30 @@ fixtures = [
     {
         "dt": "Print Format", 
         "filters": [
-            ["name", "in", ["Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                            "Quotation Print Format",]]
+            ["dt", "in", [
+                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
+                "Sales Invoice", "Employee", "BOM", "Quality Inspection",
+                "Sales Order", "Material Request",
+            ]]
+        ]
+    },
+    {
+        "dt": "Print Format",
+        "filters": [
+            ["name", "in", [
+                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
+                "Quotation Print Format",
+            ]]
         ]
     },
     {
         "dt": "Workflow",
-        "filters": [["name", "in", ["Material Request workflow"]]]
-    },
-    {
-        "dt": "Workflow State"
-    },
-    {
-        "dt": "Workflow Action Master"
-    },
 
+        "filters": [["name", "in", ["Material Request workflow"]]]
+
+    },
+    {"dt": "Workflow State"},
+    {"dt": "Workflow Action Master"},
     {
         "dt": "Report",
         "filters": [
@@ -104,10 +116,7 @@ fixtures = [
                             
             ]]
         ]
-    
     }
- 
-    
 ]
 
 #  this will be applied after the app is migrated
@@ -148,9 +157,6 @@ scheduler_events = {
 
 }
 
-# patches = [
-#     "customized_forcommon.patches.v1.update_field_option_for_employee_status"
-# ]
 override_doctype_class = {
     "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
     "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
