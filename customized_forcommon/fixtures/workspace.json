@@ -1047,7 +1047,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 12:09:46.838284",
+  "modified": "2025-08-12 12:35:53.268122",
   "module": "Selling",
   "name": "Sales and Marketing",
   "number_cards": [],
@@ -1383,7 +1383,7 @@
     "type": "Card Break"
    },
    {
-    "dependencies": null,
+    "dependencies": "Asset",
     "description": null,
     "hidden": 0,
     "icon": null,
@@ -1392,7 +1392,7 @@
     "link_count": 0,
     "link_to": "Maintenance Request",
     "link_type": "DocType",
-    "onboard": 1,
+    "onboard": 0,
     "only_for": null,
     "parent": "Fixed Assets",
     "parentfield": "links",
@@ -1509,7 +1509,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 12:26:43.851909",
+  "modified": "2025-08-12 12:57:49.866278",
   "module": "Assets",
   "name": "Fixed Assets",
   "number_cards": [],
@@ -2279,7 +2279,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 12:09:47.687050",
+  "modified": "2025-08-12 12:35:53.971903",
   "module": "HR",
   "name": "Human Resource",
   "number_cards": [],
