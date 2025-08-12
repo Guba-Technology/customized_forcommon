@@ -29,7 +29,7 @@ fixtures = [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
-                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                   "Payables"
                             
