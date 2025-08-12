@@ -1392,7 +1392,7 @@
     "link_count": 0,
     "link_to": "Maintenance Request",
     "link_type": "DocType",
-    "onboard": 0,
+    "onboard": 1,
     "only_for": null,
     "parent": "Fixed Assets",
     "parentfield": "links",
@@ -1509,7 +1509,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 12:21:40.880845",
+  "modified": "2025-08-12 12:26:43.851909",
   "module": "Assets",
   "name": "Fixed Assets",
   "number_cards": [],
