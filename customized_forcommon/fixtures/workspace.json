@@ -1137,7 +1137,7 @@
     "parent": "Sales and Marketing",
     "parentfield": "shortcuts",
     "parenttype": "Workspace",
-    "report_ref_doctype": null,
+    "report_ref_doctype": "Sales Order",
     "restrict_to_domain": null,
     "stats_filter": "{ \"Status\": \"Open\" }",
     "type": "Report",
@@ -1173,7 +1173,7 @@
     "parenttype": "Workspace"
    }
   ],
-  "content": "[{\"id\":\"dvjrdTNpqZ\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Assets\",\"col\":12}},{\"id\":\"7koieAOTKO\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Asset Value Analytics\",\"col\":12}},{\"id\":\"tuLj_KthBn\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"6Ggp9C-Q3b\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"BFe-15SnRE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Asset\",\"col\":3}},{\"id\":\"Lb-k256Cuf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Asset Category\",\"col\":3}},{\"id\":\"A3tmnJsqj4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Fixed Asset Register\",\"col\":3}},{\"id\":\"pP_qxN6ukC\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"0BcvzndhV8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Maintenance Request\",\"col\":3}},{\"id\":\"9Js1Yiu9nr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Gll4yQSuTZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"xOSavevPXS\",\"type\":\"card\",\"data\":{\"card_name\":\"Assets\",\"col\":4}},{\"id\":\"vlr8-FLfTI\",\"type\":\"card\",\"data\":{\"card_name\":\"Maintenance\",\"col\":4}},{\"id\":\"ntJ1LIAR59\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+  "content": "[{\"id\":\"dvjrdTNpqZ\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Assets\",\"col\":12}},{\"id\":\"7koieAOTKO\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Asset Value Analytics\",\"col\":12}},{\"id\":\"tuLj_KthBn\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"6Ggp9C-Q3b\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"BFe-15SnRE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Asset\",\"col\":3}},{\"id\":\"Lb-k256Cuf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Asset Category\",\"col\":3}},{\"id\":\"A3tmnJsqj4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Fixed Asset Register\",\"col\":3}},{\"id\":\"pP_qxN6ukC\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"9Js1Yiu9nr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Gll4yQSuTZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"xOSavevPXS\",\"type\":\"card\",\"data\":{\"card_name\":\"Assets\",\"col\":4}},{\"id\":\"vlr8-FLfTI\",\"type\":\"card\",\"data\":{\"card_name\":\"Maintenance\",\"col\":4}},{\"id\":\"ntJ1LIAR59\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
@@ -1509,7 +1509,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 13:13:24.315067",
+  "modified": "2025-08-13 09:16:43.924082",
   "module": "Assets",
   "name": "Fixed Assets",
   "number_cards": [],
@@ -1534,23 +1534,6 @@
     "report_ref_doctype": null,
     "restrict_to_domain": null,
     "stats_filter": null,
-    "type": "DocType",
-    "url": null
-   },
-   {
-    "color": "Grey",
-    "doc_view": "List",
-    "format": null,
-    "icon": null,
-    "kanban_board": null,
-    "label": "Maintenance Request",
-    "link_to": "Maintenance Request",
-    "parent": "Fixed Assets",
-    "parentfield": "shortcuts",
-    "parenttype": "Workspace",
-    "report_ref_doctype": null,
-    "restrict_to_domain": null,
-    "stats_filter": "[]",
     "type": "DocType",
     "url": null
    },
