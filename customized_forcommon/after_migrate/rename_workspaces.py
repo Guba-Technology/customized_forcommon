@@ -15,11 +15,12 @@ def run():
         if not frappe.db.exists("Workspace", old_name):
             continue
 
-        # If the target workspace exists, skip the rename to preserve fixtures
         if frappe.db.exists("Workspace", new_name):
-            continue
-
-        frappe.rename_doc("Workspace", old_name, new_name, force=True)
-        frappe.db.set_value("Workspace", new_name, "title", new_name)
+            # New name already exists, remove the old one to avoid duplicates
+            frappe.delete_doc("Workspace", old_name, force=True)
+        else:
+            # New name doesn't exist, so rename old to new
+            frappe.rename_doc("Workspace", old_name, new_name, force=True)
+            frappe.db.set_value("Workspace", new_name, "title", new_name)
 
     frappe.db.commit()
