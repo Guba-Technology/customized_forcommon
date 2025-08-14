@@ -3,6 +3,7 @@ import frappe
 def run():
     workspace_renames = {
         "Selling": "Sales and Marketing",
+        "Accounting": "Accounting & Finance",
         "Assets": "Fixed Assets",
         "HR": "Human Resource",
         "Buying": "Procurement",
