@@ -30,6 +30,12 @@ def get_item_for_bom(material_request):
         }
     return None
 
+@frappe.whitelist()
+def purchase_invoice_id(purchase_invoice):
+    doc = frappe.get_doc("Purchase Invoice", purchase_invoice)
+    return {"purchase_invoice_id": doc.name}
+    
+
 # This function retrieves the quantity of a specific item in a given reference document (Purchase Receipt or Purchase Invoice).
 @frappe.whitelist()
 def get_reference_item_qty(reference_type, reference_name, item_code):
@@ -125,96 +131,3 @@ def get_designation_counts(designation, company, department=None):
     }
 
 
-# This function retrieves employee advances for a given employee, filtering by specific advance types.
-@frappe.whitelist()
-def get_employee_advances(employee):
-    if not employee:
-        return []
-
-    employee_advances = frappe.db.sql("""
-        SELECT
-            name as reference_name,
-            'Employee Advance' as reference_type,
-            posting_date,
-            (advance_amount - IFNULL(claimed_amount, 0) - IFNULL(return_amount, 0)) AS advance_amount,
-            purpose as remarks
-        FROM
-            `tabEmployee Advance`
-        WHERE
-            employee = %s
-            AND docstatus = 1
-            # AND (status = 'Paid' OR status = "UnPaid")
-            AND custom_advance_type IN ("For Purchase", "For Petty Cash")
-            AND (advance_amount - IFNULL(claimed_amount, 0) - IFNULL(return_amount, 0)) > 0
-        ORDER BY posting_date DESC
-    """, (employee,), as_dict=1) or []
-
-    return employee_advances
-
-# This function creates GL entries from a Purchase Invoice, linking it to employee advances.
-@frappe.whitelist()
-def create_gl_entries_from_invoice(invoice_name):
-    invoice = frappe.get_doc("Purchase Invoice", invoice_name)
-
-    if not invoice.custom_employee_advance_details:
-        frappe.throw("No employee advances linked to this invoice.")
-
-    company = invoice.company
-    supplier = invoice.supplier
-    company_doc = frappe.get_doc("Company", company)
-    payable_account = company_doc.default_payable_account
-
-    if not payable_account:
-        frappe.throw("Default Payable Account is not set in the Company master.")
-
-    gl_entries = []
-
-    for row in invoice.custom_employee_advance_details:
-        if not row.reference_name or not row.allocated_amount or row.allocated_amount <= 0:
-            continue
-
-        advance_doc = frappe.get_doc("Employee Advance", row.reference_name)
-        advance_account = advance_doc.advance_account
-        employee = advance_doc.employee
-
-        if not advance_account:
-            frappe.throw(f"Advance account not found in Employee Advance {row.reference_name}")
-
-        # First GL Entry - Debit Payable (Supplier)
-        gl_entries.append(frappe._dict({
-            "posting_date": today(),
-            "company": company,
-            "voucher_type": "Purchase Invoice",
-            "voucher_no": invoice.name,
-            "account": payable_account,
-            "party_type": "Supplier",
-            "party": supplier,
-            "debit": row.allocated_amount,
-            "credit": 0,
-            "against": advance_account,
-            "remarks": f"Paying Supplier {supplier} from Employee Advance {row.reference_name}"
-        }))
-
-        # Second GL Entry - Credit Employee Advance
-        gl_entries.append(frappe._dict({
-            "posting_date": today(),
-            "company": company,
-            "voucher_type": "Purchase Invoice",
-            "voucher_no": invoice.name,
-            "account": advance_account,
-            "party_type": "Employee",
-            "party": employee,
-            "debit": 0,
-            "credit": row.allocated_amount,
-            "against": payable_account,
-            "remarks": f"Clearing Employee Advance {row.reference_name} for {employee}"
-        }))
-
-    # Use ERPNext utility to create GL entries
-    if gl_entries:
-        make_gl_entries(gl_entries, cancel=False, update_outstanding="Yes")
-
-    # Update invoice status to Paid
-    invoice.db_set("status", "Paid")
-
-    return "success"

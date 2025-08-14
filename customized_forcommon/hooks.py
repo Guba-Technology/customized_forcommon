@@ -29,16 +29,18 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting", "HR", "Buying", "Selling", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
-                "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
-                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
-                "Expense Claims", "Shift & Attendance", "Performance", "Users"
-                "Accounting", "Payables"
-            ]],
+                "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Employee Lifecycle", "Recruitment", "Leaves",
+                "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
+                "Expense Claims", "Shift & Attendance", "Performance", "Users",
+                  "Payables"
 
+                            ]],
         ],
-        "strict": False
-    },
+        "strict": False # do not check for existing records
+    }, 
+    
+
     {
         "dt": "Custom Field",
         "filters": [
@@ -104,16 +106,17 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",         
-                            
+                            "Employee-custom_leave_increment_period-Label",
             ]]
         ]
     }
 ]
 
+
 # Hooks
+#  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute"
@@ -141,7 +144,7 @@ doc_events = {
     },
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
-    }
+    },
 }
 
 scheduler_events = {
@@ -155,7 +158,6 @@ override_doctype_class = {
     "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
     "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
     "User": "customized_forcommon.overrides.user.CustomUser",
-    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
     "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
     "Gender": "customized_forcommon.overrides.gender.CustomGender",
     "Payment Request": "customized_forcommon.overrides.payment_request.CustomPaymentRequest",
@@ -166,20 +168,24 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBOMCreator"
+    #"BOM Creator": "customized_forcommon.overrides.bom_creator",
 }
 
 #Include JS only for specific doctypes
 app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
-    "/assets/customized_forcommon/js/whitelabel.js"
+    "/assets/customized_forcommon/js/purchase_invoice.js",
+    "/assets/customized_forcommon/js/whitelabel.js",
+    "/assets/customized_forcommon/js/list_sidebar_override.js"
+
 ]
 
 # js files to be included in the doctype views
 doctype_js = {
     "Material Request": "public/js/material_request.js",
-    "BOM Creator": "public/js/bom_creator_extended.js",
+    #"BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
 
 }
 
