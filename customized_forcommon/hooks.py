@@ -146,7 +146,8 @@ doc_events = {
     },
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
-    }
+    },
+   
 }
 
 scheduler_events = {
@@ -171,7 +172,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator",    
+    "BOM Creator": "customized_forcommon.overrides.bom_creator", 
     
 }
 
@@ -187,6 +188,7 @@ app_include_js = [
 doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
