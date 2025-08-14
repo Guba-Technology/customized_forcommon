@@ -34,7 +34,15 @@ class BulkEmployeePromotion(Document):
         if self.status !=  "Approved":
             frappe.throw("You can't submit with no Approved status")
 
-
+    # def on_trash(self):
+    #     if self.status == "Approved" and self.docstatus == 1:
+    #         frappe.throw(_("Cannot delete a submitted Bulk Employee Promotion document."))
+            
+    # def before_cancel(self):
+    #     if self.status == "Approved":
+    #         frappe.throw(_("Cannot cancel a submitted Bulk Employee Promotion document."))
+        
+        
 @frappe.whitelist()
 def get_employees_by_grade_or_step(grade=None, step=None):
     filters = {"status": "Active"}
