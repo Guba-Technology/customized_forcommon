@@ -3845,7 +3845,7 @@
     "description": null,
     "hidden": 0,
     "icon": null,
-    "is_query_report": 0,
+    "is_query_report": 1,
     "label": "Sales VAT Report",
     "link_count": 0,
     "link_to": "Sales VAT Report",
@@ -3855,7 +3855,7 @@
     "parent": "Accounting & Finance",
     "parentfield": "links",
     "parenttype": "Workspace",
-    "report_ref_doctype": "Sales Invoice",
+    "report_ref_doctype": null,
     "type": "Link"
    },
    {
@@ -3863,7 +3863,7 @@
     "description": null,
     "hidden": 0,
     "icon": null,
-    "is_query_report": 0,
+    "is_query_report": 1,
     "label": "Purchase VAT Report",
     "link_count": 0,
     "link_to": "Purchase VAT Report",
@@ -3873,7 +3873,7 @@
     "parent": "Accounting & Finance",
     "parentfield": "links",
     "parenttype": "Workspace",
-    "report_ref_doctype": "Purchase Invoice",
+    "report_ref_doctype": null,
     "type": "Link"
    },
    {
@@ -3881,7 +3881,7 @@
     "description": null,
     "hidden": 0,
     "icon": null,
-    "is_query_report": 0,
+    "is_query_report": 1,
     "label": "VAT Declaration Report",
     "link_count": 0,
     "link_to": "VAT Declaration Report",
@@ -3891,7 +3891,7 @@
     "parent": "Accounting & Finance",
     "parentfield": "links",
     "parenttype": "Workspace",
-    "report_ref_doctype": "Sales Invoice",
+    "report_ref_doctype": null,
     "type": "Link"
    },
    {
@@ -3949,7 +3949,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-13 16:52:56.570219",
+  "modified": "2025-08-14 09:32:11.172111",
   "module": "Accounts",
   "name": "Accounting & Finance",
   "number_cards": [
