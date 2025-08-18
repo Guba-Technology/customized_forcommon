@@ -189,6 +189,7 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
+	"Payment Entry"; "public/js/payment_entry.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
