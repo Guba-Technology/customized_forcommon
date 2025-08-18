@@ -1,12 +1,10 @@
-frappe.ready(() => {
-    // Observe the body for changes
+$(document).ready(function () {
+    // Observe changes in the user dropdown
+    const targetNode = document.body;
     const observer = new MutationObserver(() => {
-        // Remove the Apps link by href
-        const appsLink = document.querySelector('a.dropdown-item[href="/apps"]');
-        if (appsLink) {
-            appsLink.remove();
-        }
+        // Remove Apps link
+        $('a.dropdown-item[href="/apps"]').remove();
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(targetNode, { childList: true, subtree: true });
 });
