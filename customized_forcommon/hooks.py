@@ -9,19 +9,7 @@ app_license = "mit"
 required_apps = ["erpnext", "hrms"]
 
 # Branding
-email_brand_image = "/assets/customized_forcommon/images/gift.png"
-default_mail_footer = """
-	<span>
-		Sent via
-		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
-			ERP
-		</a>
-	</span>
-"""
-website_context = {
-	"favicon": "/assets/customized_forcommon/images/gift.png",
-	"splash_image": "/assets/customized_forcommon/images/gift.png",
-}
+
 
 # Fixtures
 fixtures = [
