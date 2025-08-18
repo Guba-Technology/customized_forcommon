@@ -1,5 +1,17 @@
 frappe.ready(() => {
-    if (frappe.boot.navbar_settings && frappe.boot.navbar_settings.settings_dropdown) {
-        frappe.boot.navbar_settings.settings_dropdown = frappe.boot.navbar_settings.settings_dropdown.filter(item => item.route !== '/apps');
-    }
+    const originalToolbar = frappe.ui.toolbar.Toolbar;
+
+    frappe.ui.toolbar.Toolbar = class extends originalToolbar {
+        constructor() {
+            super();
+            // Remove Apps link after header is rendered
+            const dropdown = document.querySelector('#toolbar-user');
+            if (dropdown) {
+                const appsLink = dropdown.querySelector('a[href="/apps"]');
+                if (appsLink) {
+                    appsLink.remove();
+                }
+            }
+        }
+    };
 });
