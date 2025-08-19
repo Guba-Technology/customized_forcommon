@@ -173,6 +173,7 @@ app_include_js = [
 
 ]
 
+
 # js files to be included in the doctype views
 doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
