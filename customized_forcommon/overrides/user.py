@@ -11,6 +11,7 @@ class CustomUser(BaseUser):
                 f'<a href="/app/user-company-assignment/new?user={self.name}" style="text-decoration: underline" target=_blank >User Company Assignment</a>',
                 'to assign the user to a company.'
             ])
+            self.enabled = 0
             frappe.msgprint(
                 f"User is not assigned to any company. Login will remain disabled. <br> Add Here {link}",
                 indicator='orange'

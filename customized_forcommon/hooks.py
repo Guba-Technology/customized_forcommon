@@ -9,19 +9,7 @@ app_license = "mit"
 required_apps = ["erpnext", "hrms"]
 
 # Branding
-email_brand_image = "/assets/customized_forcommon/images/gift.png"
-default_mail_footer = """
-	<span>
-		Sent via
-		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
-			ERP
-		</a>
-	</span>
-"""
-website_context = {
-	"favicon": "/assets/customized_forcommon/images/gift.png",
-	"splash_image": "/assets/customized_forcommon/images/gift.png",
-}
+
 
 # Fixtures
 fixtures = [
@@ -32,14 +20,16 @@ fixtures = [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
-                "Manufacturing", "Stock", "Assets", "Sales and Marketing",
+                "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
-                  "Payables"
+                "Payables",  "Receivables", "Financial Reports"
                             
                             ]],
         ],
-        "strict": False
-    },
+        "strict": False # do not check for existing records
+    }, 
+    
+
     {
         "dt": "Custom Field",
         "filters": [
@@ -144,7 +134,8 @@ doc_events = {
     },
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
-    }
+    },
+   
 }
 
 scheduler_events = {
@@ -181,10 +172,13 @@ app_include_js = [
 
 ]
 
+
 # js files to be included in the doctype views
 doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
+    "Payment Entry": "public/js/payment_entry.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
