@@ -77,7 +77,7 @@ fixtures = [
     {
         "dt": "Workflow",
 
-        "filters": [["name", "in", ["Material Request workflow", "Stock Entry Material Transfer"]]]
+        "filters": [["name", "in", ["Material Request workflow"]]]
 
     },
     {"dt": "Workflow State"},
@@ -164,9 +164,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
-    "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/hide_add_button_in_stock_entry.js"
-
+    "/assets/customized_forcommon/js/list_sidebar_override.js"
 ]
 
 
