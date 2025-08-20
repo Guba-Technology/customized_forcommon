@@ -9,19 +9,7 @@ app_license = "mit"
 required_apps = ["erpnext", "hrms"]
 
 # Branding
-email_brand_image = "/assets/customized_forcommon/images/gift.png"
-default_mail_footer = """
-	<span>
-		Sent via
-		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
-			ERP
-		</a>
-	</span>
-"""
-website_context = {
-	"favicon": "/assets/customized_forcommon/images/gift.png",
-	"splash_image": "/assets/customized_forcommon/images/gift.png",
-}
+
 
 # Fixtures
 fixtures = [
@@ -33,8 +21,7 @@ fixtures = [
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
-                  "Payables"
-
+                "Payables",  "Receivables", "Financial Reports"
                             ]],
         ],
         "strict": False # do not check for existing records
@@ -168,7 +155,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    #"BOM Creator": "customized_forcommon.overrides.bom_creator",
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
 }
 
 #Include JS only for specific doctypes
@@ -180,13 +167,14 @@ app_include_js = [
 
 ]
 
+
 # js files to be included in the doctype views
 doctype_js = {
     "Material Request": "public/js/material_request.js",
-    #"BOM Creator": "public/js/bom_creator_extended.js",
+    "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-
+    "Payment Entry": "public/js/payment_entry.js",
 }
 
 # WARNING: Monkey patching HRMS method; revisit on upgrade
