@@ -74,14 +74,14 @@ fixtures = [
             ]]
         ]
     },
-    {
-        "dt": "Workflow",
+    # {
+    #     "dt": "Workflow",
 
-        "filters": [["name", "in", ["Material Request workflow", "Stock Entry Material Transfer"]]]
+    #     "filters": [["name", "in", ["Material Request workflow", "Stock Entry Material Transfer"]]]
 
-    },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
+    # },
+    # {"dt": "Workflow State"},
+    # {"dt": "Workflow Action Master"},
     {
         "dt": "Report",
         "filters": [
@@ -128,9 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-     "Stock Entry": {
-        "before_submit": "customized_forcommon.doc_events.stock_entry_transfer.custom_before_submit"
-    }
+
    
 }
 
@@ -175,7 +173,7 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
