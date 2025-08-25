@@ -128,9 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-     "Stock Entry": {
-        "before_submit": "customized_forcommon.doc_events.stock_entry_transfer.custom_before_submit"
-    }
+  
    
 }
 
