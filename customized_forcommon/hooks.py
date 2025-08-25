@@ -62,22 +62,15 @@ fixtures = [
                           ]]
         ]
     }, 
-    {
-        "dt": "Print Format", 
-        "filters": [
-            ["dt", "in", [
-                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                "Sales Invoice", "Employee", "BOM", "Quality Inspection",
-                "Sales Order", "Material Request",
-            ]]
-        ]
-    },
+    
     {
         "dt": "Print Format",
         "filters": [
             ["name", "in", [
-                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                "Quotation Print Format",
+                "Stock Entry Print Format",
+                "Purchase Order Print Format",
+                "Purchase Receipt Print Format",
+                "Quotation Print Format"
             ]]
         ]
     },
@@ -135,6 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+  
    
 }
 
@@ -169,7 +163,6 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js"
-
 ]
 
 
@@ -178,7 +171,7 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js",
+    "Payment Entry": "public/js/payment_entry.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
