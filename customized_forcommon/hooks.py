@@ -74,14 +74,14 @@ fixtures = [
             ]]
         ]
     },
-    # {
-    #     "dt": "Workflow",
+    {
+        "dt": "Workflow",
 
-    #     "filters": [["name", "in", ["Material Request workflow", "Stock Entry Material Transfer"]]]
+        "filters": [["name", "in", ["Stock Entry Material Transfer"]]]
 
-    # },
-    # {"dt": "Workflow State"},
-    # {"dt": "Workflow Action Master"},
+    },
+    {"dt": "Workflow State"},
+    {"dt": "Workflow Action Master"},
     {
         "dt": "Report",
         "filters": [
@@ -130,7 +130,7 @@ doc_events = {
     },
 
     "Stock Entry": {
-        "on_workflow_action": "customized_forcommon.doc_events.stock_entry_workflow_handler.stock_entry_workflow_handler"
+        "on_update": "customized_forcommon.doc_events.stock_entry_workflow_handler.check_workflow_state"
     }
 
    
@@ -158,7 +158,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator", 
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",    
     
 }
 
@@ -166,9 +166,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
-    "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/hide_add_button_in_stock_entry.js"
-
+    "/assets/customized_forcommon/js/list_sidebar_override.js"
 ]
 
 

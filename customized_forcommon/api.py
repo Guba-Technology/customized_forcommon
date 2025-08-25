@@ -130,12 +130,14 @@ def get_designation_counts(designation, company, department=None):
         "job_openings": job_openings
     }
 
+
 @frappe.whitelist()
-def send_to_transit(docname):
-    """Step 1: Deduct from Source → Add to Transit (unsubmitted Stock Entry)"""
-    doc = frappe.get_doc("Stock Entry", docname)
-    transit_warehouse = doc.custom_transit_warehouse
-    if not transit_warehouse:
+def send_to_transit(stock_entry):
+    """Step 1: Deduct from Source → Add to Transit (on workflow Draft → Pending Receipt)"""
+    doc = frappe.get_doc("Stock Entry", stock_entry)
+    transit_wh = doc.custom_transit_warehouse
+
+    if not transit_wh:
         frappe.throw(_("Please set the Transit Warehouse."))
 
     for item in doc.items:
@@ -143,7 +145,7 @@ def send_to_transit(docname):
             frappe.throw(_("Source warehouse missing for item {0}").format(item.item_code))
 
         # Deduct from Source
-        frappe.get_doc({
+        sle_out = frappe.get_doc({
             "doctype": "Stock Ledger Entry",
             "item_code": item.item_code,
             "warehouse": item.s_warehouse,
@@ -153,61 +155,71 @@ def send_to_transit(docname):
             "posting_date": doc.posting_date,
             "posting_time": doc.posting_time,
             "company": doc.company,
-            "stock_uom": item.uom
-        }).insert(ignore_permissions=True)
+            "stock_uom": item.uom,
+        })
+        sle_out.insert(ignore_permissions=True)
 
         # Add to Transit
-        frappe.get_doc({
+        sle_in = frappe.get_doc({
             "doctype": "Stock Ledger Entry",
             "item_code": item.item_code,
-            "warehouse": transit_warehouse,
+            "warehouse": transit_wh,
             "actual_qty": item.qty,
             "voucher_type": "Stock Entry",
             "voucher_no": doc.name,
             "posting_date": doc.posting_date,
             "posting_time": doc.posting_time,
             "company": doc.company,
-            "stock_uom": item.uom
-        }).insert(ignore_permissions=True)
+            "stock_uom": item.uom,
+        })
+        sle_in.insert(ignore_permissions=True)
 
-    # Update status
-    frappe.db.set_value("Stock Entry", docname, "custom_transfer_status", "Pending Receipt")
+    frappe.db.set_value("Stock Entry", stock_entry, "custom_transfer_status", "Pending Receipt")
     frappe.msgprint(_("Source stock moved to Transit warehouse."))
 
 
 @frappe.whitelist()
 def complete_transfer(stock_entry):
-    """Step 2: Deduct from Transit → Add to Target using a new Stock Entry"""
-    original_doc = frappe.get_doc("Stock Entry", stock_entry)
-    transit_warehouse = original_doc.custom_transit_warehouse
+    """Step 2: Deduct from Transit → Add to Target (on workflow Pending Receipt → Completed)"""
+    doc = frappe.get_doc("Stock Entry", stock_entry)
+    transit_wh = doc.custom_transit_warehouse
 
-    if not transit_warehouse:
+    if not transit_wh:
         frappe.throw(_("Please set the Transit Warehouse."))
 
-    # Create new Stock Entry for transit -> target
-    new_doc = frappe.get_doc({
-        "doctype": "Stock Entry",
-        "posting_date": original_doc.posting_date,
-        "posting_time": original_doc.posting_time,
-        "company": original_doc.company,
-        "stock_entry_type": "Material Transfer",
-        "custom_transfer_status": "Completed",
-        "items": []
-    })
+    for item in doc.items:
+        if not item.t_warehouse:
+            frappe.throw(_("Target warehouse missing for item {0}").format(item.item_code))
 
-    for item in original_doc.items:
-        new_doc.append("items", {
+        # Deduct from Transit
+        sle_out = frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
             "item_code": item.item_code,
-            "qty": item.qty,
-            "uom": item.uom,
-            "stock_uom": item.stock_uom,
-            "s_warehouse": transit_warehouse,
-            "t_warehouse": item.t_warehouse
+            "warehouse": transit_wh,
+            "actual_qty": -item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom,
         })
+        sle_out.insert(ignore_permissions=True)
 
-    new_doc.flags.ignore_permissions = True
-    new_doc.insert()
-    new_doc.submit()
+        # Add to Target
+        sle_in = frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
+            "item_code": item.item_code,
+            "warehouse": item.t_warehouse,
+            "actual_qty": item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom,
+        })
+        sle_in.insert(ignore_permissions=True)
 
     frappe.db.set_value("Stock Entry", stock_entry, "custom_transfer_status", "Completed")
     frappe.msgprint(_("Stock moved from Transit to Target. Transfer Completed."))
