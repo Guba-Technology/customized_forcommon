@@ -129,10 +129,6 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
 
-    "Stock Entry": {
-        "on_update": "customized_forcommon.doc_events.stock_entry_workflow_handler.check_workflow_state"
-    }
-
    
 }
 
@@ -158,7 +154,8 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",    
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
+   
     
 }
 
