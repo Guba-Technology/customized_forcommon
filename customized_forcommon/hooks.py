@@ -128,7 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-  
+
    
 }
 
