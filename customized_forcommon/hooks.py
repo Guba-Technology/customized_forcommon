@@ -129,6 +129,10 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
 
+    "Stock Entry": {
+        "on_workflow_action": "customized_forcommon.doc_events.stock_entry_workflow_handler.stock_entry_workflow_handler"
+    }
+
    
 }
 
