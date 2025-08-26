@@ -130,3 +130,101 @@ def get_designation_counts(designation, company, department=None):
         "job_openings": job_openings
     }
 
+
+
+@frappe.whitelist()
+def send_to_transit(stock_entry):
+    """
+    Step 1: Move stock from Source → Transit warehouse
+    Triggered when custom_transfer_status = Draft → Pending Receipt
+    """
+    doc = frappe.get_doc("Stock Entry", stock_entry)
+    transit_warehouse = doc.custom_transit_warehouse
+    if not transit_warehouse:
+        frappe.throw(_("Please set the Transit Warehouse."))
+
+    for item in doc.items:
+        if not item.s_warehouse:
+            frappe.throw(_("Source warehouse missing for item {0}").format(item.item_code))
+
+        # Deduct from source
+        frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
+            "item_code": item.item_code,
+            "warehouse": item.s_warehouse,
+            "actual_qty": -item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom
+        }).insert(ignore_permissions=True)
+
+        # Add to transit
+        frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
+            "item_code": item.item_code,
+            "warehouse": transit_warehouse,
+            "actual_qty": item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom
+        }).insert(ignore_permissions=True)
+    doc.submit()
+
+
+    # Update status
+    frappe.db.set_value("Stock Entry", stock_entry, "custom_transfer_status", "Pending Receipt")
+    frappe.msgprint(_("Source stock moved to Transit warehouse."))
+
+
+@frappe.whitelist()
+def complete_transfer(stock_entry):
+    """
+    Step 2: Move stock from Transit → Target warehouse
+    Triggered when custom_transfer_status = Pending Receipt → Completed
+    """
+    doc = frappe.get_doc("Stock Entry", stock_entry)
+    transit_warehouse = doc.custom_transit_warehouse
+    if not transit_warehouse:
+        frappe.throw(_("Please set the Transit Warehouse."))
+
+    for item in doc.items:
+        if not item.t_warehouse:
+            frappe.throw(_("Target warehouse missing for item {0}").format(item.item_code))
+
+        # Deduct from transit
+        frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
+            "item_code": item.item_code,
+            "warehouse": transit_warehouse,
+            "actual_qty": -item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom
+        }).insert(ignore_permissions=True)
+
+        # Add to target
+        frappe.get_doc({
+            "doctype": "Stock Ledger Entry",
+            "item_code": item.item_code,
+            "warehouse": item.t_warehouse,
+            "actual_qty": item.qty,
+            "voucher_type": "Stock Entry",
+            "voucher_no": doc.name,
+            "posting_date": doc.posting_date,
+            "posting_time": doc.posting_time,
+            "company": doc.company,
+            "stock_uom": item.uom
+        }).insert(ignore_permissions=True)
+
+    # Update status
+    frappe.db.set_value("Stock Entry", stock_entry, "custom_transfer_status", "Completed")
+    frappe.msgprint(_("Stock moved from Transit to Target. Transfer Completed."))

@@ -163,7 +163,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
-    "/assets/customized_forcommon/js/list_sidebar_override.js"
+    "/assets/customized_forcommon/js/list_sidebar_override.js",
+    "/assets/customized_forcommon/js/stock_material_transfer.js",
 ]
 
 
@@ -172,7 +173,7 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js",
+    "Payment Entry": "public/js/payment_entry.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
