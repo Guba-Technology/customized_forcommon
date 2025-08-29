@@ -77,7 +77,7 @@ fixtures = [
     {
         "dt": "Workflow",
 
-        "filters": [["name", "in", ["Stock Entry Material Transfer"]]]
+        "filters": [["name", "in", ["Stock Material Transfer"]]]
 
     },
     {"dt": "Workflow State"},
@@ -128,7 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-
+   
    
 }
 
@@ -155,6 +155,8 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry"
+
    
     
 }
@@ -164,7 +166,6 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/stock_material_transfer.js",
 ]
 
 
@@ -173,8 +174,14 @@ doctype_js = {
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Stock Entry": "public/js/stock_entry_override.js"
 }
+
+doctype_list_js = {
+    "Stock Entry": "public/js/stock_entry_listview.js"
+}
+
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
