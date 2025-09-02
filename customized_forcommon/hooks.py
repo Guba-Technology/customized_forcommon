@@ -56,7 +56,7 @@ fixtures = [
         "dt": "Client Script",
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "BOM", "Quality Inspection",
+                          "Sales Invoice", "Employee", "Quality Inspection",
                           "Sales Order", "Material Request", "Leave Application",
 
                           ]]
@@ -128,7 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-   
+
    
 }
 
@@ -190,6 +190,11 @@ import customized_forcommon.overrides.leave_balance as custom_module
 
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
+
+
+jinja = {
+    "methods": "customized_forcommon.utils.amharic_currency"
+}
 
 
 
