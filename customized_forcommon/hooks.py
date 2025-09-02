@@ -37,7 +37,7 @@ fixtures = [
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
                           "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
                           "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
+                          "Stock Entry","Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
                           "Training Event", "Leave Application",
