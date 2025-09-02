@@ -56,7 +56,7 @@ fixtures = [
         "dt": "Client Script",
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "BOM", "Quality Inspection",
+                          "Sales Invoice", "Employee", "Quality Inspection",
                           "Sales Order", "Material Request", "Leave Application",
 
                           ]]
