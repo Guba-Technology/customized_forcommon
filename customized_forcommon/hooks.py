@@ -56,28 +56,21 @@ fixtures = [
         "dt": "Client Script",
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "BOM", "Quality Inspection",
+                          "Sales Invoice", "Employee", "Quality Inspection",
                           "Sales Order", "Material Request", "Leave Application",
 
                           ]]
         ]
     }, 
-    {
-        "dt": "Print Format", 
-        "filters": [
-            ["dt", "in", [
-                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                "Sales Invoice", "Employee", "BOM", "Quality Inspection",
-                "Sales Order", "Material Request",
-            ]]
-        ]
-    },
+    
     {
         "dt": "Print Format",
         "filters": [
             ["name", "in", [
-                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                "Quotation Print Format",
+                "Stock Entry Print Format",
+                "Purchase Order Print Format",
+                "Purchase Receipt Print Format",
+                "Quotation Print Format"
             ]]
         ]
     },
@@ -135,6 +128,7 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+
    
 }
 
@@ -168,26 +162,35 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
-    "/assets/customized_forcommon/js/list_sidebar_override.js"
-
+    "/assets/customized_forcommon/js/list_sidebar_override.js",
+    "/assets/customized_forcommon/js/bom_creator_extended.js"
 ]
 
 
 # js files to be included in the doctype views
 doctype_js = {
-    "BOM Creator": "public/js/bom_creator_extended.js",
+    # "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js",
+    "Payment Entry": "public/js/payment_entry.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
 import hrms.hr.doctype.leave_application.leave_application as leave_application_module
 import customized_forcommon.overrides.leave_balance as custom_module
-
+from customized_forcommon.overrides.custom_add_advance_gl_for_reference import custom_add_advance_gl_for_reference
+from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
+from customized_forcommon.overrides import custom_gl_entry
+# Monkey patch the original PaymentEntry method
+PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
+
+
+jinja = {
+    "methods": "customized_forcommon.utils.amharic_currency"
+}
 
 
 

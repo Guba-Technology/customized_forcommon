@@ -337,7 +337,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-11 14:19:54.165959",
+  "modified": "2025-08-15 12:05:11.293192",
   "module": "Accounts",
   "name": "Receivables",
   "number_cards": [],
@@ -881,7 +881,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-11 14:19:54.060011",
+  "modified": "2025-08-15 12:05:11.535599",
   "module": "Accounts",
   "name": "Financial Reports",
   "number_cards": [],
@@ -4745,7 +4745,7 @@
     "link_count": 0,
     "link_to": "Sales VAT Report",
     "link_type": "Report",
-    "onboard": 0,
+    "onboard": 1,
     "only_for": null,
     "parent": "Accounting & Finance",
     "parentfield": "links",
@@ -4844,7 +4844,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-14 09:32:11.172111",
+  "modified": "2025-08-14 09:26:41.491987",
   "module": "Accounts",
   "name": "Accounting & Finance",
   "number_cards": [
