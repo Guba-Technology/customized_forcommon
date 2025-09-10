@@ -107,11 +107,17 @@ def execute(filters=None):
     return columns, data, None, None, report_summary
 def build_icome_tax_filters(filters):
     f = {"docstatus": 1}
+    fiscal_year = filters.get("year")
+    year_satrt, year_end = GetLastDay.get_fiscal_year(fiscal_year) if fiscal_year else GetLastDay.get_fiscal_year(None)
+    month = filters.get("month")
+    year = year_satrt.year
+    if month:
+            if int(month) < year_satrt.month:
+                year = year_end.year
     if filters.get("employee"):
         f["employee"] = filters["employee"]
     if filters.get("month") :
-        lsd = GetLastDay(filters["month"])
-        year = filters.get("year") or datetime.date.today().year
+        lsd = GetLastDay(month)
         f["posting_date"] = ["between", [
             f"{year}-{filters['month']}-01",
             f"{year}-{filters['month']}-{lsd.get_last_day()}"
@@ -120,7 +126,7 @@ def build_icome_tax_filters(filters):
         month = filters.get("month") or datetime.date.today().month
         lsd = GetLastDay(month)
         f["posting_date"] = ["between", [
-            f"{filters['year']}-{month}-01",
-            f"{filters['year']}-{month}-{lsd.get_last_day()}"
+            f"{year_satrt}",
+            f"{year_end}"
         ]]
     return f

@@ -12,15 +12,34 @@ frappe.query_reports["Withholding Tax Report"] = {
 {
 	"fieldname":"year",
 	"label": "Fiscal Year",
-	"fieldtype": "Select",
-	"options": (() => {
-		let options = [];
-		let currentYear = (new Date()).getFullYear();
-		for (let i = 0; i <= 20; i++) {
-			options.push((currentYear - i).toString());
-		}
-		return options.join("\n");
-	})()
-}
+	"fieldtype": "Link",
+	"options": "Fiscal Year",
+
+},
+{
+	"fieldname":"withholding_date",
+	"label": "Withholding Date",
+	"fieldtype": "Date",
+
+},
+
+
+{
+				"fieldname":"from_date",
+				"label": "From Date",
+				"fieldtype": "Date",
+			},
+			{
+				"fieldname":"to_date",
+				"label": "To Date",
+				"fieldtype": "Date",
+			}
+			,
+			{
+				"fieldname":"filter_type",
+				"label": "Filter Type",
+				"fieldtype": "Select",
+				"options": "\nSales Invoice\nPurchase Invoice"
+			}
     ]
 };
