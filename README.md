@@ -20,7 +20,8 @@ These tools are designed to simplify regulatory reporting and improve fiscal dat
 
 ## ⚙️ Setup Instructions
 
-Before applying patches, remove any existing custom fields from the following doctypes:
+Before applying patches, remove any existing custom fields from the following doctypes: under the custom report module
+
 
 - `Sales Invoice`
 - `Purchase Invoice`
