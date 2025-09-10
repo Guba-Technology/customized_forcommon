@@ -18,7 +18,8 @@ def execute():
         "custom_vat_details_col_2",
         "custom_type_of_sale",
         "custom_vat_receipt_number",
-        "custom_description"
+        "custom_description",
+        "custom_vat_date"
     }
 
     if target_fields.intersection(existing_fields):
@@ -94,9 +95,18 @@ def execute():
                 module="custom report"
             ),
             dict(
+                fieldname = "custom_vat_date",
+                label = "VAT Date",
+                fieldtype = "Date",
+                insert_after = "custom_mrc_number",
+                placeholder = "VAT Date",
+                module = "custom report"
+                
+            ),
+            dict(
                 fieldname="custom_vat_details_col_2",
                 fieldtype="Column Break",
-                insert_after="custom_vat_category",
+                insert_after="custom_vat_date",
                 module="custom report"
             ),
             dict(
@@ -126,3 +136,4 @@ def execute():
             )
         ]
     })
+    

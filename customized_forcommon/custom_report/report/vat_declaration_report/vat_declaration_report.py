@@ -15,7 +15,7 @@ class VATDeclarationReport:
         self.filters.setdefault("vat_payable_account", get_company_info.get_vat_payable_account())
         self.filters.setdefault("vat_receivable_account", get_company_info.get_vat_receivable_account())
         self.vat_receivable_account = self.filters["vat_receivable_account"]
-
+       
     def execute(self):
         if not self.filters["vat_payable_account"]:
             frappe.throw(
@@ -31,9 +31,9 @@ class VATDeclarationReport:
 
     def get_columns(self):
         return [
-            {"label": "Date", "fieldname": "date", "fieldtype": "Date"},
-            {"label": "Voucher Type", "fieldname": "voucher_type", "fieldtype": "Data"},
-            {"label": "Voucher Number", "fieldname": "voucher_number", "fieldtype": "Link", "options": "Sales Invoice"},
+            {"label": "VAT Date", "fieldname": "custom_vat_date", "fieldtype": "Date"},
+            {"label": "Voucher Type", "fieldname": "voucher_type", "fieldtype": "Data", "hidden": 1},
+            {"label": "Voucher Number", "fieldname": "voucher_number", "fieldtype": "Dynamic Link", "options": "voucher_type"},
             {"label": "VAT Category", "fieldname": "vat_category", "fieldtype": "Select", "options": "\ngoods\nservices"},
             {"label": "Type Of Sale", "fieldname": "type_of_sale", "fieldtype": "Select", "options": "Taxable Sale\nZero Rated Sale\nTax Exempted Sale"},
             {"label": "Sales VAT", "fieldname": "vat", "fieldtype": "Currency"},
@@ -50,7 +50,7 @@ class VATDeclarationReport:
         # Process Sales Invoices
         sales_invoices = frappe.get_all("Sales Invoice",
             filters=self.build_sales_tax_filters(),
-            fields=["name", "custom_vat_category", "custom_type_of_sale", "posting_date"]
+            fields=["name", "custom_vat_category", "custom_type_of_sale", "custom_vat_date", "custom_mrc_number", "custom_vat_receipt_number", "custom_description"]
         )
 
         for si in sales_invoices:
@@ -72,25 +72,26 @@ class VATDeclarationReport:
                 receivable = item.amount * vat_receivable / 100
                 payable = item.amount * vat_payable / 100
                 vat = receivable + payable
-
+                self.doctype = "Sales Invoice"
                 data.append({
-                    "date": si.posting_date,
+                    "custom_vat_date": si.custom_vat_date,
                     "voucher_type": "Sales Invoice",
                     "voucher_number": si.name,
+                    
                     "vat_category": si.custom_vat_category,
                     "type_of_sale": si.custom_type_of_sale,
                     "vat": vat,
                     "vat_receivable": receivable,
                     "vat_payable": payable,
-                    "purchase_vat": 0,
-                    "purchase_vat_receivable": 0,
-                    "purchase_vat_payable": 0,
+                    "purchase_vat": None,
+                    "purchase_vat_receivable": None,
+                    "purchase_vat_payable": None,
                 })
 
         # Process Purchase Invoices
         purchase_invoices = frappe.get_all("Purchase Invoice",
             filters=self.build_purchase_tax_filters(),
-            fields=["name", "custom_vat_category", "posting_date"]
+            fields=["name", "custom_vat_category", "posting_date", "custom_type_of_purchase", "custom_vat_date", "custom_mrc_number", "custom_vat_receipt_number", "custom_description"]
         )
 
         for pi in purchase_invoices:
@@ -112,16 +113,16 @@ class VATDeclarationReport:
                 receivable = item.amount * vat_receivable / 100
                 payable = item.amount * vat_payable / 100
                 vat = receivable + payable
-
+                self.doctype = "Purchase Invoice"
                 data.append({
-                    "date": pi.posting_date,
+                    "custom_vat_date": pi.custom_vat_date,
                     "voucher_type": "Purchase Invoice",
                     "voucher_number": pi.name,
                     "vat_category": pi.custom_vat_category,
                     "type_of_sale": "",
-                    "vat": 0,
-                    "vat_receivable": 0,
-                    "vat_payable": 0,
+                    "vat": None,
+                    "vat_receivable": None,
+                    "vat_payable": None,
                     "purchase_vat": vat,
                     "purchase_vat_receivable": receivable,
                     "purchase_vat_payable": payable,
@@ -131,14 +132,31 @@ class VATDeclarationReport:
 
     def build_sales_tax_filters(self):
         filters = {"docstatus": 1}
-        year = self.filters.get("year", datetime.date.today().year)
+        fiscal_year = self.filters.get("year")
+        year_satrt, year_end = GetLastDay.get_fiscal_year(fiscal_year) if fiscal_year else GetLastDay.get_fiscal_year(None)
         month = self.filters.get("month")
-        lsd = GetLastDay(month if month else datetime.date.today().month)
+        
+        vat_date = self.filters.get("vat_date")
+        from_date = self.filters.get("from_date")
+        to_date = self.filters.get("to_date")
+        year = year_satrt.year
 
-        filters["posting_date"] = ["between", [
-            f"{year}-{month if month else '01'}-01",
-            f"{year}-{month if month else '12'}-{lsd.get_last_day()}"
-        ]]
+        if month:
+            if int(month) < year_satrt.month:
+                year = year_end.year
+            lsd = GetLastDay(month)
+            filters["custom_vat_date"] = ["between", [f"{year}-{month}-01",f"{year}-{month}-{lsd.get_last_day()}"]]
+        elif self.filters.get("year"):
+            lsd = GetLastDay(month if month else datetime.date.today().month)
+            filters["custom_vat_date"] = ["between", [
+                f"{year_satrt.year}-{month if month else year_satrt.month}-01",
+                f"{year_end.year}-{month if month else year_end.month}-{lsd.get_last_day()}"
+            ]]
+        if vat_date:
+            filters["custom_vat_date"] = ["between", [vat_date, vat_date]]
+        if from_date:
+            filters["custom_vat_date"] = ["between", [from_date, to_date]]
+
 
         vat_map = {"goods": "good", "services": "services"}
         if self.filters.get("vat_category") in vat_map:
@@ -148,14 +166,30 @@ class VATDeclarationReport:
 
     def build_purchase_tax_filters(self):
         filters = {"docstatus": 1}
-        year = self.filters.get("year", datetime.date.today().year)
+        fiscal_year = self.filters.get("year")
+        year_satrt, year_end = GetLastDay.get_fiscal_year(fiscal_year) if fiscal_year else GetLastDay.get_fiscal_year(None)
         month = self.filters.get("month")
-        lsd = GetLastDay(month if month else datetime.date.today().month)
+        
+        vat_date = self.filters.get("vat_date")
+        from_date = self.filters.get("from_date")
+        to_date = self.filters.get("to_date")
+        year = year_satrt.year
 
-        filters["posting_date"] = ["between", [
-            f"{year}-{month if month else '01'}-01",
-            f"{year}-{month if month else '12'}-{lsd.get_last_day()}"
-        ]]
+        if month:
+            if int(month) < year_satrt.month:
+                year = year_end.year
+            lsd = GetLastDay(month)
+            filters["custom_vat_date"] = ["between", [f"{year}-{month}-01",f"{year}-{month}-{lsd.get_last_day()}"]]
+        elif self.filters.get("year"):
+            lsd = GetLastDay(month if month else datetime.date.today().month)
+            filters["custom_vat_date"] = ["between", [
+                f"{year_satrt.year}-{month if month else year_satrt.month}-01",
+                f"{year_end.year}-{month if month else year_end.month}-{lsd.get_last_day()}"
+            ]]
+        if vat_date:
+            filters["custom_vat_date"] = ["between", [vat_date, vat_date]]
+        if from_date:
+            filters["custom_vat_date"] = ["between", [from_date, to_date]]
 
         vat_map = {"goods": "good", "services": "services"}
         if self.filters.get("vat_category") in vat_map:

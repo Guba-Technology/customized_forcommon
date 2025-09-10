@@ -12,7 +12,13 @@ def execute():
         "custom_vat_details_col_1",
         "custom_type_of_purchase",
         "custom_vat_receipt_number",
-        "custom_description"
+        "custom_description",
+        "custom_withholding_detail",
+        "custom_withholding_detail_col_1",
+        "custom_receipt_number",
+        "custom_withholding_detail_col_2",
+        "custom_withhold_date",
+        "custom_vat_date"
     }
 
    
@@ -22,10 +28,47 @@ def execute():
     create_custom_fields({
         "Purchase Invoice": [
             dict(
+                fieldname="custom_withholding_detail",
+                label="Withholding Detail",
+                fieldtype="Section Break",
+                insert_after="outstanding_amount",
+                collapsible=1,
+                module="custom report"
+            ),
+            dict(
+                fieldname="custom_withholding_detail_col_1",
+                fieldtype="Column Break",
+                insert_after="custom_withholding_detail",
+                module="custom report"
+            ),
+            dict(
+                fieldname="custom_receipt_number",
+                label="Receipt Number",
+                fieldtype="Data",
+                insert_after="custom_withholding_detail_col_1",
+                placeholder="Receipt Number",
+                module="custom report"
+            ),
+            dict(
+                fieldname="custom_withholding_detail_col_2",
+                fieldtype="Column Break",
+                insert_after="custom_receipt_number",
+                module="custom report"
+            ),
+            dict(
+                fieldname="custom_withhold_date",
+                label="Withhold Date",
+                fieldtype="Date",
+                insert_after="custom_withholding_detail_col_2",
+                placeholder="Withhold Date",
+                module="custom report"
+            ),
+
+            dict(
                 fieldname="custom_vat_details",
                 label="VAT Details",
                 fieldtype="Section Break",
-                insert_after="total_advance",
+                insert_after="custom_withhold_date",
                 collapsible=1,
                 module="custom report"
             ),
@@ -47,9 +90,18 @@ def execute():
                 module="custom report"
             ),
             dict(
+                fieldname = "custom_vat_date",
+                label = "VAT Date",
+                fieldtype = "Date",
+                insert_after = "custom_mrc_number",
+                placeholder = "VAT Date",
+                module = "custom report"
+                
+            ),
+            dict(
                 fieldname="custom_vat_details_col_1",
                 fieldtype="Column Break",
-                insert_after="custom_vat_category",
+                insert_after="custom_vat_date",
                 module="custom report"
             ),
             dict(
@@ -79,3 +131,5 @@ def execute():
             )
         ]
     })
+
+ 

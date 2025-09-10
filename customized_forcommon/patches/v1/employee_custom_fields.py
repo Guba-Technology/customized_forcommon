@@ -47,7 +47,7 @@ def execute():
                 module="custom report"
             ),
             dict(
-                fieldname="custom_employee_tin",
+                fieldname="tin_number",
                 label="Employee TIN",
                 fieldtype="Data",
                 insert_after="custom_additional_col2",
