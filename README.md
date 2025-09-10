@@ -40,3 +40,5 @@ the command above will run the patch file `customized_forcommon/patches/v1/[patc
 patche files are `employee_custom_fields.py`, `sales_invoice_custom_fields.py`, `purchase_invoice_custom_fields.py`, 
 
 you can add more patch files in `customized_forcommon/patches/v1/` folder, to be executed together with `customized_forcommon.patcher.execute`
+
+---
