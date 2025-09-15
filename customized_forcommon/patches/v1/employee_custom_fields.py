@@ -1,71 +1,47 @@
 import frappe
-import os
+from frappe.exceptions import QueryTimeoutError, DoesNotExistError
 
-def ensure_module_in_modules_txt(app_name, module_name):
-    modules_path = os.path.join(frappe.get_app_path(app_name), "modules.txt")
+import frappe
 
-    # Create file if it doesn't exist
-    if not os.path.exists(modules_path):
-        with open(modules_path, "w") as f:
-            f.write(f"{module_name}\n")
-        print(f"📄 Created modules.txt and added: {module_name}")
-        return
 
-    # Check if module is already listed
-    with open(modules_path, "r") as f:
-        lines = [line.strip() for line in f.readlines()]
-
-    if module_name not in lines:
-        with open(modules_path, "a") as f:
-            f.write(f"{module_name}\n")
-        print(f"➕ Added to modules.txt: {module_name}")
-
-def ensure_module_exists(module_name):
-    if not frappe.db.exists("Module Def", module_name):
-        frappe.get_doc({
-            "doctype": "Module Def",
-            "module_name": module_name,
-            "app_name": "customized_forcommon", 
-            "custom": 0,
-            "developer_mode": 1
-        }).insert()
-        frappe.db.commit()
-        print(f"📦 Created Module: {module_name}")
 
 def upsert_custom_field(doctype, field_def):
     fieldname = field_def["fieldname"]
     field_id = f"{doctype}-{fieldname}"
 
     try:
-        custom_field = frappe.get_doc("Custom Field", field_id)
-        updated = False
+        try:
+            custom_field = frappe.get_doc("Custom Field", field_id)
+            updated = False
 
-        for key, value in field_def.items():
-            if key != "fieldname" and custom_field.get(key) != value:
-                custom_field.set(key, value)
-                updated = True
+            for key, value in field_def.items():
+                if key != "fieldname" and custom_field.get(key) != value:
+                    custom_field.set(key, value)
+                    updated = True
 
-        if updated:
-            custom_field.save()
+            if updated:
+                custom_field.save(ignore_permissions=True)
+                frappe.db.commit()
+                print(f"✍️ Updated: {field_id}")
+            # else:
+            #     print(f"✅ No changes needed: {field_id}")
+
+        except DoesNotExistError:
+            field_def["dt"] = doctype
+            frappe.get_doc({
+                "doctype": "Custom Field",
+                **field_def
+            }).insert(ignore_permissions=True)
             frappe.db.commit()
-            print(f"✍️ Updated: {field_id}")
-      
+            print(f"🆕 Created: {field_id}")
 
-    except frappe.DoesNotExistError:
-        field_def["dt"] = doctype
-        frappe.get_doc({
-            "doctype": "Custom Field",
-            **field_def
-        }).insert()
-        frappe.db.commit()
-        #print(f"🆕 Created: {field_id}")
+    except QueryTimeoutError:
+        
+        print(f"⏳ Skipped due to lock: {field_id}")
+    except Exception as e:
+        print(f"❌ Error on {field_id}: {e}")
 
 def execute():
-    module_name = "custom report"
-    ensure_module_exists(module_name)
-    ensure_module_exists(module_name)
-    ensure_module_in_modules_txt("customized_forcommon", module_name)
-
     doctype = "Employee"
     fields = [
         dict(fieldname="custom_additionals", label="Additional Details", fieldtype="Section Break", insert_after="custom_step", collapsible=1, module="custom report"),
@@ -76,6 +52,10 @@ def execute():
     ]
 
     for field in fields:
+        frappe.db.autocommit = False
         upsert_custom_field(doctype, field)
- 
+        frappe.db.autocommit = True
+
     print("✅ Employee Patch completed successfully.")
+
+    frappe.db.commit()

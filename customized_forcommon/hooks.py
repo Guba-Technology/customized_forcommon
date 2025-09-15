@@ -99,6 +99,9 @@ fixtures = [
         ]
     }
 ]
+before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creator.execute",
+                  "customized_forcommon.patcher.execute",]
+
 
 #  this will be applied after the app is migrated
 after_migrate = [
