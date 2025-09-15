@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry","Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application",
+                          "Training Event", "Leave Application"
                           ]],
         ]
     },
@@ -166,12 +166,13 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
+    "/assets/customized_forcommon/js/bom_creator_extended.js"
 ]
 
 
 # js files to be included in the doctype views
 doctype_js = {
-    "BOM Creator": "public/js/bom_creator_extended.js",
+    # "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
@@ -187,7 +188,11 @@ doctype_list_js = {
 # this is used to customize the leave balance calculation logic when half day leaves are used
 import hrms.hr.doctype.leave_application.leave_application as leave_application_module
 import customized_forcommon.overrides.leave_balance as custom_module
-
+from customized_forcommon.overrides.custom_add_advance_gl_for_reference import custom_add_advance_gl_for_reference
+from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
+from customized_forcommon.overrides import custom_gl_entry
+# Monkey patch the original PaymentEntry method
+PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
 

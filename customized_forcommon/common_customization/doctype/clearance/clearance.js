@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Clearance', {
-    onload: function(frm) {
+    onload: function (frm) {
         // Hide "Add Row" button
         frm.get_field('clearance_table').grid.cannot_add_rows = true;
 
@@ -38,7 +38,7 @@ frappe.ui.form.on('Clearance', {
                     },
                     fieldname: "name"
                 },
-                callback: function(r) {
+                callback: function (r) {
                     if (r.message && r.message.name) {
                         frm.set_value('linked_employee', r.message.name);
                     } else {
@@ -56,7 +56,7 @@ frappe.ui.form.on('Clearance', {
         }
     },
 
-    refresh: function(frm) {
+    refresh: function (frm) {
         // Re-apply hiding on refresh, as the grid might re-render
         frm.get_field('clearance_table').grid.cannot_add_rows = true;
         frm.get_field('clearance_table').grid.cannot_delete_rows = true;
@@ -69,7 +69,7 @@ frappe.ui.form.on('Clearance', {
 
         frm.refresh_field('clearance_table');
 
-         // Set the current user as default if not already set
+        // Set the current user as default if not already set
         if (!frm.doc.current_user) {
             const current_user = frappe.session.user;
             frm.set_value('current_user', current_user);
@@ -84,7 +84,7 @@ frappe.ui.form.on('Clearance', {
                     },
                     fieldname: "name"
                 },
-                callback: function(r) {
+                callback: function (r) {
                     if (r.message && r.message.name) {
                         frm.set_value('linked_employee', r.message.name);
                     } else {
@@ -112,47 +112,47 @@ frappe.ui.form.on('Clearance', {
                 reqd: 1
             }
         ],
-        function (values) {
-            frappe.call({
-                method: 'frappe.client.get',
-                args: {
-                    doctype: 'Clearance Template',
-                    name: values.template
-                },
-                callback: function (response) {
-                    let template_doc = response.message;
+            function (values) {
+                frappe.call({
+                    method: 'frappe.client.get',
+                    args: {
+                        doctype: 'Clearance Template',
+                        name: values.template
+                    },
+                    callback: function (response) {
+                        let template_doc = response.message;
 
-                    if (template_doc && template_doc.clearance_template_table?.length > 0) {
-                        frm.clear_table('clearance_table');
+                        if (template_doc && template_doc.clearance_template_table?.length > 0) {
+                            frm.clear_table('clearance_table');
 
-                        template_doc.clearance_template_table.forEach(row => {
-                            let new_row = frm.add_child('clearance_table');
-                            new_row.department = row.department;
-                            new_row.status = 'Pending';
-                        });
+                            template_doc.clearance_template_table.forEach(row => {
+                                let new_row = frm.add_child('clearance_table');
+                                new_row.department = row.department;
+                                new_row.status = 'Pending';
+                            });
 
-                        frm.refresh_field('clearance_table');
+                            frm.refresh_field('clearance_table');
 
-                        // Re-apply the hiding logic after rows are added
-                        frm.get_field('clearance_table').grid.cannot_add_rows = true;
-                        frm.get_field('clearance_table').grid.cannot_delete_rows = true;
-                        frm.get_field('clearance_table').grid.hide_toolbar = true;
+                            // Re-apply the hiding logic after rows are added
+                            frm.get_field('clearance_table').grid.cannot_add_rows = true;
+                            frm.get_field('clearance_table').grid.cannot_delete_rows = true;
+                            frm.get_field('clearance_table').grid.hide_toolbar = true;
 
-                        setTimeout(() => {
-                            frm.fields_dict['clearance_table'].grid.wrapper.find('.grid-row-check').hide();
-                            frm.fields_dict['clearance_table'].grid.wrapper.find('.grid-delete-row').hide();
-                        }, 100);
+                            setTimeout(() => {
+                                frm.fields_dict['clearance_table'].grid.wrapper.find('.grid-row-check').hide();
+                                frm.fields_dict['clearance_table'].grid.wrapper.find('.grid-delete-row').hide();
+                            }, 100);
 
-                        frm.refresh_field('clearance_table');
+                            frm.refresh_field('clearance_table');
 
-                        frappe.msgprint(__('Template applied successfully.'));
-                    } else {
-                        frappe.msgprint(__('Selected template has no departments.'));
+                            frappe.msgprint(__('Template applied successfully.'));
+                        } else {
+                            frappe.msgprint(__('Selected template has no departments.'));
+                        }
                     }
-                }
-            });
-        },
-        __('Select Template'),
-        __('Apply'));
+                });
+            },
+            __('Select Template'),
+            __('Apply'));
     },
 });
