@@ -1,6 +1,6 @@
 import frappe
 
-
+changed = False
 def upsert_custom_field(doctype, field_def):
     fieldname = field_def["fieldname"]
     field_id = f"{doctype}-{fieldname}"
@@ -13,11 +13,13 @@ def upsert_custom_field(doctype, field_def):
                 if key != "fieldname" and custom_field.get(key) != value:
                     custom_field.set(key, value)
                     updated = True
+                    global changed
+                    changed = True
 
             if updated:
                 custom_field.save()
                 frappe.db.commit()
-                print(f"✍️ Updated: {field_id}")
+                #print(f"✍️ Updated: {field_id}")
             
 
         except frappe.DoesNotExistError:
@@ -27,6 +29,7 @@ def upsert_custom_field(doctype, field_def):
                 **field_def
             }).insert()
             frappe.db.commit()
+            changed = True
             #print(f"🆕 Created: {field_id}")
     except frappe.QueryTimeoutError:
         print(f"⏳ Skipped due to lock: {field_id}")
@@ -57,5 +60,8 @@ def execute():
         upsert_custom_field(doctype, field)
         frappe.db.autocommit = True
  
-    print("✅ Sales Invoice Patch completed successfully.")
+    #print("✅ Sales Invoice Patch completed successfully.")
+
+    if changed:
+        print("✅ Sales Invoice Patch completed successfully.")
    

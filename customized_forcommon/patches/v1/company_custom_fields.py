@@ -1,5 +1,7 @@
 import frappe
 from frappe.exceptions import QueryTimeoutError, DoesNotExistError
+
+changed = False
  
 def upsert_custom_field(doctype, field_def):
     fieldname = field_def["fieldname"]
@@ -14,11 +16,13 @@ def upsert_custom_field(doctype, field_def):
                 if key != "fieldname" and custom_field.get(key) != value:
                     custom_field.set(key, value)
                     updated = True
+                    global changed
+                    changed = True
 
             if updated:
                 custom_field.save()
                 frappe.db.commit()
-                print(f"✍️ Updated: {field_id}")
+                #print(f"✍️ Updated: {field_id}")
             
 
         except DoesNotExistError:
@@ -28,6 +32,7 @@ def upsert_custom_field(doctype, field_def):
                 **field_def
             }).insert()
             frappe.db.commit()
+            changed = True
             #print(f"🆕 Created: {field_id}")
     except QueryTimeoutError:
         print(f"⏳ Skipped due to lock: {field_id}")
@@ -53,4 +58,6 @@ def execute():
         frappe.db.autocommit = False
         upsert_custom_field(doctype, field)
         frappe.db.autocommit = True
-    print("✅ Company Patch completed successfully.")
+    if changed:
+        print("✅ Company is modified.")
+    #print("✅ Company Patch completed successfully.")
