@@ -1,9 +1,8 @@
 import frappe
 from frappe.exceptions import QueryTimeoutError, DoesNotExistError
-
 import frappe
 
-
+changed = False
 
 def upsert_custom_field(doctype, field_def):
     fieldname = field_def["fieldname"]
@@ -13,16 +12,17 @@ def upsert_custom_field(doctype, field_def):
         try:
             custom_field = frappe.get_doc("Custom Field", field_id)
             updated = False
-
             for key, value in field_def.items():
                 if key != "fieldname" and custom_field.get(key) != value:
                     custom_field.set(key, value)
                     updated = True
+                    global changed
+                    changed = True
 
             if updated:
                 custom_field.save(ignore_permissions=True)
                 frappe.db.commit()
-                print(f"✍️ Updated: {field_id}")
+                #print(f"✍️ Updated: {field_id}")
             # else:
             #     print(f"✅ No changes needed: {field_id}")
 
@@ -33,7 +33,8 @@ def upsert_custom_field(doctype, field_def):
                 **field_def
             }).insert(ignore_permissions=True)
             frappe.db.commit()
-            print(f"🆕 Created: {field_id}")
+            #print(f"🆕 Created: {field_id}")
+            changed = True
 
     except QueryTimeoutError:
         
@@ -56,6 +57,9 @@ def execute():
         upsert_custom_field(doctype, field)
         frappe.db.autocommit = True
 
-    print("✅ Employee Patch completed successfully.")
+    #print("✅ Employee Patch completed successfully.")
 
     frappe.db.commit()
+
+    if changed:
+        print("✅ Employee is modified.")
