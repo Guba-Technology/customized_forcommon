@@ -5,7 +5,7 @@ def run_patch(patch_path):
         module_path, function_name = patch_path.rsplit('.', 1)
         patch_module = __import__(module_path, fromlist=[function_name])
         getattr(patch_module, function_name)()
-        print(f"✅ Executed patch: {patch_path}")
+        #print(f"✅ Executed patch: {patch_path}")
     except Exception as e:
         print(f"❌ Failed to execute patch: {patch_path}")
         print(f"Error: {e}")
