@@ -57,13 +57,19 @@ class VATSalesReport:
             filters=self.build_sales_tax_filters(),
             fields=[
                 "name", "custom_vat_category", "custom_type_of_sale", "tax_id",
-                "customer_name", "posting_date", "custom_mrc_number",
-                "custom_vat_receipt_number", "custom_description", "custom_vat_date"
+                "customer_name", "posting_date", "custom_mrc_number","customer",
+                "custom_vat_receipt_number", "custom_description", "custom_vat_date","grand_total"
             ]
         )
         
         data = []
         for invoice in invoices:
+            tax_id = ""
+            if invoice.tax_id:
+                tax_id = invoice.tax_id
+            else:  
+                customer = frappe.get_doc("Customer",{"name": invoice.customer})
+                tax_id = customer.tax_id
             vat_payable = 0
             vat_receivable = 0
             items = frappe.get_all("Sales Invoice Item",
@@ -98,12 +104,12 @@ class VATSalesReport:
                 receivable = item["amount"] * vat_receivable / 100 
                 payable = item["amount"] * vat_payable / 100 
                 vat = receivable + payable
-                value_after_vat = item["amount"] - vat
+                value_after_vat = item["amount"] + vat
                 data.append({
                     "sales_invoice": invoice.name,
                     "vat_category": invoice.custom_vat_category,
                     "type_of_sale": invoice.custom_type_of_sale,
-                    "buyer_tin": invoice.tax_id,
+                    "buyer_tin": tax_id,
                     "buyer_name": invoice.customer_name,
                     "date_of_sale": invoice.posting_date,
                     "vat_date": invoice.custom_vat_date,
