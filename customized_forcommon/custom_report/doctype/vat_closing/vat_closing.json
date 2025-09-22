@@ -1,8 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{fiscal_year}-{#}",
- "creation": "2025-09-19 16:42:09.903981",
+ "creation": "2025-09-22 14:53:53.316598",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -14,32 +13,28 @@
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Fiscal Year",
    "options": "Fiscal Year"
   },
   {
-   "fieldname": "vat_closing",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "VAT Closing"
-  },
-  {
    "fieldname": "vat_opening",
    "fieldtype": "Currency",
-   "in_list_view": 1,
    "label": "VAT Opening"
+  },
+  {
+   "fieldname": "vat_closing",
+   "fieldtype": "Currency",
+   "label": "VAT Closing"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-19 17:03:24.360575",
+ "modified": "2025-09-22 15:56:56.482970",
  "modified_by": "Administrator",
  "module": "custom report",
  "name": "VAT Closing",
- "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

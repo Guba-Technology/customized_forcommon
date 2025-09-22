@@ -6,8 +6,7 @@ changed = False
 def upsert_custom_field(doctype, field_def):
     fieldname = field_def["fieldname"]
     field_id = f"{doctype}-{fieldname}"
-
-    
+   
     try:
         try:
             custom_field = frappe.get_doc("Custom Field", field_id)
