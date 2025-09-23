@@ -30,37 +30,57 @@ frappe.query_reports["VAT Declaration Report"] = {
 
    
   "onload": function(report) {
-    report.page.add_inner_button("Update VAT Closing", function() {
-        const year = report.get_filter_value("year");
+  
+   
+    frappe.db.get_list("Fiscal Year", {
+        fields: ["name", "year_end_date"], 
+        limit: 1,
+        order_by: "creation desc" // or use filters to get the active year
+    }).then(fiscal_years => {
+        if (!fiscal_years.length) return;
 
-        if (!year) {
-            frappe.msgprint("Please select Fiscal Year before updating VAT closing.");
-            return;
+        const fiscal_year = fiscal_years[0];
+        const end_date = frappe.datetime.str_to_obj(fiscal_year.year_end_date);
+        const today = frappe.datetime.str_to_obj(frappe.datetime.get_today());
+        const days_remaining = frappe.datetime.get_diff(end_date, today);
+
+        // Show button only if within 30 days before fiscal year end
+        if (days_remaining <= 30 && days_remaining >= 0) {
+            const btn = report.page.add_inner_button(`Update VAT Closing (${days_remaining} days left)`, function() {
+                frappe.confirm(
+                    `Are you sure you want to update VAT Closing for fiscal year <b>${fiscal_year.name}</b>?`,
+                    function() {
+                        frappe.call({
+                            method: "customized_forcommon.custom_report.report.vat_declaration_report.vat_declaration_report.update_vat_closing",
+                            args: { year: fiscal_year.name },
+                            callback: function(r) {
+                                if (r.message) {
+                                    frappe.msgprint("VAT Closing updated successfully.");
+                                }
+                            }
+                        });
+                    },
+                    function() {
+                        frappe.msgprint("VAT Closing update cancelled.");
+                    }
+                );
+            });
+            $(btn).removeClass("btn-default").addClass("btn btn-success");
+        }
+       else{
+          if (days_remaining < 0) {
+       const btn = report.page.add_inner_button(` 📌 Fiscal year ended ${Math.abs(days_remaining)} days ago. VAT closing is locked.`,);
+       $(btn).removeClass("btn-default").addClass("btn-info");
+        }
+        else if(days_remaining > 30 && days_remaining <= 60){
+            const btn = report.page.add_inner_button(` ⏳ VAT closing will be available in ${Math.abs(days_remaining)} days`,);
+            $(btn).removeClass("btn-default").addClass("btn-danger");   
+        }
+        else{
+            const btn = report.page.add_inner_button(`FISCAL YEAR: ${fiscal_year.name}`,);
+            $(btn).removeClass("btn-default").addClass("btn-info");
         }
 
-        frappe.confirm(
-            `Are you sure you want to update VAT Closing for fiscal year <b>${year}</b>?`,
-            function() {
-                // On Confirm
-                frappe.call({
-                    method: "customized_forcommon.custom_report.report.vat_declaration_report.vat_declaration_report.update_vat_closing",
-                    args: {
-                        year: year
-                    },
-                    callback: function(r) {
-                        if (r.message) {
-                            frappe.msgprint("VAT Closing updated successfully.");
-                        }
-                    }
-                });
-            },
-            function() {
-                // On Cancel
-                frappe.msgprint("VAT Closing update cancelled.");
-            }
-        );
+       }
     });
-}
-
-
-};
+}};

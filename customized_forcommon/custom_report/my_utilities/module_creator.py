@@ -7,8 +7,8 @@ def ensure_module_in_modules_txt(app_name, module_name):
     # Create file if it doesn't exist
     if not os.path.exists(modules_path):
         with open(modules_path, "w") as f:
-            f.write(f"{module_name}\n")
-        print(f"📄 Created modules.txt and added: {module_name}")
+            f.write("\n{}\n".format(module_name))
+        #print(f"📄 Created modules.txt and added: {module_name}")
         return
 
     # Check if module is already listed
@@ -17,8 +17,8 @@ def ensure_module_in_modules_txt(app_name, module_name):
 
     if module_name not in lines:
         with open(modules_path, "a") as f:
-            f.write(f"{module_name}\n")
-        print(f"➕ Added to modules.txt: {module_name}")
+            f.write("\n{}\n".format(module_name))
+        #print(f"➕ Added to modules.txt: {module_name}")
 
 def ensure_module_exists(module_name):
     if not frappe.db.exists("Module Def", module_name):
@@ -30,7 +30,7 @@ def ensure_module_exists(module_name):
             "developer_mode": 1
         }).insert()
         frappe.db.commit()
-        print(f"📦 Created Module: {module_name}")
+        #print(f"📦 Created Module: {module_name}")
 def execute():
     module_name = "custom report"
     ensure_module_exists(module_name)

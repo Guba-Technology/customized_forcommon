@@ -35,6 +35,8 @@ class GetCompanyInfo:
         # print("Fiscal Year: ", fiscal_years[0].name)
         if fiscal_years:
             return fiscal_years[0].year_start_date, fiscal_years[0].name, fiscal_years[0].year_end_date
+        else:
+            return None, None, None
 
 
  

@@ -133,12 +133,10 @@ class VATDeclarationReport:
         return [monthly_data[m] for m in month_order if m in monthly_data]
 
     def build_vat_report_filters(self, ignore_month=False, ignore_vat_date=False):
-        filters = {"docstatus": 0}
+        filters = {"docstatus": 1}
 
         fiscal_year = self.filters.get("year")
         month = self.filters.get("month")
-        
-
         
         year_start, year_end = (
             GetLastDay.get_fiscal_year(fiscal_year) if fiscal_year else GetLastDay.get_fiscal_year(self.fiscal_year)
@@ -148,10 +146,6 @@ class VATDeclarationReport:
         end_month = year_end.month
         start_day = year_start.day
         end_day = year_end.day
-
-        
-       
-
         
         if not ignore_month and month:
             month = int(month)
@@ -159,12 +153,14 @@ class VATDeclarationReport:
             from_date = f"{year}-{month:02d}-{start_day if month == start_month else 1:02d}"
             to_date = f"{year}-{month:02d}-{end_day:02d}"
             filters["custom_vat_date"] = ["between", [from_date, to_date]]
+            
             return filters
 
         # Default: full fiscal year range
         from_date = f"{year_start.year}-{start_month:02d}-{start_day:02d}"
         to_date = f"{year_end.year}-{end_month:02d}-{end_day:02d}"
         filters["custom_vat_date"] = ["between", [from_date, to_date]]
+        
         return filters
 
 
@@ -214,18 +210,22 @@ def execute(filters=None):
 
 @frappe.whitelist()
 def update_vat_closing(year):
+    tt = to_next
     company_name = frappe.defaults.get_user_default("Company")
     company = frappe.get_doc("Company", company_name)
-   
-    exist = False
-    vc = frappe.db.get_value("VAT Closing", {"parent": company_name, "fiscal_year": year}, "name")
+    
+    
+    vc = frappe.db.get_value("VAT Closing", {"parent": company_name, "fiscal_year": year}, "name") or None
     if vc:
-        exist = True
+        print("VAT Closing: ", vc)
         vc_update = frappe.get_doc("VAT Closing", vc)
         vc_update.vat_closing = to_next
+        company.custom_vat_openning_amount = to_next
         vc_update.save()
-    if not exist:
+    else:
+        print("VAT Closing: not found")
         vat_closing = frappe.new_doc("VAT Closing")
+
         vat_closing.parent = company_name
         vat_closing.parenttype = "Company"
         vat_closing.parentfield = "vat_closings"
@@ -234,7 +234,26 @@ def update_vat_closing(year):
         vat_closing.vat_closing = to_next
         vat_closing.fiscal_year = year
         vat_closing.save()
-
+    cc = frappe.get_doc("Company", company_name)
+    cc.custom_vat_openning_amount = tt
+    cc.save()
     return to_next
-
+@frappe.whitelist()
+def vat_closing_status(year):
+    if year:
+        fiscal_year = frappe.get_doc("Fiscal Year", year)
+        print("Fiscal Year: ", fiscal_year.name)
+        return {
+            "year_start": fiscal_year.year_start_date,
+            "year_end": fiscal_year.year_end_date,
+            "year": fiscal_year.name
+        }
+    else:
+        fiscal_year = frappe.db.get_list("Fiscal Year",  fields=["name", "year_start_date", "year_end_date"], order_by="year_start_date desc", limit=1)[0]
+        print("Fiscal Year 1: ", fiscal_year.name)
+        return {
+            "year_start": fiscal_year.year_start_date,
+            "year_end": fiscal_year.year_end_date,
+            "year": fiscal_year.name
+        }
    
