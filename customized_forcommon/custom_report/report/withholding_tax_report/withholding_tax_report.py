@@ -57,7 +57,7 @@ class WithholdingReport:
         ]
 
     def build_invoice_filters(self):
-        f = {}
+        f = {"docstatus": 0}
         month = self.raw_filters.get("month")
         # year = self.raw_filters.get("year") or datetime.date.today().year
         fiscal_year = self.raw_filters.get("year")
@@ -68,7 +68,7 @@ class WithholdingReport:
         to_date = self.raw_filters.get("to_date")
         
         year = year_satrt.year
-        f['docstatus'] = 1
+        # f['docstatus'] = 1
         if month:
             if int(month) < year_satrt.month:
                 year = year_end.year
@@ -115,27 +115,38 @@ class WithholdingReport:
             ]
         if doctype == "Purchase Invoice":
             return [
-                "name as invoice_name", "tax_id as withholdee_tin", "supplier_name as withholdee_name","custom_receipt_number as reciept_number",
+                "name as invoice_name", "supplier_name as withholdee_name","custom_receipt_number as reciept_number",
                 "custom_withhold_date as withhold_date"
                
             ]
 
     def annotate_withholding(self, invoices, invoice_type):
         total = 0
+        
         table = "Sales Taxes and Charges" if invoice_type == "sales" else "Purchase Taxes and Charges"
+        
         account_filter = [self.payable, self.receivable]
         
+        
         for inv in invoices:
+            tax_id =""
+            if invoice_type == "sales":
+                customer = frappe.get_doc("Customer",{"name": inv.withholdee_name})
+                tax_id = customer.tax_id
+            else:
+                supplier = frappe.get_doc("Supplier", {"name": inv.withholdee_name})
+                tax_id = supplier.tax_id
             inv.update({
                 "receivable": 0, "payable": 0, "preceivable": 0, "ppayable": 0,
-                "tax_withheld_amount": 0, "tax_withheld": 0
+                "tax_withheld_amount": 0, "tax_withheld": 0, "withholdee_tin": tax_id
             })
-
-            taxes = frappe.get_all(table, filters={"parent": inv.name, "account_head": ("in", account_filter)}, fields=["rate", "account_head", "tax_amount"])
+            
+            taxes = frappe.get_all(table, filters={"parent": inv["invoice_name"], "account_head": ["in", account_filter]}, fields=["rate", "account_head", "tax_amount"])
             withheld_sum = 0
-
+            
             for tax in taxes:
                 head = tax["account_head"].lower()
+                
                 if self.payable.lower().startswith(head):
                     if invoice_type == "sales":
                         inv["payable"] = tax["tax_amount"]

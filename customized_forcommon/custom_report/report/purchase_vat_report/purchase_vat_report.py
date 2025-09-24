@@ -53,12 +53,18 @@ class VATPurchaseReport:
     def get_data(self):
         invoices = frappe.get_list("Purchase Invoice", filters=self.build_purchase_vat_filters(), fields=[
             "name", "custom_vat_category", "custom_type_of_purchase", "tax_id",
-            "seller_name", "posting_date", "custom_mrc_number",
+            "seller_name", "posting_date", "custom_mrc_number","supplier",
             "custom_vat_receipt_number", "custom_description", "custom_vat_date"
         ])
 
         data = []
         for invoice in invoices:
+            tax_id = ""
+            if invoice.tax_id:
+                tax_id = invoice.tax_id
+            else:  
+                customer = frappe.get_doc("Supplier",{"name": invoice.supplier})
+                tax_id = customer.tax_id
             vat_payable = 0
             vat_receivable = 0
             items = frappe.get_all("Purchase Invoice Item",
@@ -94,13 +100,13 @@ class VATPurchaseReport:
                 receivable = item["amount"] * vat_receivable / 100 
                 payable = item["amount"] * vat_payable / 100 
                 vat = receivable + payable
-                value_after_vat = item["amount"] - vat
+                value_after_vat = item["amount"] + vat
                 data.append({
                     "sales_invoice": invoice.name,
                     "vat_category": invoice.custom_vat_category,
                     "type_of_purchase": invoice.custom_type_of_purchase,
-                    "seller_tin": invoice.tax_id,
-                    "seller_name": invoice.seller_name,
+                    "seller_tin": tax_id,
+                    "seller_name": invoice.seller_name if invoice.seller_name else invoice.supplier,
                     "date_of_Purchase": invoice.posting_date,
                     "vat_date": invoice.custom_vat_date,
                     "mrc_number": invoice.custom_mrc_number,
@@ -118,7 +124,7 @@ class VATPurchaseReport:
         return data
 
     def build_purchase_vat_filters(self):
-        filters = {"docstatus":1}
+        filters = {"docstatus":0}
         # year = self.filters.get("year", datetime.date.today().year)
         fiscal_year = self.filters.get("year")
         year_satrt, year_end = get_fiscal_year(fiscal_year) if fiscal_year else get_fiscal_year(None)

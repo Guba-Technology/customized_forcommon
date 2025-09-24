@@ -175,6 +175,8 @@ doctype_js = {
     # "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
+    "Purchase Invoice": "public/js/sales_invoice.js",
+
     "Payment Entry": "public/js/payment_entry.js"
 }
 

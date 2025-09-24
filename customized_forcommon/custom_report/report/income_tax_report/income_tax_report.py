@@ -8,28 +8,30 @@ def get_salary_components(component_type):
     return frappe.get_all(
         "Salary Component",
         filters={"type": component_type},
-        fields=["name"]
+        fields=["name", "salary_component", "is_tax_applicable","salary_component_abbr","type"],
     )
 
 def get_columns(components, deductibles):
     base_columns = [
-        {"label": "Employee", "fieldname": "employee_name", "fieldtype": "Link", "options": "Employee", "width": 120},
-        {"label": "Full Name", "fieldname": "full_name", "fieldtype": "Data", "width": 160},
-        {"label": "TIN", "fieldname": "employee_tin", "fieldtype": "Data", "width": 100},
-        {"label": "Pension ID", "fieldname": "pension_id", "fieldtype": "Data", "width": 100},
-        {"label": "Start Date", "fieldname": "start_date", "fieldtype": "Date", "width": 100},
-        {"label": "End Date", "fieldname": "end_date", "fieldtype": "Date", "width": 100},
+        {"label": "Employee", "fieldname": "employee_name", "fieldtype": "Link", "options": "Employee"},
+        {"label": "Full Name", "fieldname": "full_name", "fieldtype": "Data"},
+        {"label": "TIN", "fieldname": "employee_tin", "fieldtype": "Data"},
+        {"label": "Pension ID", "fieldname": "pension_id", "fieldtype": "Data"},
+        {"label": "Salary Slip Date", "fieldname": "posting_date", "fieldtype": "Date"},
+        {"label": "Start Date", "fieldname": "start_date", "fieldtype": "Date"},
+        {"label": "End Date", "fieldname": "end_date", "fieldtype": "Date"},
     ]
 
-    dynamic_columns = [{"label": comp.name, "fieldname": frappe.scrub(comp.name), "fieldtype": "Currency", "width": 120} for comp in components]
+    dynamic_columns = [{"label": comp.salary_component+" ("+comp.salary_component_abbr+")", "fieldname": frappe.scrub(comp.name), "fieldtype": "Currency"} for comp in components]
     summary_columns = [
-        {"label": ded.name, "fieldname": frappe.scrub(ded.name), "fieldtype": "Currency", "width": 120} for ded in deductibles
+        {"label": ded.salary_component+" ("+ded.salary_component_abbr+")", "fieldname": frappe.scrub(ded.name), "fieldtype": "Currency"} for ded in deductibles
     ] + [
-        {"label": "Taxable Total", "fieldname": "total_taxable", "fieldtype": "Currency", "width": 130},
-        {"label": "Total non-taxable", "fieldname": "total_non_taxable", "fieldtype": "Currency", "width": 130},
-        # {"label": "Tax Withheld", "fieldname": "tax_withheld", "fieldtype": "Currency", "width": 130},
-        {"label": "Net Payable", "fieldname": "net_payable", "fieldtype": "Currency", "width": 130},
-        {"label": "Gross Payable", "fieldname": "gross_payable", "fieldtype": "Currency", "width": 130},
+        {"label": "Other Taxable", "fieldname": "other_taxable", "fieldtype": "Currency"},
+        {"label": "Taxable Total", "fieldname": "total_taxable", "fieldtype": "Currency"},
+        {"label": "Total non-taxable", "fieldname": "total_non_taxable", "fieldtype": "Currency"},
+        {"label": "Tax Withheld", "fieldname": "tax_withheld", "fieldtype": "Currency"},
+        {"label": "Net Payable", "fieldname": "net_payable", "fieldtype": "Currency"},
+        {"label": "Gross Payable", "fieldname": "gross_payable", "fieldtype": "Currency"},
     ]
 
     return base_columns + dynamic_columns + summary_columns
@@ -45,9 +47,11 @@ def process_salary_slip(slip, components, deductibles):
         "end_date": employee.get("relieving_date"),
         "net_payable": slip.net_pay,
         "gross_payable": slip.gross_pay,
+        "posting_date": slip.posting_date,
         "total_taxable": 0,
         "tax_withheld": 0,
-        "total_non_taxable": 0
+        "total_non_taxable": 0,
+        "other_taxable": 0
     }
 
     for comp in components:
@@ -61,8 +65,11 @@ def process_salary_slip(slip, components, deductibles):
         key = frappe.scrub(earning.salary_component)
         row[key] += flt(earning.amount)
         if is_taxable:
-            row["total_taxable"] += flt(earning.amount)
-            taxable += flt(earning.amount)
+            if earning.salary_component.lower() == "transport allowance" or earning.salary_component.lower() == "ta" or earning.salary_component.lower() == "over time" or earning.salary_component.lower() == "ot":
+                row["other_taxable"] += flt(earning.amount)
+            else:
+                row["total_taxable"] += flt(earning.amount)
+                taxable += flt(earning.amount)
         else:
             row["total_non_taxable"] += flt(earning.amount)
             non_taxable += flt(earning.amount)
@@ -70,7 +77,8 @@ def process_salary_slip(slip, components, deductibles):
     for deduction in slip.deductions:
         key = frappe.scrub(deduction.salary_component)
         row[key] += flt(deduction.amount)
-        if "tax" in deduction.salary_component.lower():
+        if "tax" in deduction.salary_component.lower(): # Change this condition accordingly.
+            #tax withheld is the sum of all tax deductions or taxable deductions or other deductions
             row["tax_withheld"] += flt(deduction.amount)
 
     return row, taxable, non_taxable
@@ -85,7 +93,7 @@ def execute(filters=None):
     # if filters.get("employee"):
     #     slip_filters["employee"] = filters["employee"]
 
-    slips = frappe.get_all("Salary Slip", filters=filters, fields=["name", "employee", "employee_name", "start_date", "end_date", "net_pay", "gross_pay"])
+    slips = frappe.get_all("Salary Slip", filters=filters, fields=["name", "employee", "employee_name", "start_date", "end_date", "net_pay", "gross_pay"], order_by="posting_date desc")
     data, taxable, non_taxable, net_pay, total_deduction = [], 0, 0, 0, 0
 
     for slip_meta in slips:
