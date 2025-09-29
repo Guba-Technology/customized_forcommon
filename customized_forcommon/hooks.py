@@ -37,7 +37,7 @@ fixtures = [
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
                           "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
                           "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
+                          "Stock Entry","Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
                           "Training Event", "Leave Application"
@@ -77,7 +77,7 @@ fixtures = [
     {
         "dt": "Workflow",
 
-        "filters": [["name", "in", ["Material Request workflow"]]]
+        "filters": [["name", "in", ["Stock Material Transfer"]]]
 
     },
     {"dt": "Workflow State"},
@@ -157,7 +157,10 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",    
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry"
+
+   
     
 }
 
@@ -179,6 +182,7 @@ doctype_js = {
 
     "Payment Entry": "public/js/payment_entry.js"
 }
+
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
