@@ -10,7 +10,7 @@ from customized_forcommon.custom_report.my_utilities.get_last_day import GetLast
 
 get_company_info = GetCompanyInfo()
 to_next = 0
-
+filtered_year = None
 def get_fiscal_month_order(start_month, end_month):
     if start_month <= end_month:
         return list(range(start_month, end_month + 1))
@@ -38,6 +38,7 @@ class VATDeclarationReport:
                     get_company_info.Company
                 )
             )
+
         columns = self.get_columns()
         data = self.get_data()
         summary = self.get_summary(data)
@@ -134,33 +135,33 @@ class VATDeclarationReport:
 
     def build_vat_report_filters(self, ignore_month=False, ignore_vat_date=False):
         filters = {"docstatus": 1}
-
         fiscal_year = self.filters.get("year")
-        month = self.filters.get("month")
-        
-        year_start, year_end = (
-            GetLastDay.get_fiscal_year(fiscal_year) if fiscal_year else GetLastDay.get_fiscal_year(self.fiscal_year)
-        )
+        global filtered_year
+        filtered_year = fiscal_year
+        # If no fiscal year is provided, return unfiltered (i.e., show everything)
+        if not fiscal_year or ignore_vat_date:
+            return filters
 
-        start_month = year_start.month 
+        year_start, year_end = GetLastDay.get_fiscal_year(fiscal_year)
+        start_month = year_start.month
         end_month = year_end.month
         start_day = year_start.day
         end_day = year_end.day
-        
+
+        month = self.filters.get("month")
         if not ignore_month and month:
             month = int(month)
             year = year_end.year if month < start_month else year_start.year
             from_date = f"{year}-{month:02d}-{start_day if month == start_month else 1:02d}"
             to_date = f"{year}-{month:02d}-{end_day:02d}"
             filters["custom_vat_date"] = ["between", [from_date, to_date]]
-            
             return filters
 
         # Default: full fiscal year range
         from_date = f"{year_start.year}-{start_month:02d}-{start_day:02d}"
         to_date = f"{year_end.year}-{end_month:02d}-{end_day:02d}"
         filters["custom_vat_date"] = ["between", [from_date, to_date]]
-        
+
         return filters
 
 
@@ -210,6 +211,11 @@ def execute(filters=None):
 
 @frappe.whitelist()
 def update_vat_closing(year):
+    if year != filtered_year:
+        if not filtered_year:
+            frappe.throw("Please select a fiscal year. this report is a collective report for all fiscal years.<br><b>Note:</b> <b style='color:red'>VAT Closing is not updated.</b>")
+        else:
+            frappe.throw(f"Please select the same year similar to  {year} <br> this report belongs to the fiscal year {filtered_year}.<br><b>Note:</b> <b style='color:red'>VAT Closing is not updated.</b>")
     tt = to_next
     company_name = frappe.defaults.get_user_default("Company")
     company = frappe.get_doc("Company", company_name)
@@ -225,7 +231,6 @@ def update_vat_closing(year):
     else:
         print("VAT Closing: not found")
         vat_closing = frappe.new_doc("VAT Closing")
-
         vat_closing.parent = company_name
         vat_closing.parenttype = "Company"
         vat_closing.parentfield = "vat_closings"
