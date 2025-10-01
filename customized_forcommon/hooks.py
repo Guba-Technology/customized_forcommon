@@ -166,9 +166,16 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/bom_creator_extended.js"
+    "/assets/customized_forcommon/js/bom_creator_extended.js",
+    
 ]
+# web_include_js = [
+# "/assets/customized_forcommon/js/redirect_apps.js"
+# ]
 
+website_redirects = [
+    {"source": "/apps", "target": "/app/home"}
+]
 
 # js files to be included in the doctype views
 doctype_js = {
