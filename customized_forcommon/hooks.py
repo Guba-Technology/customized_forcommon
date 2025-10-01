@@ -202,7 +202,9 @@ jinja = {
 }
 
 
-
+website_redirects = [
+    {"source": "/apps", "target": "/app/home"}
+]
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
