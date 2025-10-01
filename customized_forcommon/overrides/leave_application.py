@@ -33,31 +33,37 @@ class CustomLeaveApplication(LeaveApplication):
 
     def calculate_total_leave_days(self):
         """
-        Custom method to calculate the total number of leave days based on
-        From Date, To Date, and the 'Half Day' checkbox.
-
-        If 'Half Day' is checked, each day in the range counts as 0.5 leave days.
-        Otherwise, each day counts as 1 full leave day.
-        This calculation happens during the validation phase (before submission).
+        Calculate total leave days, ignoring holidays.
+        If 'Half Day' is checked, take half of the total leave days.
         """
         if not self.from_date or not self.to_date:
             frappe.throw(_("From Date and To Date are required to calculate leave days."))
 
-        # Convert dates to proper date objects for accurate calculation
         from_date = getdate(self.from_date)
         to_date = getdate(self.to_date)
 
-        # Calculate the number of days in the inclusive range
-        days_in_range = cint((to_date - from_date).days) + 1
+        # Get company's default holiday list
+        holiday_list = frappe.get_value("Company", self.company, "default_holiday_list")
+        holidays = []
+        if holiday_list:
+            holidays = frappe.get_all(
+                "Holiday",
+                filters={"parent": holiday_list},
+                fields=["holiday_date"]
+            )
+            holidays = [getdate(h["holiday_date"]) for h in holidays]
 
-        if self.half_day:
-            # If the 'Half Day' checkbox is checked, each day in the range
-            # will count as 0.5 leave days towards the total.
-            self.total_leave_days = days_in_range * 0.5
-        else:
-            # If 'Half Day' is not checked, each day in the range
-            # will count as 1 full leave day.
-            self.total_leave_days = days_in_range
+        # Count non-holiday days in the range
+        days_in_range = 0
+        current_date = from_date
+        while current_date <= to_date:
+            if current_date not in holidays:
+                days_in_range += 1
+            current_date += timedelta(days=1)
+
+        # Apply half-day logic to the total leave period
+        self.total_leave_days = days_in_range * 0.5 if self.half_day else days_in_range
+
 
     def create_or_update_attendance(self, attendance_name, date):
         """
