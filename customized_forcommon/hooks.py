@@ -19,7 +19,7 @@ fixtures = [
             ["name", "in", [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
-                "Employee Lifecycle", "Recruitment", "Leaves",
+                "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
