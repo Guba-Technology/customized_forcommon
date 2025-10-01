@@ -33,7 +33,10 @@ class CustomLeaveApplication(LeaveApplication):
 
     def calculate_total_leave_days(self):
         """
-        Calculate total leave days, ignoring holidays.
+        Calculate total leave days excluding holidays.
+        Priority:
+            1. Employee's Holiday List (if defined)
+            2. Company's default Holiday List (if employee list not found)
         If 'Half Day' is checked, take half of the total leave days.
         """
         if not self.from_date or not self.to_date:
@@ -42,8 +45,14 @@ class CustomLeaveApplication(LeaveApplication):
         from_date = getdate(self.from_date)
         to_date = getdate(self.to_date)
 
-        # Get company's default holiday list
-        holiday_list = frappe.get_value("Company", self.company, "default_holiday_list")
+        # Try employee's holiday list first
+        holiday_list = frappe.get_value("Employee", self.employee, "holiday_list")
+
+        # Fallback: company's default holiday list
+        if not holiday_list:
+            holiday_list = frappe.get_value("Company", self.company, "default_holiday_list")
+
+        # Collect holidays
         holidays = []
         if holiday_list:
             holidays = frappe.get_all(
@@ -53,7 +62,7 @@ class CustomLeaveApplication(LeaveApplication):
             )
             holidays = [getdate(h["holiday_date"]) for h in holidays]
 
-        # Count non-holiday days in the range
+        # Count non-holiday days
         days_in_range = 0
         current_date = from_date
         while current_date <= to_date:
@@ -63,7 +72,6 @@ class CustomLeaveApplication(LeaveApplication):
 
         # Apply half-day logic to the total leave period
         self.total_leave_days = days_in_range * 0.5 if self.half_day else days_in_range
-
 
     def create_or_update_attendance(self, attendance_name, date):
         """
