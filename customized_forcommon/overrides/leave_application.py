@@ -86,7 +86,12 @@ class CustomLeaveApplication(LeaveApplication):
     def update_attendance(self):
         """
         Override update_attendance to skip holidays.
+        Attendance should only be created if leave status is 'Approved'.
         """
+        # Skip if not approved
+        if self.status != "Approved":
+            return
+    
         from_date = getdate(self.from_date)
         to_date = getdate(self.to_date)
 
