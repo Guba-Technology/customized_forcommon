@@ -3,24 +3,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2025-08-25 11:11:41.095690",
-  "name": "Pendind Receipt",
-  "style": "",
-  "workflow_state_name": "Pendind Receipt"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2025-08-29 09:41:05.011416",
-  "name": "In Transit",
-  "style": "",
-  "workflow_state_name": "In Transit"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2025-04-24 14:33:33.233880",
   "name": "Under Supervision",
   "style": "",
@@ -84,28 +66,10 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2025-04-03 09:53:20.530666",
-  "name": "Draft",
-  "style": "",
-  "workflow_state_name": "Draft"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2025-04-04 09:45:43.721041",
   "name": "Canceled",
   "style": "",
   "workflow_state_name": "Canceled"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2025-04-04 09:08:20.626500",
-  "name": "Completed",
-  "style": "",
-  "workflow_state_name": "Completed"
  },
  {
   "docstatus": 0,
@@ -124,15 +88,6 @@
   "name": "In Progress",
   "style": "",
   "workflow_state_name": "In Progress"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2025-05-06 15:53:19.492587",
-  "name": "Submitted",
-  "style": "",
-  "workflow_state_name": "Submitted"
  },
  {
   "docstatus": 0,
@@ -169,5 +124,50 @@
   "name": "Requested",
   "style": "",
   "workflow_state_name": "Requested"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-08-25 11:11:41.095690",
+  "name": "Pendind Receipt",
+  "style": "",
+  "workflow_state_name": "Pendind Receipt"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-05-06 15:53:19.492587",
+  "name": "Submitted",
+  "style": "",
+  "workflow_state_name": "Submitted"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-04-04 09:08:20.626500",
+  "name": "Completed",
+  "style": "",
+  "workflow_state_name": "Completed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-08-29 09:41:05.011416",
+  "name": "In Transit",
+  "style": "",
+  "workflow_state_name": "In Transit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-04-03 09:53:20.530666",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
  }
 ]
