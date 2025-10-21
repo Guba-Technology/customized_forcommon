@@ -9,7 +9,7 @@ frappe.ui.form.on("Travel Request", {
     raised_by:function(frm){
        if (frm.doc.raised_by) {
         frappe.call({
-        method:"hrms.hr.doctype.training_evaluation.training_evaluation.grievance_auto_complete",
+        method:"customized_forcommon.common_customization.doctype.training_evaluation.training_evaluation.grievance_auto_complete",
         args:{raised_by:frm.doc.raised_by},
         callback:function(r){
             if(r.message){

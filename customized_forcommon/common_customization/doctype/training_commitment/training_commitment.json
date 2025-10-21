@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:TrCmt-{YYYY}-{######}",
  "creation": "2025-10-20 09:11:37.193007",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -71,10 +72,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-21 10:24:10.048204",
+ "modified": "2025-10-21 10:58:03.982035",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Commitment",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
