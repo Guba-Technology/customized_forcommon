@@ -3,6 +3,24 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
+  "modified": "2025-08-25 11:11:41.095690",
+  "name": "Pendind Receipt",
+  "style": "",
+  "workflow_state_name": "Pendind Receipt"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-08-29 09:41:05.011416",
+  "name": "In Transit",
+  "style": "",
+  "workflow_state_name": "In Transit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
   "modified": "2025-04-24 14:33:33.233880",
   "name": "Under Supervision",
   "style": "",
