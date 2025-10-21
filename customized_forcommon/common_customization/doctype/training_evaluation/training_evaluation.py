@@ -16,7 +16,7 @@ def get_training_event(training_event):
     end_time = te.end_time
 
     if not start_time or not end_time:
-        frappe.throw(_("Start time or end time is missing."))
+        frappe.throw("Start time or end time is missing.")
 
     duration = end_time - start_time
     total_seconds = int(duration.total_seconds())
