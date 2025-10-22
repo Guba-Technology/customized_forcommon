@@ -47,6 +47,9 @@ fixtures = [
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
                           "Training Event", "Leave Application",
+
+                          "Training Result", "Employee Grievance", "Travel Request",
+                          "Clearance", 
                           ]],
         ]
     },
