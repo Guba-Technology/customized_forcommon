@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TrEv-{YYYY}-{######}",
+ "creation": "2025-10-20 11:15:05.616751",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "training_event",
+  "supplier",
+  "column_break_ftjf",
+  "trainers_name",
+  "location",
+  "duration_of_training",
+  "section_break_qmhp",
+  "training_evaluation_template",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "training_event",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Training Event",
+   "options": "Training Event",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "training_event.supplier",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "column_break_ftjf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "training_event.trainer_name",
+   "fieldname": "trainers_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Trainer's Name",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "training_event.location",
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "duration_of_training",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Duration of Training"
+  },
+  {
+   "fieldname": "section_break_qmhp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "training_evaluation_template",
+   "fieldtype": "Table",
+   "label": "Training Evaluation Template",
+   "options": "Training Evaluation Template"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-22 09:45:53.411690",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Training Evaluation",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

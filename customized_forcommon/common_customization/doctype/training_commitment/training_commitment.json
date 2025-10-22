@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TrCmt-{YYYY}-{######}",
+ "creation": "2025-10-20 09:11:37.193007",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "company",
+  "education_program",
+  "department",
+  "column_break_mmnm",
+  "institution",
+  "qualification",
+  "year_taken",
+  "witness",
+  "section_break_mlda",
+  "details"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company"
+  },
+  {
+   "fieldname": "education_program",
+   "fieldtype": "Link",
+   "label": "Education Program",
+   "options": "Education Program"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_mmnm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "institution",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Institution",
+   "options": "Institution",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qualification",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Qualification",
+   "options": "Qualification",
+   "reqd": 1
+  },
+  {
+   "fieldname": "year_taken",
+   "fieldtype": "Int",
+   "label": "Year Taken"
+  },
+  {
+   "fieldname": "witness",
+   "fieldtype": "Table MultiSelect",
+   "label": "Witness",
+   "options": "Witness Employee Detail"
+  },
+  {
+   "fieldname": "section_break_mlda",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Small Text",
+   "label": "Details"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-22 09:12:04.014415",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Training Commitment",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

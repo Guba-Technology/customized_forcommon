@@ -40,7 +40,11 @@ fixtures = [
                           "Stock Entry","Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application"
+                          "Training Event", "Leave Application",
+
+                          "Training Result", "Travel Request",
+                          "Clearance", "Employee Grievance",
+                        
                           ]],
         ]
     },
@@ -169,9 +173,16 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/bom_creator_extended.js"
+    "/assets/customized_forcommon/js/bom_creator_extended.js",
+    
 ]
+# web_include_js = [
+# "/assets/customized_forcommon/js/redirect_apps.js"
+# ]
 
+website_redirects = [
+    {"source": "/apps", "target": "/app/home"}
+]
 
 # js files to be included in the doctype views
 doctype_js = {
@@ -179,7 +190,9 @@ doctype_js = {
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
-
+    "Travel Request": "public/js/travel_request.js",
+    "Employee Grievance": "public/js/travel_request.js",
+    "Training Result": "public/js/training_result.js",
     "Payment Entry": "public/js/payment_entry.js"
 }
 
