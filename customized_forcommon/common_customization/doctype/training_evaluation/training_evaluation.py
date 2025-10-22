@@ -24,7 +24,6 @@ def get_training_event(training_event):
     days, remainder = divmod(total_seconds, 86400)
     hours, remainder = divmod(remainder, 3600)
     minutes, seconds = divmod(remainder, 60)
-
     parts = []
     if days:
         parts.append(f"{days} day{'s' if days > 1 else ''}")
@@ -32,8 +31,7 @@ def get_training_event(training_event):
         parts.append(f"{hours} hour{'s' if hours > 1 else ''}")
     if minutes:
         parts.append(f"{minutes} minute{'s' if minutes > 1 else ''}")
-    if seconds:
-        parts.append(f"{seconds} second{'s' if seconds > 1 else ''}")
+   
 
     return ", ".join(parts) if parts else ''
 @frappe.whitelist()

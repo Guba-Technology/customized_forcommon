@@ -192,6 +192,7 @@ doctype_js = {
     "Purchase Invoice": "public/js/sales_invoice.js",
     "Travel Request": "public/js/travel_request.js",
     "Employee Grievance": "public/js/travel_request.js",
+    "Training Result": "public/js/training_result.js",
     "Payment Entry": "public/js/payment_entry.js"
 }
 

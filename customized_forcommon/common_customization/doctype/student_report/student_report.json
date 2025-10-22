@@ -36,20 +36,26 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Data",
-   "label": "Department"
+   "in_list_view": 1,
+   "label": "Department",
+   "reqd": 1
   },
   {
    "fieldname": "university_attended_from",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "University Attended From",
-   "options": "Institution"
+   "options": "Institution",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_eoav",
@@ -64,14 +70,18 @@
   {
    "fieldname": "date_goes_to_school_education",
    "fieldtype": "Date",
-   "label": "Date Goes to school education"
+   "in_list_view": 1,
+   "label": "Date Goes to school education",
+   "reqd": 1
   },
   {
    "fieldname": "return_date",
    "fieldtype": "Date",
-   "label": "Return Date"
+   "label": "Return Date",
+   "reqd": 1
   },
   {
+   "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -87,7 +97,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-21 10:21:37.668805",
+ "modified": "2025-10-22 12:05:08.724969",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Student Report",

@@ -14,7 +14,9 @@
   "institution",
   "qualification",
   "year_taken",
-  "witness"
+  "witness",
+  "section_break_mlda",
+  "details"
  ],
  "fields": [
   {
@@ -38,8 +40,10 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_mmnm",
@@ -48,18 +52,22 @@
   {
    "fieldname": "institution",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Institution",
-   "options": "Institution"
+   "options": "Institution",
+   "reqd": 1
   },
   {
    "fieldname": "qualification",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Qualification",
-   "options": "Qualification"
+   "options": "Qualification",
+   "reqd": 1
   },
   {
    "fieldname": "year_taken",
-   "fieldtype": "Select",
+   "fieldtype": "Int",
    "label": "Year Taken"
   },
   {
@@ -67,12 +75,21 @@
    "fieldtype": "Table MultiSelect",
    "label": "Witness",
    "options": "Witness Employee Detail"
+  },
+  {
+   "fieldname": "section_break_mlda",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Small Text",
+   "label": "Details"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-21 10:58:03.982035",
+ "modified": "2025-10-22 09:12:04.014415",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Commitment",

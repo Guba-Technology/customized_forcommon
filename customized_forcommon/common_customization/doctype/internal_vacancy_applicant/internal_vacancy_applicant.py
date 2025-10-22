@@ -6,4 +6,10 @@ from frappe.model.document import Document
 
 
 class InternalVacancyApplicant(Document):
+	def before_submit(self):
+		if self.status =="" or self.status == None:
+			self.status = "Pending"
+		
+
+
 	pass

@@ -1,12 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:TrRep-{YYYY}-{######}",
  "creation": "2025-10-20 10:49:11.929381",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "employee",
   "training_event",
+  "employee",
   "date",
   "column_break_ldfq",
   "grade",
@@ -19,19 +20,25 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "training_event",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Training Event",
-   "options": "Training Event"
+   "options": "Training Event",
+   "reqd": 1
   },
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_ldfq",
@@ -67,10 +74,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-21 10:23:43.286622",
+ "modified": "2025-10-22 11:00:38.630422",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Report",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

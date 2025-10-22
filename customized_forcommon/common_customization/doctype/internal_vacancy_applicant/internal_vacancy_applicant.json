@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:IntVA-{YYYY}-{######}",
  "creation": "2025-10-20 08:37:58.454035",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,7 +15,8 @@
   "department",
   "current_grade",
   "grade_applying_for",
-  "date"
+  "date",
+  "amended_from"
  ],
  "fields": [
   {
@@ -38,10 +40,13 @@
   {
    "fieldname": "designation_applying_for",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Designation Applying For",
-   "options": "Designation"
+   "options": "Designation",
+   "reqd": 1
   },
   {
+   "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -66,22 +71,36 @@
   {
    "fieldname": "grade_applying_for",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Grade Applying For",
-   "options": "Employee Grade"
+   "options": "Employee Grade",
+   "reqd": 1
   },
   {
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Internal Vacancy Applicant",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-10-21 10:25:14.171071",
+ "modified": "2025-10-22 11:33:08.202022",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Internal Vacancy Applicant",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
