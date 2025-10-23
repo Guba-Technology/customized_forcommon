@@ -203,6 +203,7 @@ leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_pe
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
 }
+
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]

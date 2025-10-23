@@ -7,13 +7,13 @@ class WrappedPaymentEntry(OriginalPaymentEntry):
     def _get_delegate_cls(self):
         """Determine delegate class based on current references"""
         references = self.get("references") or []
-        
+
         has_employee_doc = any(
             ref.reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity")
             for ref in references
         )
         has_payment_request = any(
-            ref.reference_doctype == "Payment Request" 
+            ref.reference_doctype == "Payment Request"
             for ref in references
         )
 
