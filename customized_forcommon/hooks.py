@@ -136,6 +136,14 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
 
+    "KRA": {
+        "before_insert": "customized_forcommon.doc_events.kra_hooks.auto_increment_kra_number"
+    }
+
+
+    
+   
+
    
 }
 
@@ -162,7 +170,8 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
-    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry"
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
+    "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
 
    
     
@@ -193,6 +202,8 @@ doctype_js = {
     "Travel Request": "public/js/travel_request.js",
     "Employee Grievance": "public/js/travel_request.js",
     "Training Result": "public/js/training_result.js",
+    "Appraisal Template": "public/js/appraisal_template.js",
+    "Appraisal":"public/js/appraisal.js",
     "Payment Entry": "public/js/payment_entry.js"
 }
 
@@ -392,6 +403,11 @@ website_redirects = [
 # Overriding Methods
 # ------------------------------
 #
+# In your custom app's hooks.py
+# override_whitelisted_methods = {
+#     "hrms.hr.doctype.appraisal.appraisal.set_kras_and_rating_criteria": "customized_forcommon.overrides.appraisal.set_kras_and_rating_criteria"
+# }
+
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "customization_manager.event.get_events"
 # }
