@@ -13,6 +13,6 @@ def execute():
             "read_only": 0,
             "no_copy": 0,
             "fetch_from": "",
-            "depends_on": "eval:doc.paid_from"
+            "depends_on": "eval:!(doc.references && doc.references.some(r => r.reference_doctype == 'Employee Advance'))",
         }).insert(ignore_permissions=True)
         frappe.db.commit()

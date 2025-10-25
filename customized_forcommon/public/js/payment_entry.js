@@ -1,12 +1,19 @@
 frappe.ui.form.on("Payment Entry", {
+     refresh(frm) {
+        // Hide Paid By field if linked to Employee Advance
+        const has_employee_advance = (frm.doc.references || []).some(r => r.reference_doctype === "Employee Advance");
+
+        frm.toggle_display("paid_by", !has_employee_advance);
+
+    },
     setup(frm) {
         // Override Paid To filter
         frm.set_query("paid_to", function () {
             frm.events.validate_company(frm);
             return {
                 filters: {
-                    is_group: 0,             // Only leaf accounts
-                    company: frm.doc.company // Restrict to selected company
+                    is_group: 0,
+                    company: frm.doc.company
                 },
             };
         });
