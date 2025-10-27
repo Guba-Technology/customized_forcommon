@@ -3,7 +3,16 @@
 
 frappe.ui.form.on("Employee Advance Clearance", {
     refresh(frm) {
+        if ((frm.doc.invoiced_amount || 0) > (frm.doc.unreturned_amount || 0)) {
+            // Hide when invoiced amount is greater than unreturned_amount
+            frm.set_df_property("difference_account", "hidden", 0);
+            frm.set_df_property("difference_account", "reqd", 1);
+        } else {
+            // Show when advance <= unreturned_amount
+            frm.set_df_property("difference_account", "hidden", 1);
+            frm.set_df_property("difference_account", "reqd", 0);
 
+        }
     },
     setup(frm) {
 
@@ -37,11 +46,33 @@ frappe.ui.form.on("Employee Advance Clearance", {
                 }
             }
         });
+
+        frm.set_query("difference_account", function () {
+            return {
+                filters: {
+                    account_type: "Payable",
+                    company: frm.doc.company
+                }
+
+            }
+        });
     },
     onload: function (frm) {
         if (!frm.doc.employee) {
             frm.set_value("employee_advance", null);
         }
+
+        if ((frm.doc.invoiced_amount || 0) > (frm.doc.unreturned_amount || 0)) {
+            // Hide when invoiced amount is greater than unreturned_amount
+            frm.set_df_property("difference_account", "hidden", 0);
+            frm.set_df_property("difference_account", "reqd", 1);
+        } else {
+            // Show when advance <= unreturned_amount
+            frm.set_df_property("difference_account", "hidden", 1);
+            frm.set_df_property("difference_account", "reqd", 0);
+
+        }
+
     },
     employee: function (frm) {
         if (!frm.doc.employee_advance) {

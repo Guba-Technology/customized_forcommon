@@ -12,6 +12,7 @@ class EmployeeAdvanceClearance(Document):
 			self.unreturned_amount = self.advance_amount - self.returned_amount
 		else:
 			self.unreturned_amount = self.advance_amount  # fallback if returned_amount not set
+		self.difference_amount = self.invoiced_amount - self.unreturned_amount
 
 	
 
@@ -44,12 +45,18 @@ class EmployeeAdvanceClearance(Document):
 		amount = 0
 
 		if self.unreturned_amount and self.invoiced_amount:
-			difference = self.unreturned_amount - self.invoiced_amount
-			if difference >= 0:
-				amount = self.invoiced_amount
-			else:
-				frappe.throw("Invoiced amount cannot exceed unreturned advance amount.")
-
+			if self.invoiced_amount > self.unreturned_amount:
+				amount = self.unreturned_amount
+				difference = self.invoiced_amount - self.unreturned_amount
+				journal_entry.append("accounts", {
+					"account": self.difference_account,
+					"party_type": "Supplier",
+					"party": self.supplier,
+					"credit_in_account_currency": difference,
+					"debit_in_account_currency":  0
+					# "reference_type": "Purchase Invoice",
+					# "reference_name": self.purchase_invoice
+				})
 		# 2. Append Purchase Invoice Detail in Accounting Entries
 		journal_entry.append("accounts", {
 			"account": self.payable_account,
