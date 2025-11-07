@@ -867,7 +867,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-15 12:05:13.237922",
+  "modified": "2025-10-01 09:56:43.054915",
   "module": "Buying",
   "name": "Procurement",
   "number_cards": [],
@@ -876,7 +876,7 @@
   "quick_lists": [],
   "restrict_to_domain": "",
   "roles": [],
-  "sequence_id": 13.0,
+  "sequence_id": 17.0,
   "shortcuts": [
    {
     "color": "Green",
