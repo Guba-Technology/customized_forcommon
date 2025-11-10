@@ -57,10 +57,11 @@ class CustomPaymentRequest(PaymentRequest):
     def on_submit(self):
         logger.info(f"[{self.name}] Running on_submit()")
         try:
-            self.db_set("reference_doctype", "Payment Request")
-            self.db_set("reference_name", self.name)
-            logger.info(f"[{self.name}] Reference doctype and name set to self")
-
+            if not self.reference_doctype and not self.reference_name:
+                logger.info(f"[{self.name}] No reference document to process")
+                self.db_set("reference_doctype", "Payment Request")
+                self.db_set("reference_name", self.name)
+                logger.info(f"[{self.name}] Reference doctype and name set to self")
             if self.payment_request_type == "Outward":
                 self.db_set("status", "Initiated")
                 logger.info(f"[{self.name}] Status set to Initiated (Outward)")
