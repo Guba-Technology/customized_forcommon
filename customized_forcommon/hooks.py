@@ -106,8 +106,9 @@ before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creato
 #  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
-    "customized_forcommon.patches.remove_job_card_summary.execute"
+    "customized_forcommon.patches.remove_job_card_summary.execute",
 ]
+on_app_startup = "customized_forcommon.overrides.custom_asset_depreciation"
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
@@ -158,7 +159,6 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-
 }
 
 app_include_js = [

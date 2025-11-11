@@ -4,8 +4,8 @@ from frappe.model.document import Document
 class AssetReceipt(Document):
     def validate(self):
         """Update status automatically when location is filled"""
-        if self.location and self.status == "Pending Location":
-            self.status = "Ready to Create Asset"
+        if self.location and self.status == "In Transit":
+            self.status = "Received"
 
 
 @frappe.whitelist()
@@ -37,8 +37,8 @@ def create_asset_from_receipt(receipt_name):
         asset_doc.db_set("company", item.target_company)
         asset_doc.db_set("location", receipt.location)
 
-        frappe.msgprint(f"✅ Updated Asset <b>{asset_doc.name}</b> to company {item.target_company}")
+        frappe.msgprint(f" Asset <b>{asset_doc.name}</b>created to company {item.target_company}")
 
     # Mark receipt as complete
-    receipt.status = "Asset Created"
+    receipt.status = "Completed"
     receipt.save()

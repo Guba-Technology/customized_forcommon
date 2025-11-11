@@ -43,12 +43,13 @@
    "options": "Inter Company Asset Transfer"
   },
   {
-   "default": "Pending Location",
+   "default": "In Transit",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Pending Location\nReady to Create Asset\nAsset Created"
+   "options": "In Transit\nReceived\nCompleted",
+   "read_only": 1
   },
   {
    "fieldname": "created_asset",
@@ -83,7 +84,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-05 15:04:33.124066",
+ "modified": "2025-11-10 16:25:42.753910",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Asset Receipt",
