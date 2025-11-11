@@ -68,28 +68,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Quality Inspection",
-  "enabled": 1,
-  "modified": "2025-06-10 09:28:31.903628",
-  "module": "Common Customization",
-  "name": "Adding \"Rework\" option in Status",
-  "script": "frappe.ui.form.on('Quality Inspection', {\n\tonload: function(frm){\n\t    const field = frm.fields_dict.status;\n\t    const new_option = \"Rework\";\n\t    \n\t    if(!field.df.options.includes(new_option)){\n\t        field.df.options += '\\n' + new_option;\n\t        field.refresh()\n\t    }\n\t    \n\t    \n\t}\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Quality Inspection",
-  "enabled": 1,
-  "modified": "2025-06-10 11:14:47.344809",
-  "module": "Common Customization",
-  "name": "Fetching Quantity According to Reference Type",
-  "script": "frappe.ui.form.on('Quality Inspection', {\r\n    reference_name(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    item_code(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    reference_type(frm) {\r\n        fetch_custom_quantity(frm);\r\n    }\r\n});\r\n\r\nfunction fetch_custom_quantity(frm) {\r\n    const ref_type = frm.doc.reference_type;\r\n    const ref_name = frm.doc.reference_name;\r\n    const item = frm.doc.item_code;\r\n\r\n    const supported_types = [\r\n        \"Purchase Receipt\",\r\n        \"Purchase Invoice\",\r\n        \"Delivery Note\",\r\n        \"Sales Invoice\",\r\n        \"Stock Entry\",\r\n        \"Job Card\"\r\n    ];\r\n\r\n    if (supported_types.includes(ref_type) && ref_name && (ref_type === \"Job Card\" || item)) {\r\n        frappe.call({\r\n            method: \"customized_forcommon.api.get_reference_item_qty\",\r\n            args: {\r\n                reference_type: ref_type,\r\n                reference_name: ref_name,\r\n                item_code: item || \"\"\r\n            },\r\n            callback: function (r) {\r\n                if (r.message !== undefined) {\r\n                    frm.set_value(\"custom_quantity\", r.message);\r\n                } else {\r\n                    frm.set_value(\"custom_quantity\", null);\r\n                }\r\n            }\r\n        });\r\n    } else {\r\n        frm.set_value(\"custom_quantity\", null);\r\n    }\r\n}",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Leave Application",
   "enabled": 1,
   "modified": "2025-07-02 15:19:56.821320",
