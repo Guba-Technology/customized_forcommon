@@ -108,7 +108,6 @@ after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute",
 ]
-on_app_startup = "customized_forcommon.overrides.custom_asset_depreciation"
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
@@ -159,6 +158,8 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
+    # "Asset Depreciation Schedule": "customized_forcommon.overrides.custom_asset.AssetDepreciationSchedule"
+
 }
 
 app_include_js = [
@@ -186,6 +187,20 @@ doctype_js = {
 
     "Payment Entry": "public/js/payment_entry.js"
 }
+
+# -------------------------------
+# Hook: get_overrides
+# -------------------------------
+def get_overrides():
+    return {
+        "AssetDepreciationSchedule": {
+            "set_draft_asset_depr_schedule_details": "customized_forcommon.overrides.asset_depreciation_override.CustomAssetDepreciationSchedule.set_draft_asset_depr_schedule_details"
+        }
+    }
+
+from customized_forcommon.overrides import asset_depreciation_override
+
+startup = "customized_forcommon.overrides.asset_depreciation_override.apply_patches"
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
