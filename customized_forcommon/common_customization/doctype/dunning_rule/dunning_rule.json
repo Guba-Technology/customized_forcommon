@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-13 10:04:58.967751",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name1",
+  "after_days",
+  "dunning_on",
+  "dunning_based_on",
+  "dunning_fee",
+  "dunning_percentage"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "after_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "After Days",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "dunning_based_on",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Dunning Based On",
+   "options": "Amount\nPercentage",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "dunning_fee",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Dunning Fee",
+   "mandatory_depends_on": "eval:doc.dunning_based_on == \"Amount\"",
+   "non_negative": 1,
+   "read_only_depends_on": "eval:doc.dunning_based_on != \"Amount\""
+  },
+  {
+   "columns": 1,
+   "default": "0",
+   "fieldname": "dunning_percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "%",
+   "mandatory_depends_on": "eval:doc.dunning_based_on == \"Percentage\"",
+   "read_only_depends_on": "eval:doc.dunning_based_on != \"Percentage\""
+  },
+  {
+   "columns": 2,
+   "fieldname": "dunning_on",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Dunning On",
+   "options": "VAT Inclusive\nVAT Exclusive",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-13 14:52:19.354651",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Dunning Rule",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
