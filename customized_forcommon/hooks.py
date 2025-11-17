@@ -131,7 +131,12 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
-
+     "Asset Capitalization": {
+        "on_submit": "customized_forcommon.doc_events.asset_capitalization_logic.update_child_table_after_capitalization"
+    },
+    "Asset": {
+        "before_save": "customized_forcommon.doc_events.asset_capitalization_logic.sync_custom_fields"
+    }
 
 }
 
@@ -158,7 +163,6 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-    # "Asset Depreciation Schedule": "customized_forcommon.overrides.custom_asset.AssetDepreciationSchedule"
 
 }
 
@@ -187,20 +191,6 @@ doctype_js = {
 
     "Payment Entry": "public/js/payment_entry.js"
 }
-
-# -------------------------------
-# Hook: get_overrides
-# -------------------------------
-def get_overrides():
-    return {
-        "AssetDepreciationSchedule": {
-            "set_draft_asset_depr_schedule_details": "customized_forcommon.overrides.asset_depreciation_override.CustomAssetDepreciationSchedule.set_draft_asset_depr_schedule_details"
-        }
-    }
-
-from customized_forcommon.overrides import asset_depreciation_override
-
-startup = "customized_forcommon.overrides.asset_depreciation_override.apply_patches"
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
