@@ -11,11 +11,12 @@
   "dunning_on",
   "dunning_based_on",
   "dunning_fee",
-  "dunning_percentage"
+  "dunning_percentage",
+  "dunning_state"
  ],
  "fields": [
   {
-   "columns": 1,
+   "columns": 2,
    "fieldname": "name1",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -68,13 +69,21 @@
    "label": "Dunning On",
    "options": "VAT Inclusive\nVAT Exclusive",
    "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "dunning_state",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Dunning State",
+   "options": "Draft\nSubmitted"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-11-13 14:52:19.354651",
+ "modified": "2025-11-17 09:41:20.577100",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Dunning Rule",

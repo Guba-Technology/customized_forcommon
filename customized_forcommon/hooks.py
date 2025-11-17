@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation",
                            "Routing",
-                          "Training Event", "Leave Application"
+                          "Training Event", "Leave Application", "Dunning"
                           ]],
         ]
     },
@@ -140,6 +140,9 @@ scheduler_events = {
     "Hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+    ],
+    "daily": [
+        "customized_forcommon.scheduler.auto_dunning.daily_dunning_scheduler"
     ]
 
 }
