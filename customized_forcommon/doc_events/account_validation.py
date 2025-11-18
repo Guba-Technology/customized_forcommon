@@ -79,12 +79,13 @@ def get_allowed_range(parent_num):
     return lower, upper
 
 
+# Mapping of Account Type → Root Type
 ACCOUNT_ROOT_TYPE_MAP = {
-    "Accumulated Depreciation": "Asset",
+    "Accumulated": "Depreciation Asset",
     "Asset Received but not billed": "Liability",
     "Bank": "Asset",
     "Cash": "Asset",
-    "Chargeable": ["Expense", "Income"],
+    "Chargeable": ["Expense", "Income"],  # special case
     "Capital work in progress (CWIP)": "Asset",
     "Cost of goods sold (COGS)": "Expense",
     "Current Asset": "Asset",
@@ -104,48 +105,59 @@ ACCOUNT_ROOT_TYPE_MAP = {
     "Payable": "Liability",
     "Receivable": "Asset",
     "Round off": "Expense",
-    "Round off for opening": ["Temporary", "Equity"],
+    "Round off for opening": ["Temporary", "Balance Sheet"],
     "Stock": "Asset",
     "Stock Adjustment": "Expense",
     "Stock Received but not billed": "Liability",
     "Service Received but not billed": "Liability",
     "Tax": "Liability",
-    "Temporary": ["Temporary", "Equity"],
+    "Temporary": ["Temporary", "Balance Sheet"],
 }
 
 
 def validate_account_type_root_type(doc):
+    """
+    Enforce strict root_type validation with clear messages:
+    1️⃣ Child must match parent root_type if parent exists
+    2️⃣ Account type must be valid for root_type
+    """
+
+    # 1️⃣ Parent account validation
+    if doc.parent_account:
+        parent_root_type = frappe.db.get_value("Account", doc.parent_account, "root_type")
+        if not parent_root_type:
+            frappe.throw(_(
+                f"Parent account '{doc.parent_account}' does not have a Root Type set. "
+                "Please set it before adding child accounts."
+            ))
+
+        # Child root type must match parent
+        if doc.root_type != parent_root_type:
+            frappe.throw(_(
+                f"Invalid Account Type '{doc.account_type}' for this parent account '{doc.parent_account}'. "
+                f"The parent root type is '{parent_root_type}', so the child must have the same root type."
+            ))
+
+    # 2️⃣ Account type → root type validation (for top-level or standalone accounts)
     if not doc.account_type:
         return
 
     expected_root = ACCOUNT_ROOT_TYPE_MAP.get(doc.account_type)
     if not expected_root:
-        return
+        return  # no mapping → skip
 
+    # Multiple allowed root types (list)
     if isinstance(expected_root, list):
-        if not doc.root_type:
-            doc.root_type = expected_root[0]
-            frappe.msgprint(_(
-                f"Root Type automatically set to '{expected_root[0]}' "
-                f"for Account Type '{doc.account_type}'."
-            ))
-        elif doc.root_type not in expected_root:
+        if doc.root_type not in expected_root:
             frappe.throw(_(
-                f"Invalid Root Type '{doc.root_type}' for Account Type '{doc.account_type}'. "
-                f"Allowed: {', '.join(expected_root)}."
+                f"Invalid Account Type '{doc.account_type}' for Root Type '{doc.root_type}'. "
+                f"Allowed Root Types: {', '.join(expected_root)}."
             ))
         return
 
-    if not doc.root_type:
-        doc.root_type = expected_root
-        frappe.msgprint(_(
-            f"Root Type automatically set to '{expected_root}' "
-            f"for Account Type '{doc.account_type}'."
-        ))
-    elif doc.root_type != expected_root:
-        old_root = doc.root_type
-        doc.root_type = expected_root
-        frappe.msgprint(_(
-            f"Root Type adjusted from '{old_root}' to '{expected_root}' "
-            f"for Account Type '{doc.account_type}'."
+    # Single expected root type
+    if doc.root_type != expected_root:
+        frappe.throw(_(
+            f"Invalid Account Type '{doc.account_type}' for Root Type '{doc.root_type}'. "
+            f"The Parent must be '{expected_root}'."
         ))
