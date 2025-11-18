@@ -131,6 +131,9 @@ doc_events = {
     },
     "Sales Invoice": {
         "validate": "customized_forcommon.doc_events.sales_invoice_dunning.calculate_dunning_fee"
+    },
+    "Account": {
+        "validate": "customized_forcommon.doc_events.account_validation.validate_account",
     }
 
    
