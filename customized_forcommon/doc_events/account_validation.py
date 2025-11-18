@@ -5,6 +5,17 @@ from frappe import _
 def validate_account(doc, method):
     """Main validation hook for COA rules with numeric range enforcement."""
 
+    # Get company
+    company = doc.company or frappe.db.get_value("Account", doc.parent_account, "company")
+
+    # Check if validation is enabled for this company
+    enable_validation = frappe.db.get_value(
+        "Company", company, "custom_enable_chart_of_accounts_validation"
+    )
+
+    if not enable_validation:
+        return  # Skip all validations if not enabled
+
     # 1️⃣ Skip validation for root-level accounts
     if not doc.parent_account:
         # Still check root type consistency for top-level accounts
@@ -12,7 +23,6 @@ def validate_account(doc, method):
         return
 
     # 2️⃣ Check if the company uses 'Standard with Numbers'
-    company = doc.company or frappe.db.get_value("Account", doc.parent_account, "company")
     coa_template = frappe.db.get_value("Company", company, "chart_of_accounts")
     if coa_template != "Standard with Numbers":
         # Still apply account-type to root-type validation
@@ -56,20 +66,10 @@ def validate_account(doc, method):
 
 
 def get_allowed_range(parent_num):
-    """
-    Determine allowed child number range based on trailing zeros in parent number.
-    Example:
-      1000 → (1000, 2000)
-      1200 → (1200, 1300)
-      1250 → (1250, 1260)
-      100000 → (100000, 110000)
-      500 → (500, 600)
-    """
     s = str(parent_num)
     trailing_zeros = len(s) - len(s.rstrip('0'))
     
     if trailing_zeros == 0:
-        # No trailing zeros → next 10 block
         step = 1
     else:
         step = 10 ** trailing_zeros
@@ -79,16 +79,12 @@ def get_allowed_range(parent_num):
     return lower, upper
 
 
-# -------------------------------------------------------------------
-# ✅ NEW FUNCTION: Account Type ↔ Root Type validation and auto-setting
-# -------------------------------------------------------------------
-
 ACCOUNT_ROOT_TYPE_MAP = {
     "Accumulated Depreciation": "Asset",
     "Asset Received but not billed": "Liability",
     "Bank": "Asset",
     "Cash": "Asset",
-    "Chargeable": ["Expense", "Income"],  # special case
+    "Chargeable": ["Expense", "Income"],
     "Capital work in progress (CWIP)": "Asset",
     "Cost of goods sold (COGS)": "Expense",
     "Current Asset": "Asset",
@@ -119,18 +115,13 @@ ACCOUNT_ROOT_TYPE_MAP = {
 
 
 def validate_account_type_root_type(doc):
-    """
-    Validate and auto-set correct root_type based on account_type.
-    Works for both group and individual accounts.
-    """
     if not doc.account_type:
         return
 
     expected_root = ACCOUNT_ROOT_TYPE_MAP.get(doc.account_type)
     if not expected_root:
-        return  # No mapping → skip
+        return
 
-    # Multiple possible root types
     if isinstance(expected_root, list):
         if not doc.root_type:
             doc.root_type = expected_root[0]
@@ -145,7 +136,6 @@ def validate_account_type_root_type(doc):
             ))
         return
 
-    # Single expected root type
     if not doc.root_type:
         doc.root_type = expected_root
         frappe.msgprint(_(
