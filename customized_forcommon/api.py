@@ -154,7 +154,7 @@ def run_dunning_scheduler(invoice_name):
 
        # Catch-up condition:
         # Create dunning if trigger_date is in the past OR today
-        if trigger_date < today_date:
+        if today_date < trigger_date:
              # Future Dunning: inform how many days remain
             remaining_days = (trigger_date - today_date).days
             if remaining_days > 0:
