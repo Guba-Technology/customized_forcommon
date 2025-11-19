@@ -171,10 +171,8 @@ def run_dunning_scheduler(invoice_name):
                 "company": doc.company,
                 "customer": doc.customer,
                 "currency": doc.currency,
-                "posting_date": trigger_date,
                 "dunning_fee": row.dunning_fee,
                 "custom_auto_created": 1,
-                "income_account": default_dunning_account or None,
             },
             fields=["name"]
         )
