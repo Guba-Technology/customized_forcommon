@@ -30,8 +30,8 @@ def daily_dunning_scheduler():
             # Calculate trigger date for this rule
             trigger_date = add_days(getdate(doc.due_date), after_days)
 
-            # Only create Dunning if today matches the trigger date
-            if trigger_date != today_date:
+           # Create dunning if trigger_date is in the past OR today (catch-up)
+            if trigger_date < today_date:
                 continue
 
             # Fetch company and its default dunning income account

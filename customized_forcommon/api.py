@@ -152,8 +152,10 @@ def run_dunning_scheduler(invoice_name):
         after_days = int(row.after_days)
         trigger_date = add_days(getdate(doc.due_date), after_days)
 
-        # Check if today matches trigger date
-        if trigger_date != today_date:
+       # Catch-up condition:
+        # Create dunning if trigger_date is in the past OR today
+        if trigger_date < today_date:
+             # Future Dunning: inform how many days remain
             remaining_days = (trigger_date - today_date).days
             if remaining_days > 0:
                 upcoming_dunnings.append(str(remaining_days))
