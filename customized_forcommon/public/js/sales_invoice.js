@@ -3,6 +3,39 @@ frappe.ui.form.on("Sales Invoice", {
     validate_all(frm);
 
   },
+  refresh: function (frm) {
+    // Show button only when the invoice is submitted and overdue
+    if (frm.doc.docstatus === 1 && frm.doc.status === "Overdue") {
+
+      frm.add_custom_button(__('Run Dunning Scheduler'), function () {
+        frappe.call({
+          method: "customized_forcommon.api.run_dunning_scheduler", // Update with your correct path
+          args: {
+            invoice_name: frm.doc.name
+          },
+          freeze: true,
+          freeze_message: __("Running Dunning Scheduler..."),
+          callback: function (r) {
+            if (!r.exc) {
+              const msg = r.message || __("No response from server.");
+              frappe.msgprint({
+                title: __("Dunning Scheduler Result"),
+                message: msg,
+                indicator: msg.includes("successfully") ? "green" : "orange"
+              });
+              frm.reload_doc();
+            } else {
+              frappe.msgprint({
+                title: __("Error"),
+                message: __("An error occurred while running the scheduler."),
+                indicator: "red"
+              });
+            }
+          }
+        });
+      }, __("Actions"));
+    }
+  }
 });
 frappe.ui.form.on("Purchase Invoice", {
   validate: function (frm) {

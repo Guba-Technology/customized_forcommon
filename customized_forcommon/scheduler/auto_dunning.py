@@ -34,10 +34,47 @@ def daily_dunning_scheduler():
             if trigger_date != today_date:
                 continue
 
+            # Fetch company and its default dunning income account
             company = frappe.get_doc("Company", doc.company)
             default_dunning_account = company.custom_default_dunning_income_account
 
-            # Create Dunning document
+            # DUPLICATE CHECK: parent + child table matching fields
+            existing_dunnings = frappe.get_all(
+                "Dunning",
+                filters={
+                    "company": doc.company,
+                    "customer": doc.customer,
+                    "currency": doc.currency,
+                    "posting_date": trigger_date,
+                    "dunning_fee": row.dunning_fee,
+                    "conversion_rate": 1.0,
+                    "custom_auto_created": 1,
+                },
+                fields=["name"]
+            )
+
+            duplicate_found = False
+
+            for d in existing_dunnings:
+                existing_doc = frappe.get_doc("Dunning", d.name)
+                for pay in existing_doc.overdue_payments:
+                    if (
+                        pay.sales_invoice == doc.name
+                        and float(pay.outstanding) == float(doc.outstanding_amount)
+                        and getdate(pay.due_date) == getdate(doc.due_date)
+                    ):
+                        duplicate_found = True
+                        frappe.logger().info(
+                            f"Skipped duplicate Dunning for invoice {doc.name} on {trigger_date}"
+                        )
+                        break
+                if duplicate_found:
+                    break
+
+            if duplicate_found:
+                continue
+
+            # --- Create new Dunning ---
             dunning_doc = frappe.get_doc({
                 "doctype": "Dunning",
                 "company": doc.company,
@@ -58,6 +95,7 @@ def daily_dunning_scheduler():
             })
             dunning_doc.insert(ignore_permissions=True)
 
+            # Auto-submit if rule says so
             if row.dunning_state and row.dunning_state == "Submitted":
                 dunning_doc.save(ignore_permissions=True)
                 dunning_doc.submit()
