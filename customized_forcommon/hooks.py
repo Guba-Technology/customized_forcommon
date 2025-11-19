@@ -18,23 +18,23 @@ fixtures = [
         "filters": [
             ["name", "in", [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
-                
+
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
-                            
+
                             ]],
         ],
         "strict": False # do not check for existing records
-    }, 
-    
+    },
+
 
     {
         "dt": "Custom Field",
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
-                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request",
                           "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
                           "Purchase Receipt", "Training Program", "Purchase Reciept",
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
@@ -61,8 +61,8 @@ fixtures = [
 
                           ]]
         ]
-    }, 
-    
+    },
+
     {
         "dt": "Print Format",
         "filters": [
@@ -91,10 +91,10 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
-                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",         
-                            
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
+                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
+                            "Employee-custom_leave_increment_period-Label",
+
             ]]
         ]
     }
@@ -131,8 +131,14 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+ "Asset Capitalization": {
+        "on_submit": "customized_forcommon.doc_events.asset_capitalization_logic.update_child_table_after_capitalization"
+    },
+    "Asset": {
+        "before_validate": "customized_forcommon.doc_events.asset_capitalization_logic.set_default_values",
+        "before_save": "customized_forcommon.doc_events.asset_capitalization_logic.sync_custom_fields"
+    }
 
-   
 }
 
 scheduler_events = {
@@ -160,7 +166,7 @@ override_doctype_class = {
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
 
-    
+
 }
 
 app_include_js = [
@@ -169,7 +175,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
-    
+
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
@@ -186,7 +192,8 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
 
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Asset":"public/js/remove_mandatory.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application

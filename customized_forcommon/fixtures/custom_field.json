@@ -1520,7 +1520,7 @@
   "name": "Asset-custom_asset_type",
   "no_copy": 0,
   "non_negative": 0,
-  "options": "\nBiological\nBuilding\nComputer\nElectrical\nFurniture\nMachinery\nSpecialized\nVehicle",
+  "options": "\nBiological\nBuilding\nComputer\nElectrical\nFurniture\nMachinery\nSpecialized\nVehicle\nLand\nOther",
   "permlevel": 0,
   "placeholder": null,
   "precision": "",
