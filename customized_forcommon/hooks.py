@@ -164,7 +164,8 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
-    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
+    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+
     
 }
 
@@ -198,6 +199,11 @@ from customized_forcommon.overrides import custom_gl_entry
 PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
+# Monkey patch the original get_payment_entry method fro payment_entry.py
+import erpnext.accounts.doctype.payment_entry.payment_entry as pe_module
+from customized_forcommon.overrides import get_payment_entry_overrides
+
+pe_module.get_payment_entry = get_payment_entry_overrides.get_payment_entry
 
 
 jinja = {
@@ -208,6 +214,8 @@ jinja = {
 website_redirects = [
     {"source": "/apps", "target": "/app/home"}
 ]
+
+
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
