@@ -139,8 +139,10 @@ doc_events = {
 
     "KRA": {
         "before_insert": "customized_forcommon.doc_events.kra_hooks.auto_increment_kra_number"
-    }
-
+    },
+    "Batch": {
+        "before_insert": "customized_forcommon.doc_events.batch_events.before_insert_batch",
+    },
 
 
 
@@ -154,7 +156,7 @@ scheduler_events = {
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
     ],
     "daily": [
-        "customized_forcommon.scheduler.expired_items.mark_expired_items",
+        "customized_forcommon.scheduler.expired_items.mark_expired_batches",
     ]
 
 }

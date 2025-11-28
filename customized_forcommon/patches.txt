@@ -21,4 +21,4 @@ customized_forcommon.patches.v1.purchase_invoice_custom_fields
 customized_forcommon.patches.v1.sales_invoice_custom_fields
 customized_forcommon.patches.v1.employee_custom_fields
 customized_forcommon.patches.v2.employee_custom_fields
-customized_forcommon.patches.v1.add_shelf_number_fields
+customized_forcommon.patches.v1.add_shelf_number_field
