@@ -1,229 +1,225 @@
-from frappe import _
+# your_app/your_app/doctype/custom_payment_request/custom_payment_request.py
+
+from __future__ import unicode_literals
+
 import frappe
-from frappe.model.document import Document
+from frappe import _
 from frappe.utils import flt, nowdate
-from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import get_accounting_dimensions
-from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry, get_party_account, get_account_currency
+from erpnext.accounts.doctype.payment_entry.payment_entry import (
+    get_payment_entry,
+    get_party_account,
+    get_account_currency,
+)
 from erpnext.accounts.doctype.payment_request.payment_request import PaymentRequest
 
 logger = frappe.logger("payment_request")
 
+
 class CustomPaymentRequest(PaymentRequest):
-
     def validate(self):
-        logger.info(f"[{self.name}] Starting validate()")
-        try:
-            if self.get("__islocal"):
-                self.status = "Draft"
-                logger.info(f"[{self.name}] Status set to Draft for new document")
+        logger.info(f"[{self.name or 'New'}] validate() started")
 
+        if self.is_new():
+            self.status = "Draft"
+
+        # === Internal Transfer: No Party Needed ===
+        if self.payment_request_type == "Internal Transfer":
+            if not self.payment_account:
+                frappe.throw(_("From Account (Payment Account) is required for Internal Transfer"))
+            if not self.get("paid_to"):
+                frappe.throw(_("To Account is required for Internal Transfer"))
+        else:
+            # Inward / Outward
             if not self.party_type or not self.party:
-                frappe.throw(_("Party Type and Party are required."))
+                frappe.throw(_("Party Type and Party are required"))
 
-            if not self.currency:
-                frappe.throw(_("Currency must be specified."))
+        if not self.currency or not self.company:
+            frappe.throw(_("Currency and Company are required"))
 
-            if not self.company:
-                frappe.throw(_("Company must be specified."))
+        # Auto-set conversion rate
+        company_currency = frappe.get_cached_value("Company", self.company, "default_currency")
+        if self.currency != company_currency and not self.conversion_rate:
+            rate = frappe.db.get_value(
+                "Currency Exchange",
+                {"from_currency": self.currency, "to_currency": company_currency},
+                "exchange_rate",
+            )
+            self.conversion_rate = rate or 1
 
-            if self.reference_doctype and self.reference_name:
-                logger.info(f"[{self.name}] Validating reference document: {self.reference_doctype} - {self.reference_name}")
-                super().validate_reference_document()
-                super().validate_payment_request_amount()
+        if self.reference_doctype and self.reference_name:
+            super().validate_reference_document()
+            super().validate_payment_request_amount()
 
-            super().validate_subscription_details()
-            logger.info(f"[{self.name}] Validation complete")
-
-        except Exception as e:
-            logger.error(f"[{self.name}] Validation failed: {e}")
-            frappe.log_error(frappe.get_traceback(), _("Validation failed in CustomPaymentRequest"))
-            raise
+        super().validate_subscription_details()
+        logger.info(f"[{self.name or 'New'}] validate() completed")
 
     def before_submit(self):
-        logger.info(f"[{self.name}] Running before_submit()")
-        try:
-            if not self.reference_doctype and not self.reference_name:
-                self.outstanding_amount = self.grand_total
-                logger.info(f"[{self.name}] No reference set; outstanding_amount = grand_total: {self.grand_total}")
-            else:
-                super().before_submit()
-                logger.info(f"[{self.name}] Called super().before_submit()")
-
-        except Exception as e:
-            logger.error(f"[{self.name}] Error in before_submit: {e}")
-            frappe.log_error(frappe.get_traceback(), _("Error in before_submit"))
-            raise
+        if not self.reference_doctype and not self.reference_name:
+            self.outstanding_amount = flt(self.grand_total)
 
     def on_submit(self):
-        logger.info(f"[{self.name}] Running on_submit()")
-        try:
-            if not self.reference_doctype and not self.reference_name:
-                logger.info(f"[{self.name}] No reference document to process")
-                self.db_set("reference_doctype", "Payment Request")
-                self.db_set("reference_name", self.name)
-                logger.info(f"[{self.name}] Reference doctype and name set to self")
-            if self.payment_request_type == "Outward":
-                self.db_set("status", "Initiated")
-                logger.info(f"[{self.name}] Status set to Initiated (Outward)")
-                return
-            elif self.payment_request_type == "Inward":
-                self.db_set("status", "Requested")
-                logger.info(f"[{self.name}] Status set to Requested (Inward)")
+        logger.info(f"[{self.name}] on_submit()")
 
-            if not self.reference_doctype or not self.reference_name:
-                logger.info(f"[{self.name}] No reference document to process")
-                return
+        # Only set self-reference if standalone
+        if not self.reference_doctype and not self.reference_name:
+            self.db_set("reference_doctype", "Payment Request")
+            self.db_set("reference_name", self.name)
 
-            send_mail = super().payment_gateway_validation() if self.payment_gateway else None
-            logger.info(f"[{self.name}] payment_gateway_validation result: {send_mail}")
+        # Set correct status
+        if self.payment_request_type in ["Outward", "Internal Transfer"]:
+            self.db_set("status", "Initiated")
+        else:  # Inward
+            self.db_set("status", "Requested")
 
-            ref_doc = frappe.get_doc(self.reference_doctype, self.reference_name)
+        # Internal Transfer → no email
+        if self.payment_request_type == "Internal Transfer":
+            return
 
-            if (getattr(ref_doc, "order_type", None) == "Shopping Cart") or self.flags.get("mute_email"):
-                send_mail = False
-
-            if send_mail and self.payment_channel != "Phone":
-                logger.info(f"[{self.name}] Sending email notification")
-                super().set_payment_request_url()
-                super().send_email()
-                super().make_communication_entry()
-            elif self.payment_channel == "Phone":
-                logger.info(f"[{self.name}] Phone payment requested")
-                super().request_phone_payment()
-
-        except Exception as e:
-            logger.error(f"[{self.name}] Error in on_submit: {e}")
-            frappe.log_error(frappe.get_traceback(), _("Error in CustomPaymentRequest.on_submit"))
-            raise
+        # Inward with gateway → send email
+        if self.payment_request_type == "Inward" and self.payment_gateway and self.payment_channel != "Phone":
+            if not self.flags.get("mute_email"):
+                self.set_payment_request_url()
+                self.send_email()
+                self.make_communication_entry()
 
     def on_cancel(self):
-        logger.info(f"[{self.name}] Running on_cancel()")
-        try:
-            self.db_set("reference_doctype", None)
-            self.db_set("reference_name", None)
-            super().on_cancel()
-            logger.info(f"[{self.name}] Cancel process complete")
-
-        except Exception as e:
-            logger.error(f"[{self.name}] Error in on_cancel: {e}")
-            frappe.log_error(frappe.get_traceback(), _("Error in CustomPaymentRequest.on_cancel"))
-            raise
+        if self.reference_doctype == "Payment Request" and self.reference_name == self.name:
+            self.db_set({"reference_doctype": None, "reference_name": None})
+        super().on_cancel()
 
     def create_payment_entry(self, submit=True):
-        logger.info(f"[{self.name}] Creating Payment Entry, submit={submit}")
-        try:
-            frappe.flags.ignore_account_permission = True
+        logger.info(f"[{self.name}] create_payment_entry(submit={submit})")
 
-            if self.reference_doctype == "Payment Request":
-                ref_doc = self
+        frappe.flags.ignore_account_permission = True
+        amount = flt(self.outstanding_amount or self.grand_total)
+        company_currency = frappe.get_cached_value("Company", self.company, "default_currency")
 
-                if not self.party_type or not self.party:
-                    frappe.throw(_("Party Type and Party are required in Payment Request"))
+        # === INTERNAL TRANSFER ===
+        if self.payment_request_type == "Internal Transfer":
+            return self._create_internal_transfer_pe(amount, submit)
 
-                party_account = get_party_account(self.party_type, self.party, self.company)
-            else:
-                ref_doc = frappe.get_doc(self.reference_doctype, self.reference_name)
+        # === STANDALONE INWARD / OUTWARD (no reference doc) ===
+        if self.reference_doctype == "Payment Request" and self.reference_name == self.name:
+            return self._create_standalone_pe(amount, submit)
 
-                if self.reference_doctype in ["Sales Invoice", "POS Invoice"]:
-                    party_account = ref_doc.debit_to
-                elif self.reference_doctype == "Purchase Invoice":
-                    party_account = ref_doc.credit_to
-                else:
-                    party_account = get_party_account("Customer", ref_doc.get("customer"), ref_doc.company)
+        # === FROM INVOICE / OTHER DOCTYPE ===
+        return self._create_from_reference_pe(amount, submit, company_currency)
 
-            party_account_currency = (
-                self.get("party_account_currency")
-                or ref_doc.get("party_account_currency")
-                or get_account_currency(party_account)
-            )
+    def _create_internal_transfer_pe(self, amount, submit):
+        from_account = self.payment_account
+        to_account = self.paid_to
 
-            party_amount = bank_amount = self.outstanding_amount or self.grand_total
-            company_currency = frappe.get_cached_value("Company", self.company, "default_currency")
+        if not from_account or not to_account:
+            frappe.throw(_("From and To accounts are required for Internal Transfer"))
 
-            if party_account_currency == company_currency and party_account_currency != self.currency:
-                exchange_rate = ref_doc.get("conversion_rate") or 1
-                if not exchange_rate:
-                    frappe.throw(_("Missing conversion rate to compute bank amount."))
-                bank_amount = flt(party_amount / exchange_rate, self.precision("grand_total"))
+        pe = frappe.new_doc("Payment Entry")
+        pe.update({
+            "payment_type": "Internal Transfer",
+            "company": self.company,
+            "posting_date": nowdate(),
+            "paid_from": from_account,
+            "paid_to": to_account,
+            "paid_amount": amount,
+            "received_amount": amount,
+            "mode_of_payment": self.mode_of_payment,
+            "reference_no": self.name,
+            "reference_date": nowdate(),
+            "remarks": f"Internal Transfer - {self.name}",
+            "cost_center": self.cost_center,
+            "project": self.project,
+        })
 
-            logger.info(f"[{self.name}] party_amount={party_amount}, bank_amount={bank_amount}")
+        # Handle multi-currency
+        from_curr = frappe.db.get_value("Account", from_account, "account_currency")
+        to_curr = frappe.db.get_value("Account", to_account, "account_currency")
 
-            if self.reference_doctype == "Payment Request":
-                payment_type = "Receive" if self.payment_request_type == "Inward" else "Pay"
+        if from_curr != self.currency:
+            pe.paid_amount = flt(amount * (self.conversion_rate or 1))
+            pe.source_exchange_rate = pe.paid_amount / amount
 
-                # if not self.payment_account:
-                #     frappe.throw(_("Payment Account is required to create Payment Entry."))
+        if to_curr != self.currency:
+            pe.received_amount = flt(amount * (self.conversion_rate or 1))
+            pe.target_exchange_rate = pe.received_amount / amount
 
-                payment_entry = frappe.new_doc("Payment Entry")
-                payment_entry.update({
-                    "payment_type": payment_type,
-                    "company": self.company,
-                    "party_type": self.party_type,
-                    "party": self.party,
-                    "paid_from": self.payment_account if payment_type == "Pay" else party_account,
-                    "paid_to": party_account if payment_type == "Pay" else self.payment_account,
-                    "paid_amount": party_amount,
-                    "received_amount": bank_amount,
-                    "source_exchange_rate": 1,
-                    "target_exchange_rate": 1,
-                    "mode_of_payment": self.mode_of_payment,
-                    "reference_no": self.name,
-                    "reference_date": nowdate(),
-                    "remarks": f"Payment Entry from Payment Request {self.name}",
-                    "project": self.get("project"),
-                    "cost_center": self.get("cost_center")
-                })
-                payment_entry.append("references", {
-                    "reference_doctype": "Payment Request",
-                    "reference_name": self.name,
-                    "total_amount": self.grand_total,
-                    "outstanding_amount": self.outstanding_amount,
-                    "allocated_amount": party_amount,
-                    "payment_request": self.name,
-                })
-            else:
-                payment_entry = get_payment_entry(
-                    self.reference_doctype,
-                    self.reference_name,
-                    party_amount=party_amount,
-                    bank_account=self.payment_account,
-                    bank_amount=bank_amount,
-                    created_from_payment_request=True,
-                )
+        # pe.append("references", {
+        #     "reference_doctype": "Payment Request",
+        #     "reference_name": self.name,
+        #     "allocated_amount": amount
+        # })
 
-                payment_entry.update({
-                    "mode_of_payment": self.mode_of_payment,
-                    "reference_no": self.name,
-                    "reference_date": nowdate(),
-                    "remarks": f"Payment Entry against {self.reference_doctype} {self.reference_name} via Payment Request {self.name}",
-                    "cost_center": self.get("cost_center"),
-                    "project": self.get("project"),
-                })
+        if submit:
+            pe.insert(ignore_permissions=True)
+            pe.submit()
+            self.db_set("status", "Paid")
+            self.notify_update()
+            frappe.msgprint(_("Internal Transfer completed: {0}").format(pe.name_link()), indicator="green")
 
-                self._allocate_payment_request_to_pe_references(references=payment_entry.references)
+        return pe
 
-                if self.currency != ref_doc.company_currency:
-                    if (
-                        self.payment_request_type == "Outward"
-                        and payment_entry.paid_from_account_currency == ref_doc.company_currency
-                        and payment_entry.paid_from_account_currency != payment_entry.paid_to_account_currency
-                    ):
-                        payment_entry.paid_amount = payment_entry.base_paid_amount = (
-                            payment_entry.target_exchange_rate * payment_entry.received_amount
-                        )
+    def _create_standalone_pe(self, amount, submit):
+        party_account = get_party_account(self.party_type, self.party, self.company)
+        bank_account = self.payment_account
 
-            for dimension in get_accounting_dimensions():
-                payment_entry.update({dimension: self.get(dimension)})
+        if not bank_account:
+            frappe.throw(_("Payment Account is required"))
 
-            if submit:
-                payment_entry.insert(ignore_permissions=True)
-                payment_entry.submit()
-                logger.info(f"[{self.name}] Payment Entry {payment_entry.name} created and submitted")
+        payment_type = "Receive" if self.payment_request_type == "Inward" else "Pay"
+        paid_from = bank_account if payment_type == "Pay" else party_account
+        paid_to = party_account if payment_type == "Pay" else bank_account
 
-            return payment_entry
+        pe = frappe.new_doc("Payment Entry")
+        pe.update({
+            "payment_type": payment_type,
+            "company": self.company,
+            "posting_date": nowdate(),
+            "party_type": self.party_type,
+            "party": self.party,
+            "paid_from": paid_from,
+            "paid_to": paid_to,
+            "paid_amount": amount,
+            "received_amount": amount,
+            "mode_of_payment": self.mode_of_payment,
+            "reference_no": self.name,
+            "reference_date": nowdate(),
+            "remarks": f"Payment via Request {self.name}",
+        })
 
-        except Exception as e:
-            logger.error(f"[{self.name}] Error creating Payment Entry: {e}")
-            frappe.log_error(frappe.get_traceback(), _("Error while creating Payment Entry from Payment Request"))
-            raise
+        pe.append("references", {
+            "reference_doctype": "Payment Request",
+            "reference_name": self.name,
+            "total_amount": self.grand_total,
+            "outstanding_amount": amount,
+            "allocated_amount": amount,
+        })
 
+        if submit:
+            pe.insert(ignore_permissions=True)
+            pe.submit()
+            self.db_set("status", "Paid")
+            self.notify_update()
+
+        return pe
+
+    def _create_from_reference_pe(self, amount, submit, company_currency):
+        pe = get_payment_entry(
+            self.reference_doctype,
+            self.reference_name,
+            party_amount=amount,
+            bank_account=self.payment_account,
+            bank_amount=amount,
+        )
+
+        pe.update({
+            "mode_of_payment": self.mode_of_payment,
+            "reference_no": self.name,
+            "reference_date": nowdate(),
+            "remarks": f"Via Payment Request {self.name}",
+            "cost_center": self.cost_center,
+            "project": self.project,
+        })
+
+        if submit:
+            pe.insert(ignore_permissions=True)
+            pe.submit()
+
+        return pe

@@ -13,3 +13,11 @@ customized_forcommon.patches.v1.add_routing_to_bom_creator
 customized_forcommon.patches.v2.allow_payment_request_create
 # customized_forcommon.patches.v1.add_routing_fields_to_bom_creator
 customized_forcommon.patches.v1.add_status_in_appraisal
+customized_forcommon.patches.v1.salary_structure_assignment_patch
+
+
+customized_forcommon.patches.v1.company_custom_fields
+customized_forcommon.patches.v1.purchase_invoice_custom_fields
+customized_forcommon.patches.v1.sales_invoice_custom_fields
+customized_forcommon.patches.v1.employee_custom_fields
+customized_forcommon.patches.v2.employee_custom_fields

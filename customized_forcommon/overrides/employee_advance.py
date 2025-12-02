@@ -51,5 +51,6 @@ class CustomEmployeeAdvance(EmployeeAdvance):
 
         # --- Run original validation logic ---
         super().validate()
-
-    
+        frappe.msgprint(
+            _("Advance Account automatically set to: {0}").format(self.advance_account)
+        )

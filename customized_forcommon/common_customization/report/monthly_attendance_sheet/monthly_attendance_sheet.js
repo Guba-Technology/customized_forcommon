@@ -62,18 +62,6 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			default: 0,
 		},
 	],
-	onload: function () {
-		return frappe.call({
-			method: "hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet.get_attendance_years",
-			callback: function (r) {
-				var year_filter = frappe.query_report.get_filter("year");
-				year_filter.df.options = r.message;
-				year_filter.df.default = r.message.split("\n")[0];
-				year_filter.refresh();
-				year_filter.set_input(year_filter.df.default);
-			},
-		});
-	},
 	formatter: function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
 		const summarized_view = frappe.query_report.get_filter_value("summarized_view");
@@ -90,9 +78,11 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 				else if (value == "A") value = "<span style='color:red'>" + value + "</span>";
 				else if (value == "HD") value = "<span style='color:orange'>" + value + "</span>";
 				else if (value == "L") value = "<span style='color:#318AD8'>" + value + "</span>";
+				else if(value =="")value = "<span style='color:blue'>--</span>";
 			}
 		}
 
 		return value;
 	},
+
 };
