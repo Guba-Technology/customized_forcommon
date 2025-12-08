@@ -15,3 +15,16 @@ def execute():
         }).insert(ignore_permissions=True)
 
     frappe.db.commit()
+    asset_doc = frappe.get_doc("DocType", "Asset")
+    links = asset_doc.get("links", [])
+
+    if not any(l.link_doctype == "Asset Borrowing" for l in links):
+        links.append({
+            "group": "Activity",
+            "link_doctype": "Asset Borrowing",
+            "link_fieldname": "asset"
+        })
+        asset_doc.set("links", links)
+        asset_doc.save(ignore_permissions=True)
+        frappe.db.commit()
+        print("Asset Borrowing link added to Asset DocType")

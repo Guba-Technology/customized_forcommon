@@ -9,13 +9,13 @@ def mark_expired_batches():
     """
     today = getdate()
 
-    # 1️⃣ Get Expired Warehouse from Stock Settings
+    # Get Expired Warehouse from Stock Settings
     expired_wh = frappe.db.get_single_value("Stock Settings", "expired_warehouse")
     if not expired_wh:
         frappe.log_error("Expired Warehouse NOT configured in Stock Settings", "Expired Batch Scheduler")
         return
 
-    # 2️⃣ Get all active batches that have expired
+    # Get all active batches that have expired
     expired_batches = frappe.get_all(
         "Batch",
         filters={
@@ -37,7 +37,7 @@ def mark_expired_batches():
         batch_no = batch.name
 
         try:
-            # 3️⃣ ✅ UPDATED: Get stock from Serial and Batch Bundles
+            #UPDATED: Get stock from Serial and Batch Bundles
             stock_locations = frappe.db.sql("""
                 SELECT sbb.warehouse, SUM(sbb_entry.qty) as qty
                 FROM `tabSerial and Batch Bundle` sbb
@@ -55,7 +55,7 @@ def mark_expired_batches():
                 frappe.db.set_value("Batch", batch_no, "disabled", 1)
                 continue
 
-            # 4️⃣ Create stock entries for each warehouse with stock
+            # Create stock entries for each warehouse with stock
             stock_entries_created = 0
 
             for location in stock_locations:
@@ -88,7 +88,7 @@ def mark_expired_batches():
 
                 frappe.db.commit()  # Commit after each successful SE
 
-            # 5️⃣ Only disable batch if stock was successfully moved
+            # Only disable batch if stock was successfully moved
             if stock_entries_created > 0:
                 frappe.db.set_value("Batch", batch_no, "disabled", 1)
                 moved_batches += 1
@@ -105,7 +105,7 @@ def mark_expired_batches():
             failed_batches.append(batch_no)
             frappe.log_error(error_msg, "Expired Batch Scheduler")
 
-    # 6️⃣ Final summary
+    # Final summary
     summary = f"Expired batches processed: {moved_batches} moved, {len(failed_batches)} failed"
     frappe.logger().info(summary)
 

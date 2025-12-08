@@ -176,7 +176,8 @@ override_doctype_class = {
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
-    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
+    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+    "Asset": "customized_forcommon.overrides.asset.Asset"
 }
 
 app_include_js = [
@@ -206,7 +207,8 @@ doctype_js = {
     "Training Result": "public/js/training_result.js",
     "Appraisal Template": "public/js/appraisal_template.js",
     "Appraisal":"public/js/appraisal.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Asset":"public/js/asset.js"
 }
 
 

@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
+  "original_company",
   "asset",
   "borrower",
   "borrow_start_date",
@@ -23,18 +24,24 @@
    "fieldname": "asset",
    "fieldtype": "Link",
    "label": "Asset",
-   "options": "Asset"
+   "options": "Asset",
+   "reqd": 1
   },
   {
    "fieldname": "borrower",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Borrower",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "borrow_start_date",
    "fieldtype": "Date",
-   "label": "Borrow Start Date"
+   "in_list_view": 1,
+   "label": "Borrow Start Date",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_mivv",
@@ -48,13 +55,16 @@
   {
    "fieldname": "actual_return_date",
    "fieldtype": "Date",
-   "label": "Actual Return Date"
+   "in_list_view": 1,
+   "label": "Actual Return Date",
+   "reqd": 1
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending\nBorrowed\nReturned"
+   "options": "Pending\nBorrowed\nReturned\nCancelled",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -80,16 +90,23 @@
    "fieldtype": "Select",
    "label": "Naming Series",
    "options": "ASS-.BO-.#####"
+  },
+  {
+   "fieldname": "original_company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-27 10:54:30.777225",
+ "modified": "2025-12-08 16:41:28.695963",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Asset Borrowing",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
