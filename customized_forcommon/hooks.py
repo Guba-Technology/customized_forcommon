@@ -18,37 +18,37 @@ fixtures = [
         "filters": [
             ["name", "in", [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
-                
+
                 "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
-                            
+
                             ]],
         ],
         "strict": False # do not check for existing records
-    }, 
-    
+    },
+
 
     {
         "dt": "Custom Field",
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
-                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request",
                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
                           "Purchase Receipt", "Training Program", "Purchase Reciept",
                           "Stock Entry", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "Routing", 
+                          "Stock Ledger Entry", "Employee Grade", "Routing",
                           "Training Event", "Leave Application",
 
                           "Training Result", "Travel Request",
                           "Clearance", "Employee Grievance",
-                          "Appraisal Template", "Appraisal Template Goal", 
+
+                          "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
                           "Sales Order", "Customer"
-                       
-                        
-                          ]],
+
+                                                  ]],
         ]
     },
     {
@@ -68,8 +68,8 @@ fixtures = [
 
                           ]]
         ]
-    }, 
-    
+    },
+
     {
         "dt": "Print Format",
         "filters": [
@@ -98,9 +98,9 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",         
-                            
+            ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
+                            "Employee-custom_leave_increment_period-Label",
+
             ]]
         ]
     }
@@ -123,7 +123,7 @@ doc_events = {
     },
     "Item": {
         "autoname": "customized_forcommon.Item.custom_item_autoname",
-        "on_update": "customized_forcommon.Item.custom_item_autoname"
+        "on_update": "customized_forcommon.Item.custom_item_autoname",
     },
     "Interview": {
         "validate": "customized_forcommon.doc_events.interview_score.calculate_total_criteria_score",
@@ -141,9 +141,13 @@ doc_events = {
     "KRA": {
         "before_insert": "customized_forcommon.doc_events.kra_hooks.auto_increment_kra_number"
     },
+
     "Customer": {
         "validate": "customized_forcommon.doc_events.customer.validate_license_dates"
-    }
+    },
+     "Batch": {
+        "before_insert": "customized_forcommon.doc_events.batch_events.before_insert_batch",
+    },
 }
 
 scheduler_events = {
@@ -151,9 +155,14 @@ scheduler_events = {
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
     ],
+
      "Hourly":
     [
         "customized_forcommon.scheduler.customer_license_checker.execute",
+    ],
+    "daily":
+    [
+        "customized_forcommon.scheduler.expired_items.mark_expired_batches",
     ]
 
 }
@@ -170,7 +179,7 @@ override_doctype_class = {
     "Payment Entry": "customized_forcommon.overrides.wrapped_payment_entry.WrappedPaymentEntry",
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
@@ -183,7 +192,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
-    
+
 ]
 
 
@@ -207,7 +216,12 @@ doctype_js = {
     "Appraisal Template": "public/js/appraisal_template.js",
     "Appraisal":"public/js/appraisal.js",
     "Payment Entry": "public/js/payment_entry.js",
+    "Asset":"public/js/asset.js",
     "Customer": "public/js/customer_type.js"
+}
+doctype_list_js = {
+    "Asset": "public/js/asset_list.js",
+    "Asset Borrowing": "public/js/assetborrow_list.js"
 }
 
 
