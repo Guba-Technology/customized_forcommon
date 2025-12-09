@@ -43,8 +43,9 @@ fixtures = [
 
                           "Training Result", "Travel Request",
                           "Clearance", "Employee Grievance",
-                          "Appraisal Template", "Appraisal Template Goal"
-                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating"
+                          "Appraisal Template", "Appraisal Template Goal", 
+                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
+                          "Sales Order", "Customer"
                        
                         
                           ]],
@@ -139,19 +140,20 @@ doc_events = {
 
     "KRA": {
         "before_insert": "customized_forcommon.doc_events.kra_hooks.auto_increment_kra_number"
+    },
+    "Customer": {
+        "validate": "customized_forcommon.doc_events.customer.validate_license_dates"
     }
-
-
-    
-   
-
-   
 }
 
 scheduler_events = {
     "Hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+    ],
+     "Hourly":
+    [
+        "customized_forcommon.scheduler.customer_license_cheker.execute",
     ]
 
 }
@@ -171,7 +173,8 @@ override_doctype_class = {
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
-    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
+    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+    "Customer": "customized_forcommon.overrides.customer.CustomCustomer"
 }
 
 app_include_js = [
@@ -182,6 +185,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     
 ]
+
+
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
 # ]
@@ -201,7 +206,8 @@ doctype_js = {
     "Training Result": "public/js/training_result.js",
     "Appraisal Template": "public/js/appraisal_template.js",
     "Appraisal":"public/js/appraisal.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Customer": "public/js/customer_type.js"
 }
 
 
@@ -217,6 +223,14 @@ PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
 
+# from erpnext.accounts.report.bank_reconciliation_statement import bank_reconciliation_statement as brs
+# from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
+
+# brs.execute = cb.execute
+
+# override_report_js = {
+#     "Bank Reconciliation Statement": "public/js/bank_reconciliation_statement.js"
+# }
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
