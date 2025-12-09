@@ -153,7 +153,7 @@ scheduler_events = {
     ],
      "Hourly":
     [
-        "customized_forcommon.scheduler.customer_license_cheker.execute",
+        "customized_forcommon.scheduler.customer_license_checker.execute",
     ]
 
 }
