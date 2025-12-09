@@ -12,7 +12,7 @@ class CustomCustomer(BaseCustomer):
         if self.customer_type == "Foreign" or  self.customer_type == "Local":
             meta = frappe.get_meta("Customer")
             field = meta.get_field("customer_type")
-            if field and "Foriegn" not in field.options.split("\n"):
+            if field and "Foreign" not in field.options.split("\n"):
                 field.options += "\nForeign"
             if field and "Local" not in field.options.split("\n"):
                 field.options += "\nLocal"
