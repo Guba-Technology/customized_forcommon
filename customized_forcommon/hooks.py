@@ -156,7 +156,7 @@ scheduler_events = {
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
     ],
 
-     "Hourly":
+     "Daily":
     [
         "customized_forcommon.scheduler.customer_license_checker.execute",
     ],
