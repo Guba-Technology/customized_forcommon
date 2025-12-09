@@ -210,7 +210,8 @@ doctype_js = {
     "Asset":"public/js/asset.js",
 }
 doctype_list_js = {
-    "Asset": "public/js/asset_list.js"
+    "Asset": "public/js/asset_list.js",
+    "Asset Borrowing": "public/js/assetborrow_list.js"
 }
 
 
