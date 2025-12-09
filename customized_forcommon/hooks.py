@@ -177,7 +177,6 @@ override_doctype_class = {
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
-    "Asset": "customized_forcommon.overrides.asset.Asset"
 }
 
 app_include_js = [
@@ -208,7 +207,10 @@ doctype_js = {
     "Appraisal Template": "public/js/appraisal_template.js",
     "Appraisal":"public/js/appraisal.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Asset":"public/js/asset.js"
+    "Asset":"public/js/asset.js",
+}
+doctype_list_js = {
+    "Asset": "public/js/asset_list.js"
 }
 
 
