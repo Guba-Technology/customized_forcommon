@@ -3171,6 +3171,24 @@
     "type": "Link"
    },
    {
+    "dependencies": "",
+    "description": null,
+    "hidden": 0,
+    "icon": null,
+    "is_query_report": 0,
+    "label": "Asset Borrowing",
+    "link_count": 0,
+    "link_to": "Asset Borrowing",
+    "link_type": "DocType",
+    "onboard": 0,
+    "only_for": null,
+    "parent": "Fixed Assets",
+    "parentfield": "links",
+    "parenttype": "Workspace",
+    "report_ref_doctype": null,
+    "type": "Link"
+   },
+   {
     "dependencies": null,
     "description": null,
     "hidden": 0,
