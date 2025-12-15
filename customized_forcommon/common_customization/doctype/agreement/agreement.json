@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-12-15 10:35:02.816200",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_qolf",
+  "naming_series",
+  "buyer",
+  "column_break_ggbd",
+  "origin",
+  "destination",
+  "section_break_igpf",
+  "buyer_email",
+  "seller_email",
+  "effective_date",
+  "column_break_oygi",
+  "buyer_signature",
+  "seller_signature",
+  "section_break_lclq",
+  "witnesses",
+  "section_break_kjmo",
+  "agreement_item",
+  "section_break_gofy",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_qolf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Agreement",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "agreement_item",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Agreement Item"
+  },
+  {
+   "fieldname": "buyer",
+   "fieldtype": "Data",
+   "label": "Buyer"
+  },
+  {
+   "fieldname": "section_break_kjmo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_gofy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "AGREEMENT-.YYYY.-",
+   "read_only": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_ggbd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "origin",
+   "fieldtype": "Data",
+   "label": "Origin"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Data",
+   "label": "Destination"
+  },
+  {
+   "fieldname": "section_break_igpf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "seller_email",
+   "fieldtype": "Data",
+   "label": "Seller Email"
+  },
+  {
+   "fieldname": "column_break_oygi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "buyer_email",
+   "fieldtype": "Data",
+   "label": "Buyer Email"
+  },
+  {
+   "fieldname": "effective_date",
+   "fieldtype": "Date",
+   "label": "Effective Date"
+  },
+  {
+   "fieldname": "buyer_signature",
+   "fieldtype": "Signature",
+   "label": "Buyer Signature"
+  },
+  {
+   "fieldname": "seller_signature",
+   "fieldtype": "Signature",
+   "label": "Seller Signature"
+  },
+  {
+   "fieldname": "section_break_lclq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "witnesses",
+   "fieldtype": "Table",
+   "label": "Witnesses",
+   "options": "Agreement Witness"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-15 10:57:45.941149",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Agreement",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
