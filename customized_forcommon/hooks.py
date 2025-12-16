@@ -145,9 +145,9 @@ doc_events = {
     "Customer": {
         "validate": "customized_forcommon.doc_events.customer.validate_license_dates"
     },
-    #  "Batch": {
-    #     "before_insert": "customized_forcommon.doc_events.batch_events.before_insert_batch",
-    # },
+     "Batch": {
+        "before_insert": "customized_forcommon.doc_events.batch_events.before_insert_batch",
+    },
 }
 
 scheduler_events = {
@@ -160,10 +160,10 @@ scheduler_events = {
     [
         "customized_forcommon.scheduler.customer_license_checker.execute",
     ],
-    # "daily":
-    # [
-    #     "customized_forcommon.scheduler.expired_items.mark_expired_batches",
-    # ]
+    "daily":
+    [
+        "customized_forcommon.scheduler.expired_items.mark_expired_batches",
+    ]
 
 }
 
