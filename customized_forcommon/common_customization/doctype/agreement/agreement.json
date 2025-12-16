@@ -9,10 +9,14 @@
   "section_break_qolf",
   "naming_series",
   "buyer",
+  "customer_name",
+  "company",
   "column_break_ggbd",
+  "sales_order",
   "origin",
   "destination",
   "section_break_igpf",
+  "payment",
   "buyer_email",
   "seller_email",
   "effective_date",
@@ -23,6 +27,8 @@
   "agreement_item",
   "section_break_lclq",
   "witnesses",
+  "section_break_lzdh",
+  "agreement_detail",
   "section_break_gofy",
   "amended_from"
  ],
@@ -49,8 +55,11 @@
   },
   {
    "fieldname": "buyer",
-   "fieldtype": "Data",
-   "label": "Buyer"
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Buyer",
+   "options": "Customer",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_kjmo",
@@ -63,10 +72,10 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Series",
    "no_copy": 1,
    "options": "AGREEMENT-.YYYY.-",
-   "read_only": 1,
    "set_only_once": 1
   },
   {
@@ -88,6 +97,8 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "Email",
+   "fetch_from": "company.email",
    "fieldname": "seller_email",
    "fieldtype": "Data",
    "label": "Seller Email"
@@ -97,11 +108,15 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "buyer.email_id",
+   "fetch_if_empty": 1,
    "fieldname": "buyer_email",
    "fieldtype": "Data",
-   "label": "Buyer Email"
+   "label": "Buyer Email",
+   "options": "Email"
   },
   {
+   "default": "Today",
    "fieldname": "effective_date",
    "fieldtype": "Date",
    "label": "Effective Date"
@@ -125,13 +140,49 @@
    "fieldtype": "Table",
    "label": "Witnesses",
    "options": "Agreement Witness"
+  },
+  {
+   "fieldname": "payment",
+   "fieldtype": "Data",
+   "label": "Payment"
+  },
+  {
+   "fetch_from": "buyer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "sales_order.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_lzdh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "agreement_detail",
+   "fieldtype": "Text Editor",
+   "label": "Agreement Detail"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-16 09:52:04.961855",
+ "modified": "2025-12-16 11:03:54.606656",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Agreement",
