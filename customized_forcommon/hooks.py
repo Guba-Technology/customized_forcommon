@@ -218,7 +218,6 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "Asset":"public/js/asset.js",
     "Customer": "public/js/customer_type.js",
-    "Sales Order": "public/js/sales_order.js"
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",

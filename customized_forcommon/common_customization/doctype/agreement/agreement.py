@@ -24,3 +24,21 @@ class Agreement(Document):
             frappe.throw(
                 f"Duplicate items found in Agreement Items: {', '.join(set(duplicates))}"
             )
+
+@frappe.whitelist()
+def get_data(agreement_doc):
+    agreement = frappe.get_doc("Agreement", agreement_doc)
+    items_data = []
+
+    for item in agreement.agreement_item:
+        items_data.append({
+            "item_code": item.item_code,
+            "qty": item.qty,
+            "rate": item.rate,
+            "amount": item.amount
+        })
+
+    return {
+        "customer": agreement.buyer,
+        "items": items_data
+    }

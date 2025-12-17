@@ -12,7 +12,6 @@
   "customer_name",
   "company",
   "column_break_ggbd",
-  "sales_order",
   "origin",
   "destination",
   "section_break_igpf",
@@ -154,17 +153,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "sales_order",
-   "fieldtype": "Link",
-   "label": "Sales Order",
-   "options": "Sales Order",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "sales_order.company",
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "Seller/Company",
    "options": "Company",
    "reqd": 1
   },
@@ -182,7 +173,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-16 11:09:10.605738",
+ "modified": "2025-12-17 12:31:16.452509",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Agreement",
