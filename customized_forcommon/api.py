@@ -129,3 +129,4 @@ def get_designation_counts(designation, company, department=None):
         "employee_count": employee_count,
         "job_openings": job_openings
     }
+

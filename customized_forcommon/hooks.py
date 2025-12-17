@@ -17,7 +17,7 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Accounting & Finance", "Human Resource", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
 
                 "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
@@ -217,7 +217,7 @@ doctype_js = {
     "Appraisal":"public/js/appraisal.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Asset":"public/js/asset.js",
-    "Customer": "public/js/customer_type.js"
+    "Customer": "public/js/customer_type.js",
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
