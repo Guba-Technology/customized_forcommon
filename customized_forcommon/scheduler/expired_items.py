@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate, now_datetime, time_diff_in_seconds
 from frappe import _
 
 def mark_expired_batches():
@@ -7,12 +7,18 @@ def mark_expired_batches():
     Detect expired batches and move stock to Expired Warehouse automatically.
     UPDATED FOR SERIAL AND BATCH BUNDLE SYSTEM
     """
+    print("mark_expired_batches() started")
+
     today = getdate()
+    print(f"Today's date: {today}")
 
     # Get Expired Warehouse from Stock Settings
     expired_wh = frappe.db.get_single_value("Stock Settings", "expired_warehouse")
+    print(f"Expired Warehouse: {expired_wh}")
+
     if not expired_wh:
         frappe.log_error("Expired Warehouse NOT configured in Stock Settings", "Expired Batch Scheduler")
+        print(" No expired warehouse configured, exiting")
         return
 
     # Get all active batches that have expired
@@ -25,8 +31,11 @@ def mark_expired_batches():
         fields=["name", "item"]
     )
 
+    print(f"Found {len(expired_batches)} expired batches")
+
     if not expired_batches:
         frappe.logger().info("No expired batches found to process")
+        print(" No expired batches found, exiting")
         return
 
     moved_batches = 0
@@ -35,9 +44,10 @@ def mark_expired_batches():
     for batch in expired_batches:
         item_code = batch.item
         batch_no = batch.name
+        print(f" Processing batch {batch_no} for item {item_code}")
 
         try:
-            #UPDATED: Get stock from Serial and Batch Bundles
+            # Get stock from Serial and Batch Bundles
             stock_locations = frappe.db.sql("""
                 SELECT sbb.warehouse, SUM(sbb_entry.qty) as qty
                 FROM `tabSerial and Batch Bundle` sbb
@@ -50,9 +60,12 @@ def mark_expired_batches():
                 HAVING SUM(sbb_entry.qty) > 0
             """, (item_code, batch_no), as_dict=True)
 
+            print(f"  Stock locations found: {len(stock_locations)}")
+
             if not stock_locations:
                 # No stock found, just disable the batch
                 frappe.db.set_value("Batch", batch_no, "disabled", 1)
+                print(f" No stock found. Batch {batch_no} disabled")
                 continue
 
             # Create stock entries for each warehouse with stock
@@ -63,6 +76,7 @@ def mark_expired_batches():
                 qty = location.qty
 
                 if source_wh == expired_wh or qty <= 0:
+                    print(f"  ⏭ Skipping warehouse {source_wh} with qty {qty}")
                     continue
 
                 # Create Stock Entry
@@ -85,29 +99,28 @@ def mark_expired_batches():
                 se.insert(ignore_permissions=True)
                 se.submit()
                 stock_entries_created += 1
+                print(f" Moved {qty} of {item_code} from {source_wh} to {expired_wh}")
 
-                frappe.db.commit()  # Commit after each successful SE
+                frappe.db.commit()
 
             # Only disable batch if stock was successfully moved
             if stock_entries_created > 0:
                 frappe.db.set_value("Batch", batch_no, "disabled", 1)
                 moved_batches += 1
-
-                # Log success
-                frappe.logger().info(
-                    f"Successfully moved batch {batch_no} ({item_code}) "
-                    f"to expired warehouse {expired_wh}"
-                )
+                print(f" Batch {batch_no} disabled after stock movement")
 
         except Exception as e:
             frappe.db.rollback()
             error_msg = f"Failed to process batch {batch_no}: {str(e)}"
             failed_batches.append(batch_no)
             frappe.log_error(error_msg, "Expired Batch Scheduler")
+            print(f" {error_msg}")
 
     # Final summary
     summary = f"Expired batches processed: {moved_batches} moved, {len(failed_batches)} failed"
     frappe.logger().info(summary)
+    print(f" {summary}")
 
     if failed_batches:
         frappe.log_error(f"Failed batches: {', '.join(failed_batches)}", "Expired Batch Scheduler")
+        print(f" Failed batches: {', '.join(failed_batches)}")
