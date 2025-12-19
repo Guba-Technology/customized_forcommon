@@ -40,5 +40,6 @@ def get_data(agreement_doc):
 
     return {
         "customer": agreement.buyer,
-        "items": items_data
+        "items": items_data,
+        "company": agreement.company
     }

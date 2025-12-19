@@ -32,7 +32,8 @@ frappe.ui.form.on("Agreement", {
                             // Create new Agreement doc with buyer and agreement items
                             frappe.new_doc("Sales Order", {
                                 customer: r.message.customer,
-                                items: agreement_items
+                                items: agreement_items,
+                                company: r.message.company
                             });
 
                         } else {
