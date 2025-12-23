@@ -17,7 +17,7 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Accounting & Finance", "Human Resource", "Purchase", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Stock", "Fixed Assets", "Sales and Marketing",
@@ -62,32 +62,6 @@ fixtures = [
                           ]]
         ]
     }, 
-    
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["name", "in", [
-                "Stock Entry Print Format",
-                "Purchase Order Print Format",
-                "Purchase Receipt Print Format",
-                "Quotation Print Format"
-            ]]
-        ]
-    },
-    {
-        "dt": "Workflow",
-
-        "filters": [["name", "in", ["Material Request workflow"]]]
-
-    },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
-    {
-        "dt": "Report",
-        "filters": [
-            ["name", "in", ["Job Card Status Report", "Stock Ledger Report"]]
-        ]
-    },
     {
         "dt": "Property Setter",
         "filters": [
@@ -106,7 +80,8 @@ before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creato
 #  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
-    "customized_forcommon.patches.remove_job_card_summary.execute"
+    "customized_forcommon.patches.remove_job_card_summary.execute",
+    "customized_forcommon.after_migrate.hide_unallowed_workspaces.run"
 ]
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
@@ -169,7 +144,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
-    "/assets/customized_forcommon/js/payment_request_extend.js"    
+    "/assets/customized_forcommon/js/payment_request_extend.js",
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
