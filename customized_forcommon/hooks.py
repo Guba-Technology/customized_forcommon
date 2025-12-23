@@ -20,7 +20,7 @@ fixtures = [
                 "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
-                "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
+                "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
                             
@@ -35,11 +35,11 @@ fixtures = [
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
-                          "Workstation", "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
+                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
                           "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
-                          "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
+                          "Stock Entry",  "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade",
+                          "Routing", 
                           "Training Event", "Leave Application"
                           ]],
         ]
@@ -56,7 +56,7 @@ fixtures = [
         "dt": "Client Script",
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "Quality Inspection",
+                          "Sales Invoice", "Employee", 
                           "Sales Order", "Material Request", "Leave Application",
 
                           ]]
@@ -144,7 +144,7 @@ scheduler_events = {
 }
 
 override_doctype_class = {
-    "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
+    # "Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
     "Leave Application": "customized_forcommon.overrides.leave_application.CustomLeaveApplication",
     "User": "customized_forcommon.overrides.user.CustomUser",
     "Employee Onboarding": "customized_forcommon.overrides.employee_onboarding.CustomEmployeeOnboarding",
@@ -156,7 +156,7 @@ override_doctype_class = {
     "Payment Entry": "customized_forcommon.overrides.wrapped_payment_entry.WrappedPaymentEntry",
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
-    "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
+    # "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
 
