@@ -206,8 +206,10 @@ jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
 }
 
-app_logo_url = "/assets/customized_forcommon/AFCU.ico"
-
+website_context = {
+	"favicon": "/assets/customized_forcommon/images/afcu.jpg",
+	"splash_image": "/assets/customized_forcommon/images/afcu.jpg",
+}
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
