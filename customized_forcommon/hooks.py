@@ -181,7 +181,10 @@ jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
 }
 
-
+website_context = {
+	"favicon": "/assets/customized_forcommon/images/tele-logo.png",
+	"splash_image": "/assets/customized_forcommon/images/tele-logo.png",
+}
 
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
