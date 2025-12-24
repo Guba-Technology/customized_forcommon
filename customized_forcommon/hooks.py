@@ -17,10 +17,10 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting & Finance", "Human Resource", "Buying", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Accounting & Finance", "Human Resource", "Procurement", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
-                "Stock", "Fixed Assets", "Sales and Marketing",
+                "Inventory", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
                             
@@ -63,31 +63,6 @@ fixtures = [
         ]
     }, 
     
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["name", "in", [
-                "Stock Entry Print Format",
-                "Purchase Order Print Format",
-                "Purchase Receipt Print Format",
-                "Quotation Print Format"
-            ]]
-        ]
-    },
-    {
-        "dt": "Workflow",
-
-        "filters": [["name", "in", ["Material Request workflow"]]]
-
-    },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
-    {
-        "dt": "Report",
-        "filters": [
-            ["name", "in", ["Job Card Status Report", "Stock Ledger Report"]]
-        ]
-    },
     {
         "dt": "Property Setter",
         "filters": [
