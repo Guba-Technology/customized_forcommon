@@ -207,8 +207,8 @@ jinja = {
 }
 
 website_context = {
-	"favicon": "/assets/customized_forcommon/images/afcu.jpg",
-	"splash_image": "/assets/customized_forcommon/images/afcu.jpg",
+	"favicon": "/assets/customized_forcommon/images/afcu-logo.png",
+	"splash_image": "/assets/customized_forcommon/images/afcu-logo.png",
 }
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
