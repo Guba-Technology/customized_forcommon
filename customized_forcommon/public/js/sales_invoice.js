@@ -44,18 +44,18 @@ function validate_all(frm)
             taxes: tax_type,
           },
           callback: function (r) {
-            if (!r.exec && r.message) {
+            // if (!r.exec && r.message) {
 
-              if (r.message.vat) {
-                set_mandatory(frm,"vat");
-              } else {
-                set_free(frm,"vat");
-              }
-              if (r.message.withhold) {
-                set_mandatory(frm, "withhold");
-              } else {
-                set_free(frm, "withold");
-              }
+            //   if (r.message.vat) {
+            //     set_mandatory(frm,"vat");
+            //   } else {
+            //     set_free(frm,"vat");
+            //   }
+            //   if (r.message.withhold) {
+            //     set_mandatory(frm, "withhold");
+            //   } else {
+            //     set_free(frm, "withold");
+            //   }
               if(r.message.vat_not_exist){
                 
          frappe.show_alert({
