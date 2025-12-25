@@ -44,7 +44,7 @@ function validate_all(frm)
             taxes: tax_type,
           },
           callback: function (r) {
-            // if (!r.exec && r.message) {
+            if (!r.exec && r.message) {
 
             //   if (r.message.vat) {
             //     set_mandatory(frm,"vat");
@@ -59,16 +59,16 @@ function validate_all(frm)
               if(r.message.vat_not_exist){
                 
          frappe.show_alert({
-  message: `
-    <b style="color:red">⚠️ Unregistered VAT Account detected</b><br>
-    Please enter a valid VAT Account.<br>
-    You can set the account in the 
-    <a href="/app/company/${encodeURIComponent(frm.doc.company)}" target="_blank">
-      ${frm.doc.company}'s VAT Account Tab
-    </a>.
-  `,
-  indicator: 'red'
-});
+              message: `
+                <b style="color:red">⚠️ Unregistered VAT Account detected</b><br>
+                Please enter a valid VAT Account.<br>
+                You can set the account in the 
+                <a href="/app/company/${encodeURIComponent(frm.doc.company)}" target="_blank">
+                  ${frm.doc.company}'s VAT Account Tab
+                </a>.
+              `,
+              indicator: 'red'
+            });
 
 
 
@@ -81,16 +81,16 @@ function validate_all(frm)
                 // frm.refresh_field("custom_receipt_number");
                 // set_mandatory(frm, "withhold");
                 frappe.show_alert({
-  message: `
-    <b style="color:red">⚠️ Unregistered Withhold Account detected</b><br>
-    Please enter a valid Withhold Account.<br>
-    You can set the account in the 
-    <a href="/app/company/${encodeURIComponent(frm.doc.company)}" target="_blank">
-      ${frm.doc.company}'s VAT Account Tab
-    </a>.
-  `,
-  indicator: 'red'
-});
+                  message: `
+                    <b style="color:red">⚠️ Unregistered Withhold Account detected</b><br>
+                    Please enter a valid Withhold Account.<br>
+                    You can set the account in the 
+                    <a href="/app/company/${encodeURIComponent(frm.doc.company)}" target="_blank">
+                      ${frm.doc.company}'s VAT Account Tab
+                    </a>.
+                  `,
+                  indicator: 'red'
+                });
 
 
               }
