@@ -7,7 +7,7 @@ def run():
         "Assets": "Fixed Assets",
         "HR": "Human Resource",
         "Buying": "Procurement",
-        # "Procurement": "Purchase",
+        "Procurement": "Purchase",
         "Stock": "Inventory",
         "ERPNext Settings": "ERP Settings",
         "ERPNext Integrations": "ERP Integrations",
