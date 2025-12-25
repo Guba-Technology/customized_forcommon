@@ -130,4 +130,11 @@ def get_designation_counts(designation, company, department=None):
         "job_openings": job_openings
     }
 
+from frappe.desk.doctype.user.user import get_modules_for_user
 
+def get_modules_for_user_override(user):
+    modules = get_modules_for_user(user)
+    # Remove ERPNext Integrations for everyone except System Manager
+    if not frappe.has_role(user, "System Manager"):
+        modules = [m for m in modules if m.get("module_name") != "ERPNext Integrations"]
+    return modules
