@@ -17,6 +17,10 @@ class UserCompanyAssignment(Document):
         if not assigned_company or not assigned_user_id:
             frappe.throw("Both User and Company must be selected for the User Company Assignment.")
 
+        # Exclude Administrator from restriction checks
+        if assigned_user_id == "Administrator":
+            return
+
         max_users_allowed = frappe.db.get_value(
             "Max User Restriction",
             {"company": assigned_company, "docstatus": 1},
@@ -51,10 +55,13 @@ class UserCompanyAssignment(Document):
     def on_update(self):
         assigned_user_id = self.user
 
+        # Exclude Administrator from auto-enable logic
+        if assigned_user_id == "Administrator":
+            return
+
         if assigned_user_id:
             user_doc = frappe.get_doc("User", assigned_user_id)
 
-            # Enable user and set proper type
             if not user_doc.enabled:
                 user_doc.enabled = 1
 
@@ -68,6 +75,11 @@ class UserCompanyAssignment(Document):
 
     def on_trash(self):
         assigned_user_id = self.user
+
+         # Exclude Administrator from auto-disable logic
+        if assigned_user_id == "Administrator":
+            frappe.msgprint("Administrator assignment deleted, but user remains enabled.", indicator="green")
+            return
 
         if assigned_user_id:
             user_doc = frappe.get_doc("User", assigned_user_id)
