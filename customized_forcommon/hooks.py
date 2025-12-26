@@ -186,9 +186,6 @@ website_context = {
 	"splash_image": "/assets/customized_forcommon/images/tele-logo.png",
 }
 
-override_whitelisted_methods = {
-    "frappe.desk.doctype.user.user.get_modules_for_user": "customized_forcommon.api.get_modules_for_user_override"
-}
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
