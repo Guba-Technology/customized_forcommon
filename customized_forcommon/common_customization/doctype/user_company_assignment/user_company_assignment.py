@@ -73,8 +73,9 @@ class UserCompanyAssignment(Document):
     def on_trash(self):
         assigned_user_id = self.user
 
-        # Exclude Administrator from auto-disable logic
+         # Exclude Administrator from auto-disable logic
         if assigned_user_id == "Administrator":
+            frappe.msgprint("Administrator assignment deleted, but user remains enabled.", indicator="green")
             return
 
         if assigned_user_id:
