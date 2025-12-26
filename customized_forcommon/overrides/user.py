@@ -3,6 +3,10 @@ import frappe
 
 class CustomUser(BaseUser):
     def validate(self):
+        # Exclude Administrator
+        if self.name == "Administrator":
+            return
+
         super(CustomUser, self).validate()
 
         # Only show warning if user has no assignment; don't forcibly disable here
@@ -18,6 +22,10 @@ class CustomUser(BaseUser):
             )
 
     def on_update(self):
+        # Exclude Administrator
+        if self.name == "Administrator":
+            return
+
         super(CustomUser, self).on_update()
         # Clean-up: If the user is disabled, remove all their company assignments
         if not self.enabled:
