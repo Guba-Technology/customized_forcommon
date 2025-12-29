@@ -20,6 +20,7 @@ class WarrantyRequest(Document):
 			existing_approved_requests = frappe.get_all(
 				"Warranty Request",
 				filters={
+					"warranty_request_for": "Other Employee",
 					"employee": self.employee,
 					"status": "Active", # Only check for active requests
 					"name": ["!=", self.name]  # Exclude current request
@@ -27,9 +28,9 @@ class WarrantyRequest(Document):
 				fields=["name"]
 			)
 
-			if existing_approved_requests:
+			if len(existing_approved_requests) > 1:
 				frappe.throw(
-					_(f"An Active warranty request already exists for this employee {self.employee}.")
+					_(f"Two Active warranty requests already exists for this employee {self.employee}.")
 				)
 	def validate_duplicated_witness(self):
 		if self.witnesses:
