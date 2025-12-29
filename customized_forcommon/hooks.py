@@ -43,7 +43,8 @@ fixtures = [
 
                           "Training Result", "Travel Request",
                           "Clearance", "Employee Grievance",
-
+                          "Employee Incentive","Employee Promotion","Employee Transfer",
+                          "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
                           "Sales Order", "Customer"
