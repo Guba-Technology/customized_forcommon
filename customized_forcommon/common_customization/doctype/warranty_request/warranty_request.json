@@ -1,140 +1,299 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "naming_series:",
- "creation": "2025-06-02 15:07:58.734803",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "naming_series",
-  "employee",
-  "full_name",
-  "department",
-  "designation",
-  "salutation",
-  "ctc",
-  "company",
-  "column_break_exja",
-  "warrantee_holder",
-  "beneficiary_company",
-  "address",
-  "status"
- ],
- "fields": [
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Series",
-   "options": "WARRANTY-REQ-.YYYY.-"
-  },
-  {
-   "fieldname": "column_break_exja",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Employee / Warrantor",
-   "options": "Employee",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "employee.employee_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.department",
-   "fieldname": "department",
-   "fieldtype": "Data",
-   "label": "Department",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.designation",
-   "fieldname": "designation",
-   "fieldtype": "Data",
-   "label": "Designation",
-   "read_only": 1
-  },
-  {
-   "fieldname": "beneficiary_company",
-   "fieldtype": "Data",
-   "label": "Beneficiary Company"
-  },
-  {
-   "fieldname": "address",
-   "fieldtype": "Data",
-   "label": "Address",
-   "reqd": 1
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Draft\nActive\nReleased"
-  },
-  {
-   "fieldname": "warrantee_holder",
-   "fieldtype": "Data",
-   "label": "Warrantee Holder",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "employee.salutation",
-   "fieldname": "salutation",
-   "fieldtype": "Data",
-   "label": "Salutation",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.ctc",
-   "fieldname": "ctc",
-   "fieldtype": "Data",
-   "label": "CTC",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.company",
-   "fieldname": "company",
-   "fieldtype": "Data",
-   "label": "Company",
-   "read_only": 1
-  }
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-06-04 14:18:57.343807",
- "modified_by": "Administrator",
- "module": "Common Customization",
- "name": "Warranty Request",
- "naming_rule": "By \"Naming Series\" field",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "row_format": "Dynamic",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "title_field": "full_name",
- "track_changes": 1,
- "track_seen": 1
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "naming_series:",
+    "creation": "2025-06-02 15:07:58.734803",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "naming_series",
+        "warranty_request_for",
+        "employee",
+        "full_name",
+        "designation",
+        "date_of_birth",
+        "column_break_dode",
+        "department",
+        "ctc",
+        "salutation",
+        "company",
+        "date",
+        "status",
+        "warrantee_detail_section",
+        "beneficiary_company",
+        "warrantee_holder",
+        "column_break_mvap",
+        "address",
+        "guaratee_detail_section",
+        "type_of_collateral",
+        "collateral_value",
+        "collateral_address",
+        "employee_declaration",
+        "guarantor_full_name",
+        "guarantor_date_of_birth",
+        "sub_city",
+        "woreda",
+        "kebele",
+        "column_break_xsum",
+        "house_number",
+        "place_of_work",
+        "monthly_salary",
+        "daily_income",
+        "annual_income",
+        "guarantor_declaration",
+        "witnesses",
+        "guarantee_status"
+    ],
+    "fields": [
+        {
+            "fieldname": "naming_series",
+            "fieldtype": "Select",
+            "hidden": 1,
+            "label": "Series",
+            "options": "WARRANTY-REQ-.YYYY.-"
+        },
+        {
+            "fieldname": "employee",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Employee / Warrantor",
+            "options": "Employee",
+            "reqd": 1
+        },
+        {
+            "fetch_from": "employee.employee_name",
+            "fieldname": "full_name",
+            "fieldtype": "Data",
+            "label": "Full Name",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "employee.department",
+            "fieldname": "department",
+            "fieldtype": "Data",
+            "label": "Department",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "employee.designation",
+            "fieldname": "designation",
+            "fieldtype": "Data",
+            "label": "Designation",
+            "read_only": 1,
+            "reqd": 1
+        },
+        {
+            "fieldname": "beneficiary_company",
+            "fieldtype": "Data",
+            "label": "Beneficiary Company"
+        },
+        {
+            "fieldname": "address",
+            "fieldtype": "Data",
+            "label": "Address",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\""
+        },
+        {
+            "depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "label": "Status",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
+            "options": "\nDraft\nActive\nReleased"
+        },
+        {
+            "fieldname": "warrantee_holder",
+            "fieldtype": "Data",
+            "label": "Warrantee Holder",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\""
+        },
+        {
+            "fetch_from": "employee.salutation",
+            "fieldname": "salutation",
+            "fieldtype": "Data",
+            "label": "Salutation",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "employee.ctc",
+            "fieldname": "ctc",
+            "fieldtype": "Data",
+            "label": "CTC",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "employee.company",
+            "fieldname": "company",
+            "fieldtype": "Data",
+            "label": "Company",
+            "read_only": 1
+        },
+        {
+            "default": "Today",
+            "fieldname": "date",
+            "fieldtype": "Date",
+            "label": "Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "warranty_request_for",
+            "fieldtype": "Select",
+            "label": "Warranty Request For",
+            "options": "Other Employee\nSelf"
+        },
+        {
+            "fieldname": "column_break_mvap",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fetch_from": "employee.date_of_birth",
+            "fieldname": "date_of_birth",
+            "fieldtype": "Date",
+            "label": "Date of Birth",
+            "read_only": 1,
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_dode",
+            "fieldtype": "Column Break"
+        },
+        {
+            "depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
+            "fieldname": "warrantee_detail_section",
+            "fieldtype": "Section Break",
+            "label": "Warrantee Detail"
+        },
+        {
+            "fieldname": "type_of_collateral",
+            "fieldtype": "Link",
+            "label": "Type of Collateral",
+            "options": "Collateral Type"
+        },
+        {
+            "fieldname": "column_break_xsum",
+            "fieldtype": "Column Break"
+        },
+        {
+            "depends_on": "eval:doc.warranty_request_for == \"Self\"",
+            "fieldname": "guaratee_detail_section",
+            "fieldtype": "Section Break",
+            "label": "Collateral/Guaratee Detail"
+        },
+        {
+            "fieldname": "collateral_value",
+            "fieldtype": "Currency",
+            "label": "Collateral Value/Amount"
+        },
+        {
+            "fieldname": "collateral_address",
+            "fieldtype": "Data",
+            "label": "Collateral Address"
+        },
+        {
+            "fieldname": "employee_declaration",
+            "fieldtype": "Small Text",
+            "label": "Employee Declaration"
+        },
+        {
+            "fieldname": "guarantor_full_name",
+            "fieldtype": "Data",
+            "label": "Guarantor Full Name",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\""
+        },
+        {
+            "fieldname": "guarantor_date_of_birth",
+            "fieldtype": "Date",
+            "label": "Guarantor Date of Birth",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\""
+        },
+        {
+            "fieldname": "sub_city",
+            "fieldtype": "Data",
+            "label": "Sub City"
+        },
+        {
+            "fieldname": "woreda",
+            "fieldtype": "Data",
+            "label": "Woreda"
+        },
+        {
+            "fieldname": "kebele",
+            "fieldtype": "Data",
+            "label": "Kebele"
+        },
+        {
+            "fieldname": "house_number",
+            "fieldtype": "Data",
+            "label": "House Number"
+        },
+        {
+            "fieldname": "place_of_work",
+            "fieldtype": "Data",
+            "label": "Place of Work"
+        },
+        {
+            "fieldname": "monthly_salary",
+            "fieldtype": "Currency",
+            "label": "Monthly Salary"
+        },
+        {
+            "fieldname": "daily_income",
+            "fieldtype": "Currency",
+            "label": "Daily Income"
+        },
+        {
+            "fieldname": "annual_income",
+            "fieldtype": "Currency",
+            "label": "Annual Income"
+        },
+        {
+            "fieldname": "guarantor_declaration",
+            "fieldtype": "Small Text",
+            "label": "Guarantor Declaration"
+        },
+        {
+            "fieldname": "witnesses",
+            "fieldtype": "Table",
+            "label": "Witnesses",
+            "options": "Warranty Wintess"
+        },
+        {
+            "depends_on": "eval:doc.warranty_request_for == \"Self\"",
+            "fieldname": "guarantee_status",
+            "fieldtype": "Select",
+            "label": "Guarantee Status",
+            "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\"",
+            "options": "\nDraft\nAccepted\nReleased"
+        }
+    ],
+    "grid_page_length": 50,
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2025-12-29 11:04:49.648665",
+    "modified_by": "Administrator",
+    "module": "Common Customization",
+    "name": "Warranty Request",
+    "naming_rule": "By \"Naming Series\" field",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "full_name",
+    "track_changes": 1,
+    "track_seen": 1
 }
