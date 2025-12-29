@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:KNM-{YYYY}-{#####}",
+ "creation": "2025-12-29 09:18:45.021507",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "department",
+  "subject",
+  "knowledge_distribution_methods",
+  "knowledge_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department",
+   "reqd": 1
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Subject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "knowledge_details",
+   "fieldtype": "Table",
+   "label": " Knowledge Details",
+   "options": "Knowledge Details",
+   "reqd": 1
+  },
+  {
+   "fieldname": "knowledge_distribution_methods",
+   "fieldtype": "Link",
+   "label": "Knowledge Distribution Methods",
+   "options": "Knowledge Distribution Methods"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-29 09:56:50.446311",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Knowledge Management",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

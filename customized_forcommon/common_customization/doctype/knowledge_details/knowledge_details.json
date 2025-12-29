@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-29 09:21:20.489924",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "serial_number",
+  "knowledge_type",
+  "knowledge_gap",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "serial_number",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Serial Number"
+  },
+  {
+   "fieldname": "knowledge_type",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": " Knowledge Type"
+  },
+  {
+   "fieldname": "knowledge_gap",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Knowledge Gap"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Attachment"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-29 09:23:24.131786",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Knowledge Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

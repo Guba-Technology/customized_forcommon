@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{knowledge_distribution_method}",
+ "creation": "2025-12-29 09:55:21.602375",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "knowledge_distribution_method"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "knowledge_distribution_method",
+   "fieldtype": "Data",
+   "label": "Knowledge Distribution Method"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-29 09:56:32.423375",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Knowledge Distribution Methods",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

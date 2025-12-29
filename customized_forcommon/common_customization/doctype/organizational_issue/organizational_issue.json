@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:OI-{YYYY}-{#####}",
+ "creation": "2025-12-29 09:37:05.696052",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "subject",
+  "observed_gap_in_party",
+  "gap_observed_in",
+  "designation",
+  "area_of_improvement",
+  "column_break_kilr",
+  "cause_of_the_problem",
+  "impact_on_work",
+  "proposed_solution"
+ ],
+ "fields": [
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject"
+  },
+  {
+   "fieldname": "observed_gap_in_party",
+   "fieldtype": "Link",
+   "label": "Observed Gap In Party",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "gap_observed_in",
+   "fieldtype": "Dynamic Link",
+   "label": "Gap Observed In",
+   "options": "observed_gap_in_party"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "area_of_improvement",
+   "fieldtype": "Link",
+   "label": "Area Of Improvement",
+   "options": "Area of Improvement"
+  },
+  {
+   "fieldname": "column_break_kilr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cause_of_the_problem",
+   "fieldtype": "Small Text",
+   "label": "Cause of the Problem"
+  },
+  {
+   "fieldname": "impact_on_work",
+   "fieldtype": "Small Text",
+   "label": "Impact on Work"
+  },
+  {
+   "fieldname": "proposed_solution",
+   "fieldtype": "Small Text",
+   "label": "Proposed Solution"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-29 09:45:09.578471",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Organizational Issue",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

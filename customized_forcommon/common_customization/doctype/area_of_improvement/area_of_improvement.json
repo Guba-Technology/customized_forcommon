@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{area_of_improvement}",
+ "creation": "2025-12-29 09:41:33.057596",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "area_of_improvement"
+ ],
+ "fields": [
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "area_of_improvement",
+   "fieldtype": "Data",
+   "label": "Area of Improvement"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-29 09:42:36.127497",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Area of Improvement",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
