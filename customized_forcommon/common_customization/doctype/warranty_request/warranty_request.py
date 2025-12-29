@@ -16,7 +16,7 @@ class WarrantyRequest(Document):
 		
 	def validate_duplicated_request_per_employee(self):
 		"""Ensure that an employee cannot have multiple warranty requests"""
-		if self.employee:
+		if self.employee and self.warranty_request_for == "Other Employee":
 			existing_approved_requests = frappe.get_all(
 				"Warranty Request",
 				filters={
