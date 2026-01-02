@@ -33,6 +33,7 @@ function toggle_item_row_add(frm) {
     const has_mr = (frm.doc.items || []).some(d => d.material_request);
     frm.fields_dict.items.grid.cannot_add_rows = has_mr;
     frm.fields_dict.items.grid.cannot_add_multiple_rows = has_mr;
+    frm.set_df_property("get_stock_and_rate", "hidden", 1);
     frm.fields_dict.items.refresh();
 }
 
