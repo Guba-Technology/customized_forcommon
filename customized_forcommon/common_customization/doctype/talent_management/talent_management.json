@@ -22,7 +22,9 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "succession_planning_details",
@@ -46,7 +48,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-29 11:03:48.982772",
+ "modified": "2026-01-23 12:07:22.524811",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Talent Management",

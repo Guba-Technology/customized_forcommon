@@ -24,27 +24,26 @@
    "fieldname": "subject",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Subject",
-   "reqd": 1
+   "label": "Subject"
   },
   {
    "fieldname": "knowledge_details",
    "fieldtype": "Table",
    "label": " Knowledge Details",
-   "options": "Knowledge Details",
-   "reqd": 1
+   "options": "Knowledge Details"
   },
   {
    "fieldname": "knowledge_distribution_methods",
    "fieldtype": "Link",
    "label": "Knowledge Distribution Methods",
-   "options": "Knowledge Distribution Methods"
+   "options": "Knowledge Distribution Methods",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-29 09:56:50.446311",
+ "modified": "2026-01-23 12:06:42.505747",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Knowledge Management",
