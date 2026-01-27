@@ -3,6 +3,9 @@ import frappe
 
 class CustomUser(BaseUser):
     def validate(self):
+        # Exclude in setup wizard
+        if frappe.flags.in_setup_wizard:
+            return
         # Exclude Administrator
         if self.name == "Administrator":
             return
