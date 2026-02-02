@@ -82,6 +82,7 @@ after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute",
     # "customized_forcommon.after_migrate.hide_unallowed_workspaces.run"
+    "customized_forcommon.prunning.run"
 ]
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
