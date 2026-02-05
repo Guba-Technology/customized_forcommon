@@ -10,11 +10,13 @@ from frappe.modules import reload_doc
 # Configuration
 ALLOWED_WORKSPACES = [
     "Home", "Sales and Marketing", "Human Resource", "Inventory", "Purchase",
-    "Accounting & Finance", "Users", "Settings"
+    "Accounting & Finance", "Users", "Settings", "Recruitment", "Employee Lifecycle", 
+    "Performance","Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
+    "Salary Payout", "Tax & Benefits"
 ]
 LIT_MODULES = [
     "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", 
-    "Setup", "Core", "Custom", "Desk", "Email", "Automation"
+    "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization"
 ]
 HIDDEN_BY_DEFAULT = ["CRM", "Quality Management", "Quality", "Projects", "Assets", "Manufacturing"]
 MANIFEST_FILE = "lite_mode_lock_manifest.json"
