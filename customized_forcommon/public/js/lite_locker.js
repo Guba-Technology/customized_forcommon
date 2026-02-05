@@ -43,6 +43,6 @@ function block_and_redirect(item) {
         message: __("<b>{0}</b> is restricted in LITE mode Please contact your administrator.", [item]),
         indicator: 'red'
     }, 5);
-        window.location.href = '/app/home';
-window.location.reload(true);
+    window.location.href = '/app/home';
+    window.location.reload(true);
 }
