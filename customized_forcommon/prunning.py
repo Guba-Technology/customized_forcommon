@@ -71,7 +71,7 @@ def run(mode="lite"):
 def apply_lite_mode():
     workspaces = frappe.get_all("Workspace", fields=["name", "module", "label"])
     allowed_dts = frappe.get_all("DocType", filters={"module": ["in", LIT_MODULES]}, pluck="name")
-
+    
     for ws in workspaces:
         label = ws.label or ws.name
         is_hidden = 0 if label in ALLOWED_WORKSPACES else 1
@@ -96,6 +96,9 @@ def apply_lite_mode():
     for mod in modules:
         if mod not in LIT_MODULES:
             toggle_structure_lock(mod, lock=True)
+            frappe.db.sql("""
+            DELETE FROM `tabRoute History`
+            WHERE route = %s """, f"/app/{mod.lower()}")
     toggle_metadata(True)
 
 def restore_full_mode():
