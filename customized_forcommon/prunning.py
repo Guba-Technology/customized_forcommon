@@ -12,7 +12,7 @@ ALLOWED_WORKSPACES = [
     "Home", "Sales and Marketing", "Human Resource", "Inventory", "Purchase",
     "Accounting & Finance", "Users", "Settings", "Recruitment", "Employee Lifecycle", 
     "Performance","Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
-    "Salary Payout", "Tax & Benefits", "ERP Settings"
+    "Salary Payout", "Tax & Benefits",
 ]
 LIT_MODULES = [
     "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", 
