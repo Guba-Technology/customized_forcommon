@@ -43,5 +43,5 @@ function block_and_redirect(item) {
         indicator: 'red'
     }, 5);
     // frappe.set_route('desk');
-    window.location.replace('/app/home');
+    window.location.href('/app/home');
 }
