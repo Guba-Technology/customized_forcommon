@@ -1,7 +1,10 @@
-
 // your_app/public/js/lite_locker.js
+let liteLockerExecuted = false;  // guard flag
+
 $(document).on('app_ready', function () {
     frappe.router.on('change', () => {
+        if (liteLockerExecuted) return;  // prevent rerun
+
         const route = frappe.get_route();
         if (!route || route.length < 2) return;
 
@@ -16,22 +19,27 @@ $(document).on('app_ready', function () {
 
                 if (view_type === 'Module' && manifest.modules.includes(identifier)) {
                     block_and_redirect(identifier);
+                    liteLockerExecuted = true;
                 }
 
                 else if ((view_type === 'query-report' || view_type === 'report') && manifest.reports.includes(identifier)) {
                     block_and_redirect(identifier);
+                    liteLockerExecuted = true;
                 }
 
                 else if (view_type === 'Page' && manifest.pages.includes(identifier)) {
                     block_and_redirect(identifier);
+                    liteLockerExecuted = true;
                 }
 
                 else if (view_type === 'Form' && identifier === 'DocType' && manifest.doctypes.includes(route[2])) {
                     block_and_redirect(route[2]);
+                    liteLockerExecuted = true;
                 }
 
                 else if (manifest.doctypes.includes(identifier) || manifest.modules.includes(identifier)) {
                     block_and_redirect(identifier);
+                    liteLockerExecuted = true;
                 }
             }
         });
@@ -39,10 +47,12 @@ $(document).on('app_ready', function () {
 });
 
 function block_and_redirect(item) {
-    frappe.show_alert({
-        message: __("<b>{0}</b> is restricted in LITE mode Please contact your administrator.", [item]),
+    frappe.msgprint({
+        title: __('Access Restricted'),
+        message: __('The {0} is currently locked in LITE mode. You will be redirected to the home page.', [item]),
         indicator: 'red'
-    }, 5);
+    });
+    setTimeout(() => {
         window.location.href = '/app/home';
-window.location.reload(true);
+    }, 3000);
 }

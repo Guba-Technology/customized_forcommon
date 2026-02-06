@@ -6,6 +6,7 @@ import frappe
 import json
 import os
 from frappe.modules import reload_doc 
+from frappe import _
 
 # Configuration
 ALLOWED_WORKSPACES = [
