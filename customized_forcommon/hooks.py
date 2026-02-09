@@ -174,7 +174,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/bom_creator_extended.js"
+    "/assets/customized_forcommon/js/bom_creator_extended.js",
 ]
 
 
@@ -185,7 +185,8 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Stock Entry": "public/js/stock_entry_override.js"
+    "Stock Entry": "public/js/stock_entry_override.js",
+    "Purchase Receipt":"public/js/purchase_reciept_itemfilter.js"
 }
 
 
