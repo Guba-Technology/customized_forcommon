@@ -2,6 +2,7 @@ frappe.ui.form.on('Stock Entry', {
     onload: function (frm) {
         set_transfer_status(frm);
         toggle_item_row_add(frm);
+        set_item_filter(frm);
     },
 
     stock_entry_type: function (frm) {
@@ -15,6 +16,17 @@ frappe.ui.form.on('Stock Entry', {
     refresh: function (frm) {
         lock_fields_based_on_status(frm);
         toggle_item_row_add(frm);
+    },
+    cost_center2(frm) {
+        if (
+            frm.doc.stock_entry_type === "Material Issue" &&
+            frm.doc.cost_center2
+        ) {
+            (frm.doc.items || []).forEach(row => {
+                row.cost_center = frm.doc.cost_center2;
+            });
+            frm.refresh_field("items");
+        }
     }
 });
 
@@ -71,4 +83,43 @@ function lock_fields_based_on_status(frm) {
         frm.set_df_property("to_warehouse", "read_only", 0);
         frm.enable_save();
     }
+}
+frappe.ui.form.on("Stock Entry Detail", {
+    s_warehouse(frm, cdt, cdn) {
+        set_item_filter(frm);
+    },
+    items_add(frm, cdt, cdn) {
+        if (
+            frm.doc.stock_entry_type === "Material Issue" &&
+            frm.doc.cost_center2
+        ) {
+            frappe.model.set_value(
+                cdt,
+                cdn,
+                "cost_center",
+                frm.doc.cost_center2
+            );
+        }
+    }
+});
+
+function set_item_filter(frm) {
+    frm.fields_dict.items.grid.get_field("item_code").get_query = function (doc, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        let warehouse = row.s_warehouse || doc.from_warehouse;
+
+        if (!warehouse) {
+            frappe.msgprint("Please select Source Warehouse first");
+            return {};
+        }
+
+        return {
+            query: "customized_forcommon.item_queries.get_items_by_warehouse",
+            filters: {
+                warehouse: warehouse
+            }
+        };
+    };
+
+    frm.refresh_field("items");
 }
