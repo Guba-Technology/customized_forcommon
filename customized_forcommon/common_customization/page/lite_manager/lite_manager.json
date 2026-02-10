@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2026-02-09 10:03:24.626762",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-02-09 10:50:11.310153",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "lite-manager",
+ "owner": "Administrator",
+ "page_name": "lite-manager",
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Lite App Manager page"
+}
