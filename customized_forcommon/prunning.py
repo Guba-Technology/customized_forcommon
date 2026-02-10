@@ -25,35 +25,42 @@ MANIFEST_FILE = "lite_mode_lock_manifest.json"
 def get_manifest_path():
     return os.path.join(frappe.get_site_path(), MANIFEST_FILE)
 
+def read_manifest():
+    path = get_manifest_path()
+    if os.path.exists(path):
+        try:
+            with open(path, "r") as f:
+                return json.load(f)
+        except: return {}
+    return {}
+
+def write_manifest(data):
+    path = get_manifest_path()
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
+
 @frappe.whitelist()
 def get_locked_manifest():
     """Returns a comprehensive list of locked components for the JS Locker."""
-    path = get_manifest_path()
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            try:
-                data = json.load(f)
-            except:
-                return {"modules": [], "doctypes": [], "reports": [], "pages": []}
-            
-            all_doctypes, all_reports, all_pages = [], [], []
-            
-            for mod, components in data.items():
-                # Handle dictionary format (New) or list format (Old)
-                if isinstance(components, dict):
-                    all_doctypes.extend(components.get("doctypes", []))
-                    all_reports.extend(components.get("reports", []))
-                    all_pages.extend(components.get("pages", []))
-                elif isinstance(components, list):
-                    all_doctypes.extend(components)
+    data = read_manifest()
+    if not data:
+        return {"modules": [], "doctypes": [], "reports": [], "pages": []}
+    
+    all_doctypes, all_reports, all_pages = [], [], []
+    
+    # We now iterate through the snapshot to extract names for the JS locker
+    for mod, snapshot in data.items():
+        if isinstance(snapshot, dict):
+            all_doctypes.extend(snapshot.get("doctypes_meta", {}).keys())
+            all_reports.extend(snapshot.get("reports", []))
+            all_pages.extend(snapshot.get("pages", []))
 
-            return {
-                "modules": list(data.keys()),
-                "doctypes": list(set(all_doctypes)),
-                "reports": list(set(all_reports)),
-                "pages": list(set(all_pages))
-            }
-    return {"modules": [], "doctypes": [], "reports": [], "pages": []}
+    return {
+        "modules": list(data.keys()),
+        "doctypes": list(set(all_doctypes)),
+        "reports": list(set(all_reports)),
+        "pages": list(set(all_pages))
+    }
 @frappe.whitelist()
 def run(mode="lite"):
     is_lite = (mode == "lite")
@@ -61,59 +68,53 @@ def run(mode="lite"):
     try:
         if is_lite:
             apply_lite_mode()
-            return True
         else:
             restore_full_mode()
-            return True
+        
         frappe.clear_cache()
         print(f"Successfully updated to {mode.upper()} mode.")
+        return True
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "LITE Mode Toggle Error")
         print(f"Error: {e}")
+        return False
 
 def apply_lite_mode():
-    workspaces = frappe.get_all("Workspace", fields=["name", "module", "label"])
-    allowed_dts = frappe.get_all("DocType", filters={"module": ["in", LIT_MODULES]}, pluck="name")
+    """Bulk apply Lite mode while creating snapshots."""
+    # 1. Handle Module Selections
+    allowed_mod_str = frappe.db.get_global("lite_modules")
+    allowed_modules = json.loads(allowed_mod_str) if allowed_mod_str else LIT_MODULES
     
-    for ws in workspaces:
-        label = ws.label or ws.name
-        is_hidden = 0 if label in ALLOWED_WORKSPACES else 1
-        frappe.db.set_value("Workspace", ws.name, "is_hidden", is_hidden, update_modified=False)
-
-        if not is_hidden:
-            # Clean up Workspace Links and Shortcuts
-            frappe.db.sql("DELETE FROM `tabWorkspace Link` WHERE parent=%s AND link_to NOT IN %s AND type!='Card Break'", (ws.name, tuple(allowed_dts + [""])))
-            frappe.db.sql("DELETE FROM `tabWorkspace Shortcut` WHERE parent=%s AND link_to NOT IN %s", (ws.name, tuple(allowed_dts + [""])))
-            
-            content = frappe.db.get_value("Workspace", ws.name, "content")
-            if content:
-                try:
-                    data = json.loads(content)
-                    clean_data = [b for b in data if not (b.get("data", {}).get("link_to") or b.get("data", {}).get("shortcut_name")) 
-                                  or (b.get("data", {}).get("link_to") in allowed_dts) 
-                                  or (b.get("data", {}).get("shortcut_name") in allowed_dts)]
-                    frappe.db.set_value("Workspace", ws.name, "content", json.dumps(clean_data), update_modified=False)
-                except: pass
-
     modules = frappe.get_all("Module Def", pluck="name")
     for mod in modules:
-        if mod not in LIT_MODULES:
-            toggle_structure_lock(mod, lock=True)
-            frappe.db.sql("""
-            DELETE FROM `tabRoute History`
-            WHERE route = %s """, f"/app/{mod.lower()}")
+        if mod not in allowed_modules:
+            toggle_module_visibility(mod, hide=True)
+            frappe.db.sql("DELETE FROM `tabRoute History` WHERE route LIKE %s", f"/app/{mod.lower()}%")
+    
+    # 2. Handle Workspace Visibility based on ALLOWED_WORKSPACES
+    workspaces = frappe.get_all("Workspace", fields=["name", "label"])
+    for ws in workspaces:
+        label = ws.label or ws.name
+        if label not in ALLOWED_WORKSPACES:
+            # We don't use toggle_module_visibility here because these are standalone workspaces
+            frappe.db.set_value("Workspace", ws.name, "is_hidden", 1, update_modified=False)
+
     toggle_metadata(True)
 
 def restore_full_mode():
+    """Precision restore using the manifest snapshots."""
+    manifest = read_manifest()
+    
+    # Restore every module recorded in the manifest
+    for module_name in list(manifest.keys()):
+        toggle_module_visibility(module_name, hide=False)
+
+    # Global reset for any stragglers
     frappe.db.sql("UPDATE `tabDocType` SET read_only = 0, show_name_in_global_search = 1 WHERE custom = 0")
     if frappe.db.has_column("Module Def", "disabled"):
         frappe.db.sql("UPDATE `tabModule Def` SET disabled = 0")
-    
-    # Remove all entries from manifest
-    path = get_manifest_path()
-    if os.path.exists(path):
-        os.remove(path)
 
+    # Unhide all Workspaces and force a reload from original JSON to restore 'content'
     workspaces = frappe.get_all("Workspace", fields=["name", "module"])
     for ws in workspaces:
         frappe.db.set_value("Workspace", ws.name, "is_hidden", 0, update_modified=False)
@@ -123,28 +124,73 @@ def restore_full_mode():
                 reload_doc(frappe.scrub(app), "desktop_page", frappe.scrub(ws.name), force=True)
         except: pass
     
+    # Clear manifest file instead of deleting to maintain file presence
+    write_manifest({})
+    
     frappe.db.commit()
     frappe.clear_cache()
 
 def toggle_module_visibility(module_name, hide=True):
-    """Selective toggle for a single module's visibility and URL security."""
-    status = 1 if hide else 0
-    search = 0 if hide else 1
-
-    if frappe.db.has_column("Module Def", "disabled"):
-        frappe.db.set_value("Module Def", module_name, "disabled", status)
-
-    frappe.db.sql("UPDATE `tabDocType` SET read_only=%s, show_name_in_global_search=%s WHERE module=%s", (status, search, module_name))
-    frappe.db.sql("UPDATE `tabWorkspace` SET is_hidden=%s WHERE module=%s", (status, module_name))
+    """Surgical toggle that records original state before hiding."""
+    manifest = read_manifest()
     
-    # Sync with URL locker manifest
-    toggle_structure_lock(module_name, lock=hide)
-    
+    if hide:
+        # --- SNAPSHOT PHASE ---
+        if module_name not in manifest:
+            # Record Module State
+            mod_disabled = 0
+            if frappe.db.has_column("Module Def", "disabled"):
+                mod_disabled = frappe.db.get_value("Module Def", module_name, "disabled") or 0
+            
+            # Record DocType States
+            doctypes_meta = {}
+            dts = frappe.get_all("DocType", filters={"module": module_name}, fields=["name", "read_only", "show_name_in_global_search"])
+            for d in dts:
+                doctypes_meta[d.name] = {"read_only": d.read_only, "show_name_in_global_search": d.show_name_in_global_search}
+            
+            # Record Workspace States (including full content)
+            workspaces_meta = {}
+            wss = frappe.get_all("Workspace", filters={"module": module_name}, fields=["name", "is_hidden", "content"])
+            for w in wss:
+                workspaces_meta[w.name] = {"is_hidden": w.is_hidden, "content": w.content}
+
+            manifest[module_name] = {
+                "module_disabled": mod_disabled,
+                "doctypes_meta": doctypes_meta,
+                "workspaces_meta": workspaces_meta,
+                "reports": frappe.get_all("Report", filters={"module": module_name}, pluck="name"),
+                "pages": frappe.get_all("Page", filters={"module": module_name}, pluck="name")
+            }
+
+        # --- APPLY PHASE ---
+        if frappe.db.has_column("Module Def", "disabled"):
+            frappe.db.set_value("Module Def", module_name, "disabled", 1)
+        
+        frappe.db.sql("UPDATE `tabDocType` SET read_only=1, show_name_in_global_search=0 WHERE module=%s", module_name)
+        frappe.db.sql("UPDATE `tabWorkspace` SET is_hidden=1 WHERE module=%s", module_name)
+
+    else:
+        # --- RESTORE PHASE ---
+        if module_name in manifest:
+            data = manifest[module_name]
+            
+            # Restore Module
+            if frappe.db.has_column("Module Def", "disabled"):
+                frappe.db.set_value("Module Def", module_name, "disabled", data.get("module_disabled", 0))
+            
+            # Restore DocTypes exactly as they were
+            for dt_name, meta in data.get("doctypes_meta", {}).items():
+                frappe.db.set_value("DocType", dt_name, meta, update_modified=False)
+            
+            # Restore Workspaces exactly as they were (including content/shortcuts)
+            for ws_name, meta in data.get("workspaces_meta", {}).items():
+                frappe.db.set_value("Workspace", ws_name, meta, update_modified=False)
+            
+            manifest.pop(module_name)
+
+    write_manifest(manifest)
     frappe.db.commit()
     frappe.clear_cache()
-    frappe.msgprint(_(f"Module '{module_name}' is now {'Hidden/Locked' if hide else 'Visible/Unlocked'}."), alert=True)
-    print(f"Module '{module_name}' is now {'Hidden/Locked' if hide else 'Visible/Unlocked'}.")
-
 def toggle_structure_lock(module_name, lock=True):
     path = get_manifest_path()
     all_locked_data = {}
@@ -167,6 +213,7 @@ def toggle_structure_lock(module_name, lock=True):
 
 def toggle_metadata(is_lite):
     status, search = (1, 0) if is_lite else (0, 1)
+    # Bulk update for standard hidden modules
     frappe.db.sql("""UPDATE `tabDocType` SET read_only = %s, show_name_in_global_search = %s 
                      WHERE (module IN %s OR (module NOT IN %s AND %s = 1)) AND custom = 0""", 
                   (status, search, tuple(HIDDEN_BY_DEFAULT), tuple(LIT_MODULES), status))
@@ -175,50 +222,35 @@ def toggle_metadata(is_lite):
 
 @frappe.whitelist()
 def get_init_data():
-    """Fetches current state and determines mode based on JSON content."""
-    settings = {"allowed_workspaces": [], "lite_modules": []}
-    modules = []
-    reports = []
-    doctypes = []
-    pages = []
-    MANIFEST_PATH = get_manifest_path()
-    data_length = 0
-    if os.path.exists(MANIFEST_PATH):
-        try:
-            with open(MANIFEST_PATH, "r") as f:
-                data = json.load(f)
-                if data: 
-                    settings = data
-                    data_length = len(data)
-                    for mod, components in data.items():
-                        modules.append(mod)
-                        doctypes.extend(components.get("doctypes", []))
-                        reports.extend(components.get("reports", []))
-                        pages.extend(components.get("pages", []))
-        except Exception:
-            pass
+    """Fetches current state based on detailed Snapshot manifest."""
+    data = read_manifest()
+    all_mods = frappe.get_all("Module Def", pluck="name")
+    
+    locked_modules = list(data.keys())
+    locked_doctypes = []
+    locked_reports = []
+    locked_pages = []
 
+    for mod, snapshot in data.items():
+        locked_doctypes.extend(snapshot.get("doctypes_meta", {}).keys())
+        locked_reports.extend(snapshot.get("reports", []))
+        locked_pages.extend(snapshot.get("pages", []))
 
-    settings["lite_modules"] = frappe.get_all("Module Def", filters = {"name": ["not in", modules]}, pluck = "name")
-    settings["locked_doctypes"] = doctypes
-    settings["locked_reports"] = reports
-    settings["locked_pages"] = pages
-    settings["allowed_workspaces"] = frappe.get_all("Workspace", filters = {"name": ["in", ALLOWED_WORKSPACES]}, pluck="name")
-    is_lite = 'LITE' if data_length > 0 else 'FULL'
-    print(f"Initialization: Detected mode - {is_lite}")
-    return {
-        "workspaces": frappe.get_all("Workspace", pluck="name"),
-        "modules": frappe.get_all("Module Def", pluck="name"),
-        "settings": settings,
-        "is_lite": is_lite
+    settings = {
+        "lite_modules": [m for m in all_mods if m not in locked_modules],
+        "locked_doctypes": list(set(locked_doctypes)),
+        "locked_reports": list(set(locked_reports)),
+        "locked_pages": list(set(locked_pages)),
+        "allowed_workspaces": frappe.get_all("Workspace", filters={"label": ["in", ALLOWED_WORKSPACES]}, pluck="name")
     }
 
-@frappe.whitelist()
-def save_settings(workspaces, modules):
-    """Saves the user's UI selections to Global Defaults"""
-    frappe.set_global_default("lite_allowed_workspaces", workspaces)
-    frappe.set_global_default("lite_modules", modules)
-    return "Settings Saved"
+    return {
+        "workspaces": frappe.get_all("Workspace", pluck="name"),
+        "modules": all_mods,
+        "settings": settings,
+        "is_lite": 'LITE' if len(locked_modules) > 0 else 'FULL'
+    }
+
 @frappe.whitelist()
 def save_settings(workspaces=None, modules=None):
     if workspaces is not None:
@@ -227,25 +259,21 @@ def save_settings(workspaces=None, modules=None):
         frappe.db.set_global("lite_modules", json.dumps(modules))
     frappe.db.commit()
     return "Settings Saved"
+
 @frappe.whitelist()
 def get_system_summary():
-    """Provides a detailed scan of hidden vs visible components."""
     return {
         "hidden_workspaces": frappe.get_all("Workspace", filters={"is_hidden": 1}, pluck="name"),
         "readonly_doctypes": frappe.get_all("DocType", filters={"read_only": 1}, pluck="name"),
-        "locked_modules": list(get_locked_manifest().get("modules", []))
+        "locked_modules": list(read_manifest().keys())
     }
 
-# Terminal Helper
 def print_status():
-    """Can be called via 'bench execute customized_forcommon.prunning.print_status'"""
-    is_lite = bool(frappe.db.sql("SHOW TABLES LIKE 'tabLiteModeBackup'"))
-    print(f"System Mode: {'LITE' if is_lite else 'FULL'}")
     summary = get_system_summary()
+    print(f"System Mode: {'LITE' if summary['locked_modules'] else 'FULL'}")
     print(f"Hidden Workspaces: {len(summary['hidden_workspaces'])}")
     print(f"Locked Modules: {len(summary['locked_modules'])}")
 @frappe.whitelist()
 def toggle_module_visibility_from_gui(module_name, hide):
-    """Wrapper to ensure GUI calls are properly handled with whitelisting."""
-    hide = bool(int(hide))  # Convert string '1'/'0' to boolean
+    hide = bool(int(hide))
     toggle_module_visibility(module_name, hide)
