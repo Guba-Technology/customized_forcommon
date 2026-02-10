@@ -10,6 +10,14 @@ class CustomUser(BaseUser):
 
         super(CustomUser, self).validate()
 
+        # This block is added for concat middle name also in the user full name
+        parts = [self.first_name]
+        if getattr(self, "middle_name", None):
+            parts.append(self.middle_name)
+        if getattr(self, "last_name", None):
+            parts.append(self.last_name)
+        self.full_name = " ".join(parts)
+
         # Check user count limit before enabling
         self.check_max_user_restriction()
 
