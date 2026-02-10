@@ -166,7 +166,8 @@ doctype_js = {
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Company": "public/js/company_custom.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
