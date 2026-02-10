@@ -11,7 +11,7 @@ from frappe import _
 # Configuration
 ALLOWED_WORKSPACES = [
     "Home", "Sales and Marketing", "Human Resource", "Inventory", "Purchase",
-    "Accounting & Finance", "Users", "Settings", "Recruitment", "Employee Lifecycle", 
+    "Accounting & Finance", "Payables", "Receivables", "Financial Reports", "Users", "Settings", "Recruitment", "Employee Lifecycle", 
     "Performance","Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
     "Salary Payout", "Tax & Benefits",
 ]
