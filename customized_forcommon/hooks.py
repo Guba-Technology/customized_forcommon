@@ -23,8 +23,7 @@ fixtures = [
                 "Inventory", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports"
-                            
-                            ]],
+            ]],
         ],
         "strict": False # do not check for existing records
     }, 
