@@ -17,7 +17,7 @@ ALLOWED_WORKSPACES = [
 ]
 LIT_MODULES = [
     "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", 
-    "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
+    "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization","Contacts"
 ]
 HIDDEN_BY_DEFAULT = ["CRM", "Quality Management", "Quality", "Projects", "Assets", "Manufacturing"]
 MANIFEST_FILE = "lite_mode_lock_manifest.json"
