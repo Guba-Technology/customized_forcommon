@@ -34,8 +34,8 @@ class CustomUser(BaseUser):
         # If user is being enabled and limit exceeded
         if self.enabled and active_users > max_limit:
             frappe.throw(
-                f"Cannot enable user. "
-                f"Maximum active users allowed for company <b>{company}</b> is {max_limit}. "
+                f"Cannot enable this user. "
+                f"Maximum active users allowed for company <b>{company}</b> is <b>{max_limit}</b>. "
                 f"Please disable another user first."
             )
 
