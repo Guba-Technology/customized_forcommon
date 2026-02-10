@@ -4947,7 +4947,7 @@
  },
  {
   "charts": [],
-  "content": "[{\"id\": \"rMMsfn2eB4\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"G984SgVRJN\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Purchase Invoice\", \"col\": 3}}, {\"id\": \"F9f4I1viNr\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Payment Entry\", \"col\": 3}}, {\"id\": \"1ArNvt9qhz\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Journal Entry\", \"col\": 3}}, {\"id\": \"B7-uxs8tkU\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"jAcOH-cC-Q\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\", \"col\": 12}}, {\"id\": \"7dj93PEUjW\", \"type\": \"card\", \"data\": {\"card_name\": \"Invoicing\", \"col\": 4}}, {\"id\": \"Gl0Ktt0d4a\", \"type\": \"card\", \"data\": {\"card_name\": \"Payments\", \"col\": 4}}, {\"id\": \"K9gVsDY8-h\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+  "content": "[{\"id\":\"rMMsfn2eB4\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"G984SgVRJN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"F9f4I1viNr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Entry\",\"col\":3}},{\"id\":\"1ArNvt9qhz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Journal Entry\",\"col\":3}},{\"id\":\"B7-uxs8tkU\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jAcOH-cC-Q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"7dj93PEUjW\",\"type\":\"card\",\"data\":{\"card_name\":\"Invoicing\",\"col\":4}},{\"id\":\"GZGLZd2E-a\",\"type\":\"card\",\"data\":{\"card_name\":\"Payments\",\"col\":4}},{\"id\":\"WLbp1B9sGj\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
@@ -5019,7 +5019,7 @@
     "icon": null,
     "is_query_report": 0,
     "label": "Reports",
-    "link_count": 7,
+    "link_count": 1,
     "link_to": null,
     "link_type": "DocType",
     "onboard": 0,
@@ -5029,6 +5029,24 @@
     "parenttype": "Workspace",
     "report_ref_doctype": null,
     "type": "Card Break"
+   },
+   {
+    "dependencies": null,
+    "description": null,
+    "hidden": 0,
+    "icon": null,
+    "is_query_report": 1,
+    "label": "Accounts Payable",
+    "link_count": 0,
+    "link_to": "Accounts Payable",
+    "link_type": "Report",
+    "onboard": 0,
+    "only_for": null,
+    "parent": "Payables",
+    "parentfield": "links",
+    "parenttype": "Workspace",
+    "report_ref_doctype": null,
+    "type": "Link"
    },
    {
     "dependencies": null,
@@ -5121,7 +5139,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2026-02-10 09:53:08.365358",
+  "modified": "2026-02-10 15:28:19.935219",
   "module": "Accounts",
   "name": "Payables",
   "number_cards": [],
