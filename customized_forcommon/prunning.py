@@ -82,8 +82,8 @@ def run(mode="lite"):
 def apply_lite_mode():
     """Bulk apply Lite mode while creating snapshots."""
     # 1. Handle Module Selections
-    allowed_mod_str = frappe.db.get_global("lite_modules")
-    allowed_modules = json.loads(allowed_mod_str) if allowed_mod_str else LIT_MODULES
+    
+    allowed_modules = LIT_MODULES
     
     modules = frappe.get_all("Module Def", pluck="name")
     for mod in modules:
@@ -105,92 +105,38 @@ def restore_full_mode():
     """Precision restore using the manifest snapshots."""
     manifest = read_manifest()
     
-    # Restore every module recorded in the manifest
+    # 1. Restore modules recorded in manifest
     for module_name in list(manifest.keys()):
         toggle_module_visibility(module_name, hide=False)
 
-    # Global reset for any stragglers
-    frappe.db.sql("UPDATE `tabDocType` SET read_only = 0, show_name_in_global_search = 1 WHERE custom = 0")
-    if frappe.db.has_column("Module Def", "disabled"):
-        frappe.db.sql("UPDATE `tabModule Def` SET disabled = 0")
-
-    # Unhide all Workspaces and force a reload from original JSON to restore 'content'
-    workspaces = frappe.get_all("Workspace", fields=["name", "module"])
-    for ws in workspaces:
-        frappe.db.set_value("Workspace", ws.name, "is_hidden", 0, update_modified=False)
-        try:
-            app = frappe.db.get_value("Module Def", ws.module, "app_name")
-            if app:
-                reload_doc(frappe.scrub(app), "desktop_page", frappe.scrub(ws.name), force=True)
-        except: pass
+    # 2. Global reset for Workspaces
+    # We set is_hidden to 0 AND public to 1 to ensure visibility in the sidebar
+    frappe.db.sql("UPDATE `tabWorkspace` SET is_hidden = 0, public = 1")
     
-    # Clear manifest file instead of deleting to maintain file presence
+    # 3. Clear manifest and cache
     write_manifest({})
-    
     frappe.db.commit()
     frappe.clear_cache()
 
 def toggle_module_visibility(module_name, hide=True):
-    """Surgical toggle that records original state before hiding."""
-    manifest = read_manifest()
+    """Selective toggle for a single module's visibility and URL security."""
+    status = 1 if hide else 0
+    search = 0 if hide else 1
+
+    if frappe.db.has_column("Module Def", "disabled"):
+        frappe.db.set_value("Module Def", module_name, "disabled", status)
+
+    frappe.db.sql("UPDATE `tabDocType` SET read_only=%s, show_name_in_global_search=%s WHERE module=%s", (status, search, module_name))
+    frappe.db.sql("UPDATE `tabWorkspace` SET is_hidden=%s WHERE module=%s", (status, module_name))
     
-    if hide:
-        # --- SNAPSHOT PHASE ---
-        if module_name not in manifest:
-            # Record Module State
-            mod_disabled = 0
-            if frappe.db.has_column("Module Def", "disabled"):
-                mod_disabled = frappe.db.get_value("Module Def", module_name, "disabled") or 0
-            
-            # Record DocType States
-            doctypes_meta = {}
-            dts = frappe.get_all("DocType", filters={"module": module_name}, fields=["name", "read_only", "show_name_in_global_search"])
-            for d in dts:
-                doctypes_meta[d.name] = {"read_only": d.read_only, "show_name_in_global_search": d.show_name_in_global_search}
-            
-            # Record Workspace States (including full content)
-            workspaces_meta = {}
-            wss = frappe.get_all("Workspace", filters={"module": module_name}, fields=["name", "is_hidden", "content"])
-            for w in wss:
-                workspaces_meta[w.name] = {"is_hidden": w.is_hidden, "content": w.content}
-
-            manifest[module_name] = {
-                "module_disabled": mod_disabled,
-                "doctypes_meta": doctypes_meta,
-                "workspaces_meta": workspaces_meta,
-                "reports": frappe.get_all("Report", filters={"module": module_name}, pluck="name"),
-                "pages": frappe.get_all("Page", filters={"module": module_name}, pluck="name")
-            }
-
-        # --- APPLY PHASE ---
-        if frappe.db.has_column("Module Def", "disabled"):
-            frappe.db.set_value("Module Def", module_name, "disabled", 1)
-        
-        frappe.db.sql("UPDATE `tabDocType` SET read_only=1, show_name_in_global_search=0 WHERE module=%s", module_name)
-        frappe.db.sql("UPDATE `tabWorkspace` SET is_hidden=1 WHERE module=%s", module_name)
-
-    else:
-        # --- RESTORE PHASE ---
-        if module_name in manifest:
-            data = manifest[module_name]
-            
-            # Restore Module
-            if frappe.db.has_column("Module Def", "disabled"):
-                frappe.db.set_value("Module Def", module_name, "disabled", data.get("module_disabled", 0))
-            
-            # Restore DocTypes exactly as they were
-            for dt_name, meta in data.get("doctypes_meta", {}).items():
-                frappe.db.set_value("DocType", dt_name, meta, update_modified=False)
-            
-            # Restore Workspaces exactly as they were (including content/shortcuts)
-            for ws_name, meta in data.get("workspaces_meta", {}).items():
-                frappe.db.set_value("Workspace", ws_name, meta, update_modified=False)
-            
-            manifest.pop(module_name)
-
-    write_manifest(manifest)
+    # Sync with URL locker manifest
+    toggle_structure_lock(module_name, lock=hide)
+    
     frappe.db.commit()
     frappe.clear_cache()
+    frappe.msgprint(_(f"Module '{module_name}' is now {'Hidden/Locked' if hide else 'Visible/Unlocked'}."), alert=True)
+    print(f"Module '{module_name}' is now {'Hidden/Locked' if hide else 'Visible/Unlocked'}.")
+
 def toggle_structure_lock(module_name, lock=True):
     path = get_manifest_path()
     all_locked_data = {}
@@ -213,7 +159,6 @@ def toggle_structure_lock(module_name, lock=True):
 
 def toggle_metadata(is_lite):
     status, search = (1, 0) if is_lite else (0, 1)
-    # Bulk update for standard hidden modules
     frappe.db.sql("""UPDATE `tabDocType` SET read_only = %s, show_name_in_global_search = %s 
                      WHERE (module IN %s OR (module NOT IN %s AND %s = 1)) AND custom = 0""", 
                   (status, search, tuple(HIDDEN_BY_DEFAULT), tuple(LIT_MODULES), status))
