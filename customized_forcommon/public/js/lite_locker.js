@@ -1,9 +1,9 @@
 // your_app/public/js/lite_locker.js
-let liteLockerExecuted = false;  // guard flag
+let liteLockerExecuted = false;
 
 $(document).on('app_ready', function () {
     frappe.router.on('change', () => {
-        if (liteLockerExecuted) return;  // prevent rerun
+        if (liteLockerExecuted) return;
 
         const route = frappe.get_route();
         if (!route || route.length < 2) return;
@@ -47,12 +47,27 @@ $(document).on('app_ready', function () {
 });
 
 function block_and_redirect(item) {
-    frappe.msgprint({
-        title: __('Access Restricted'),
-        message: __('The {0} is currently locked in LITE mode. You will be redirected to the home page.', [item]),
-        indicator: 'red'
-    });
-    setTimeout(() => {
-        window.location.href = '/app/home';
-    }, 3000);
+    localStorage.setItem('lite_mode_redirect_active', 'true');
+    localStorage.setItem('lite_mode_locked_item', item);
+    window.location.href = '/app/home';
 }
+
+$(document).on('app_ready', function () {
+    if (localStorage.getItem('lite_mode_redirect_active') === 'true') {
+        const item = localStorage.getItem('lite_mode_locked_item') || 'requested page';
+
+        const d = frappe.msgprint({
+            title: __('Access Restricted'),
+            indicator: 'red',
+            message: __('The <b>{0}</b> is currently locked in LITE mode. You have been redirected to the home page.', [item]),
+            primary_action: {
+                label: __('Understood'),
+                action: function () {
+                    localStorage.removeItem('lite_mode_redirect_active');
+                    localStorage.removeItem('lite_mode_locked_item');
+                    d.hide();
+                }
+            }
+        });
+    }
+});
