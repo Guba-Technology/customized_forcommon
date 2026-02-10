@@ -15,10 +15,12 @@ ALLOWED_WORKSPACES = [
     "Performance","Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
     "Salary Payout", "Tax & Benefits",
 ]
+frapp_modules =frappe.get_all("Module Def", pluck="name", filters ={"app_name": "frappe"})
 LIT_MODULES = [
     "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", 
     "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization","Contacts"
 ]
+# LIT_MODULES.extend(frapp_modules)
 HIDDEN_BY_DEFAULT = ["CRM", "Quality Management", "Quality", "Projects", "Assets", "Manufacturing"]
 MANIFEST_FILE = "lite_mode_lock_manifest.json"
 
