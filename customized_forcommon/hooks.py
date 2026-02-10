@@ -17,7 +17,7 @@ fixtures = [
         "dt": "Workspace",
         "filters": [
             ["name", "in", [
-                "Accounting & Finance", "Human Resource", "Purchase", "Manufacturing","ERPNext Settings","ERPNext Integrations","Integrations",
+                "Accounting & Finance", "Human Resource", "Purchase","ERPNext Settings","ERPNext Integrations","Integrations",
                 
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Inventory", "Fixed Assets", "Sales and Marketing",
