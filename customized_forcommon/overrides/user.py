@@ -3,41 +3,53 @@ import frappe
 
 class CustomUser(BaseUser):
     def validate(self):
-        # Exclude in setup wizard
-        if frappe.flags.in_setup_wizard:
-            return
-        # Exclude Administrator
-        if self.name == "Administrator":
+        """Validate before saving user."""
+        # Skip validation during setup or for Administrator
+        if frappe.flags.in_setup_wizard or self.name == "Administrator":
             return
 
         super(CustomUser, self).validate()
 
-        # Only show warning if user has no assignment; don't forcibly disable here
-        if not frappe.db.exists("User Company Assignment", {"user": self.name}):
-            link = " ".join([
-                f'<a href="/app/user-company-assignment/new?user={self.name}" style="text-decoration: underline" target=_blank >User Company Assignment</a>',
-                'to assign the user to a company.'
-            ])
-            self.enabled = 0
-            frappe.msgprint(
-                f"User is not assigned to any company. Login will remain disabled. <br> Add Here {link}",
-                indicator='orange'
+        # Check user count limit before enabling
+        self.check_max_user_restriction()
+
+    def check_max_user_restriction(self):
+        """Ensure that enabling this user doesn't exceed company max user limit."""
+        company = self.company  # Custom Link field to Company
+
+        if not company:
+            return  # Skip if no company assigned
+
+        # Fetch limit for this company
+        max_limit = frappe.db.get_value("Max User Restriction", {"company": company}, "no_of_users_allowed")
+        if not max_limit:
+            return  # No restriction record → skip
+
+        # Count currently enabled users under same company
+        active_users = frappe.db.count(
+            "User",
+            {"enabled": 1, "company": company}
+        )
+
+        # If user is being enabled and limit exceeded
+        if self.enabled and active_users > max_limit:
+            frappe.throw(
+                f"Cannot enable this user. "
+                f"Maximum active users allowed for company <b>{company}</b> is <b>{max_limit}</b>. "
+                f"Please disable another user first."
             )
 
     def on_update(self):
-        # Exclude Administrator
-        if self.name == "Administrator":
+        """Triggered after user is updated."""
+        if frappe.flags.in_setup_wizard or self.name == "Administrator":
             return
 
         super(CustomUser, self).on_update()
-        # Clean-up: If the user is disabled, remove all their company assignments
-        if not self.enabled:
-            assignments = frappe.get_all(
-                "User Company Assignment",
-                filters={"user": self.name},
-                pluck="name"
-            )
-            for assignment_name in assignments:
-                frappe.delete_doc("User Company Assignment", assignment_name, ignore_permissions=True)
-            if assignments:
-                frappe.msgprint("User has been disabled and removed from all User Company Assignments.", indicator='red')
+
+        company = self.company
+        if not company:
+            return
+
+        # Recheck after update to ensure no violation
+        if self.enabled:
+            self.check_max_user_restriction()

@@ -107,6 +107,9 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+    "Employee": {
+        "validate": "customized_forcommon.doc_events.leave_increment_period.validate_leave_increment_period"
+    }
 
    
 }

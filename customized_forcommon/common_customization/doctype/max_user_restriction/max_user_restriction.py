@@ -11,6 +11,8 @@ class MaxUserRestriction(Document):
 		self.validate_max_users()
 
 	def validate_max_users(self):
+		if self.no_of_users_allowed < 0:
+			frappe.throw("Number of users allowed cannot be negative")
 		existed_restriction = frappe.get_all(
 			"Max User Restriction",
 			filters={"docstatus": 1, "name": self.name},
