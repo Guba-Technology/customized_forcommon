@@ -12,7 +12,7 @@ from frappe import _
 ALLOWED_WORKSPACES = [
     "Home", "Sales and Marketing", "Human Resource", "Inventory", "Purchase",
     "Accounting & Finance", "Payables", "Receivables", "Financial Reports", "Users", "Settings", "Recruitment", "Employee Lifecycle", 
-    "Performance","Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
+    "Shift & Attendance", "Expense Claim", "Leaves", "Payroll",
     "Salary Payout", "Tax & Benefits","Welcome Workspace",
 ]
 frapp_modules =frappe.get_all("Module Def", pluck="name", filters ={"app_name": "frappe"})
