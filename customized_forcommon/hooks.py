@@ -8,6 +8,8 @@ app_license = "mit"
 # Required Apps
 required_apps = ["erpnext", "hrms"]
 
+# Redirect the root "/" to /app/home
+home_page = "/app/home"
 # Branding
 
 
