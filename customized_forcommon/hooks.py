@@ -149,7 +149,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/payment_request_extend.js",
     "/assets/customized_forcommon/js/lite_locker.js",
-    "/assets/customized_forcommon/js/pruning_gui.js"
+    "/assets/customized_forcommon/js/pruning_gui.js",
+    "/assets/customized_forcommon/js/global_back_button.js"
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
