@@ -192,6 +192,8 @@ website_context = {
 	"splash_image": "/assets/customized_forcommon/images/tele-logo.png",
 }
 
+setup_wizard_complete = "customized_forcommon.patches.v1.gender_patch"
+
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
