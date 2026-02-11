@@ -16,12 +16,15 @@ $(document).on('app_ready', function () {
                 const manifest = r.message;
                 const view_type = route[0];
                 const identifier = route[1];
-
+                console.log(view_type, identifier);
                 if (view_type === 'Module' && manifest.modules.includes(identifier)) {
                     block_and_redirect(identifier);
                     liteLockerExecuted = true;
                 }
-
+                else if(view_type.split("-")[0] === "Form" && manifest.modules.includes(identifier.split(" ")[0])) {
+                    block_and_redirect(identifier);
+                    liteLockerExecuted = true;
+                }
                 else if ((view_type === 'query-report' || view_type === 'report') && manifest.reports.includes(identifier)) {
                     block_and_redirect(identifier);
                     liteLockerExecuted = true;
