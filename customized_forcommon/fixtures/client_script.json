@@ -2,39 +2,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Material Request",
-  "enabled": 1,
-  "modified": "2025-06-04 16:11:27.537199",
-  "module": "Common Customization",
-  "name": "Adding \"Material Cost\" option in Purpose",
-  "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Leave Application",
-  "enabled": 1,
-  "modified": "2025-07-02 15:19:56.821320",
-  "module": "Common Customization",
-  "name": "Hiding Half Day Date and Calculate Total Leave Days",
-  "script": "frappe.ui.form.on('Leave Application', {\n\trefresh(frm) {\n    \t toggleHalfDayDateMandatory(frm);\n\t},\n\thalf_day: function(frm){\n\t   toggleHalfDayDateMandatory(frm);\n\t}\n});\n\nfunction toggleHalfDayDateMandatory(frm) {\n    if (frm.doc.half_day) {\n        frm.toggle_display('half_day_date', false); // Show it, but not mandatory\n        // Optionally clear the value if half_day is checked and it's no longer needed\n        // frm.set_value('half_day_date', null);\n    }\n    // Refresh the field to apply the mandatory status change visually\n    frm.refresh_field('half_day_date');\n}\n",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Employee",
-  "enabled": 1,
-  "modified": "2026-02-10 14:42:47.783131",
-  "module": "Common Customization",
-  "name": "Making fields mandatory in Employee",
-  "script": "frappe.ui.form.on('Employee', {\r\n    refresh(frm) {\r\n        // Make specific fields mandatory dynamically\r\n        const mandatory_fields = [\r\n            'cell_number',\r\n            'ctc',\r\n            'user_id',\r\n            'employee_tin',\r\n            'expense_approver',\r\n            'leave_approver',\r\n            'shift_request_approver'\r\n        ];\r\n\r\n        mandatory_fields.forEach(fieldname => {\r\n            frm.set_df_property(fieldname, 'reqd', 1);\r\n        });\r\n    }\r\n});",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Payment Entry",
   "enabled": 1,
   "modified": "2025-04-28 10:29:53.214269",
@@ -85,6 +52,28 @@
   "module": "Common Customization",
   "name": "Adding \"Manufactured Sale\" option in order type",
   "script": "frappe.ui.form.on('Sales Order', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.order_type;\n        const new_option = 'Manufactured Sale';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Material Request",
+  "enabled": 1,
+  "modified": "2025-06-04 16:11:27.537199",
+  "module": "Common Customization",
+  "name": "Adding \"Material Cost\" option in Purpose",
+  "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Leave Application",
+  "enabled": 1,
+  "modified": "2025-07-02 15:19:56.821320",
+  "module": "Common Customization",
+  "name": "Hiding Half Day Date and Calculate Total Leave Days",
+  "script": "frappe.ui.form.on('Leave Application', {\n\trefresh(frm) {\n    \t toggleHalfDayDateMandatory(frm);\n\t},\n\thalf_day: function(frm){\n\t   toggleHalfDayDateMandatory(frm);\n\t}\n});\n\nfunction toggleHalfDayDateMandatory(frm) {\n    if (frm.doc.half_day) {\n        frm.toggle_display('half_day_date', false); // Show it, but not mandatory\n        // Optionally clear the value if half_day is checked and it's no longer needed\n        // frm.set_value('half_day_date', null);\n    }\n    // Refresh the field to apply the mandatory status change visually\n    frm.refresh_field('half_day_date');\n}\n",
   "view": "Form"
  }
 ]
