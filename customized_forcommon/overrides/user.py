@@ -10,7 +10,7 @@ class CustomUser(BaseUser):
 
         super(CustomUser, self).validate()
 
-        # This block is added for concat middle name also in the user full name
+        # Concat full name
         parts = [self.first_name]
         if getattr(self, "middle_name", None):
             parts.append(self.middle_name)
@@ -18,46 +18,42 @@ class CustomUser(BaseUser):
             parts.append(self.last_name)
         self.full_name = " ".join(parts)
 
-        # Check user count limit before enabling
-        self.check_max_user_restriction()
+        # Check global user limit before enabling
+        self.check_allowed_users()
 
-    def check_max_user_restriction(self):
-        """Ensure that enabling this user doesn't exceed company max user limit."""
-        company = self.company  # Custom Link field to Company
+    def check_allowed_users(self):
+        """Enforce allowed users from site_config.json with dynamic messages."""
+        allowed_users = frappe.local.conf.get('no_of_allowed_users')
+        if not allowed_users:
+            return  # No limit → skip
 
-        if not company:
-            return  # Skip if no company assigned
+        # Count all currently enabled users
+        active_users = frappe.db.count("User", {"enabled": 1})
 
-        # Fetch limit for this company
-        max_limit = frappe.db.get_value("Max User Restriction", {"company": company}, "no_of_users_allowed")
-        if not max_limit:
-            return  # No restriction record → skip
+        # Include this user if being enabled and not already counted
+        if self.enabled:
+            already_enabled = frappe.db.exists("User", {"name": self.name, "enabled": 1})
+            if not already_enabled:
+                active_users += 1
 
-        # Count currently enabled users under same company
-        active_users = frappe.db.count(
-            "User",
-            {"enabled": 1, "company": company}
-        )
-
-        # If user is being enabled and limit exceeded
-        if self.enabled and active_users > max_limit:
-            frappe.throw(
-                f"Cannot enable this user. "
-                f"Maximum active users allowed for company <b>{company}</b> is <b>{max_limit}</b>. "
-                f"Please disable another user first."
-            )
+        # If exceeds allowed number, raise dynamic error
+        if active_users > allowed_users:
+            if self.is_new():  
+                frappe.throw(
+                    f"Cannot create a new user. Maximum allowed active users is <b>{allowed_users}</b>."
+                )
+            else:
+                frappe.throw(
+                    f"Cannot enable this user. Maximum allowed active users is <b>{allowed_users}</b>."
+                )
 
     def on_update(self):
-        """Triggered after user is updated."""
+        """Recheck after update to ensure no violation."""
         if frappe.flags.in_setup_wizard or self.name == "Administrator":
             return
 
         super(CustomUser, self).on_update()
 
-        company = self.company
-        if not company:
-            return
-
-        # Recheck after update to ensure no violation
+        # Recheck only if user is enabled
         if self.enabled:
-            self.check_max_user_restriction()
+            self.check_allowed_users()
