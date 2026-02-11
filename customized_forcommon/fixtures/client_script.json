@@ -2,6 +2,17 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
+  "dt": "Employee",
+  "enabled": 1,
+  "modified": "2026-02-10 14:42:47.783131",
+  "module": "Common Customization",
+  "name": "Making fields mandatory in Employee",
+  "script": "frappe.ui.form.on('Employee', {\r\n    refresh(frm) {\r\n        // Make specific fields mandatory dynamically\r\n        const mandatory_fields = [\r\n            'cell_number',\r\n            'ctc',\r\n            'user_id',\r\n            'employee_tin',\r\n            'expense_approver',\r\n            'leave_approver',\r\n            'shift_request_approver'\r\n        ];\r\n\r\n        mandatory_fields.forEach(fieldname => {\r\n            frm.set_df_property(fieldname, 'reqd', 1);\r\n        });\r\n    }\r\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
   "dt": "Payment Entry",
   "enabled": 1,
   "modified": "2025-04-28 10:29:53.214269",
