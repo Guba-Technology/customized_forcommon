@@ -8,7 +8,6 @@ frappe.ui.form.on('User', {
         ];
 
         // Target the checkboxes wrapper
-        // Note: Fieldname is usually 'block_modules' in recent Frappe versions
         $('div[data-fieldname="block_modules"] .unit-checkbox').each(function () {
             let label = $(this).text().trim();
 

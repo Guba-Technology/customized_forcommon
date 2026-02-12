@@ -7,7 +7,6 @@ frappe.ui.form.on('Module Profile', {
             "Common Customization", "Contacts"
         ];
 
-        // The fieldname in Module Profile is usually 'block_modules'
         // We loop through the checkboxes and hide any that aren't in our list
         $('div[data-fieldname="block_modules"] .unit-checkbox').each(function () {
             let label = $(this).text().trim();
