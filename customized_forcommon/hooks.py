@@ -111,10 +111,7 @@ doc_events = {
     "Employee": {
         "validate": "customized_forcommon.doc_events.leave_increment_period.validate_leave_increment_period"
     }
-
-   
 }
-
 scheduler_events = {
     "Hourly":
     [
@@ -171,8 +168,9 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "User": "public/js/validate_useremail.js",
-    "Employee": "public/js/validate_employeeemail.js"
+    "User": "public/js/user.js",
+    "Module Profile": "public/js/module_profile.js",
+    "Employee": "public/js/employee.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
