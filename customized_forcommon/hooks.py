@@ -24,7 +24,8 @@ fixtures = [
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Inventory", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
-                "Payables",  "Receivables", "Financial Reports", "Home"
+                "Payables",  "Receivables", "Financial Reports", "Home",
+                "Payroll", "Tax & Benefits", "Salary Payout"
             ]],
         ],
         "strict": False # do not check for existing records
