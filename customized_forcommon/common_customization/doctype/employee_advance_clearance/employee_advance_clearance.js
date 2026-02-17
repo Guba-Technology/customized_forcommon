@@ -1,111 +1,127 @@
-// Copyright (c) 2025, Guba Technologies and contributors
-// For license information, please see license.txt
+# Copyright (c) 2025, Guba Technologies and contributors
+# For license information, please see license.txt
 
-frappe.ui.form.on("Employee Advance Clearance", {
-    refresh(frm) {
-        // Show/hide and set required for difference_account
-        if ((frm.doc.invoiced_amount || 0) > (frm.doc.unreturned_amount || 0)) {
-            // Show field and make it required
-            frm.set_df_property("difference_account", "hidden", 0);
-            frm.set_df_property("difference_account", "reqd", 1);
+import frappe
+from frappe.model.document import Document
+from frappe.utils import today
 
-            // Set the company default for difference_account if exists
-            frappe.db.get_value("Company", frm.doc.company, "custom_account_for_difference")
-                .then(r => {
-                    if (r.message && r.message.custom_account_for_difference) {
-                        frm.set_value("difference_account", r.message.custom_account_for_difference);
-                    }
-                });
-        } else {
-            // Hide field and make it optional
-            frm.set_df_property("difference_account", "hidden", 1);
-            frm.set_df_property("difference_account", "reqd", 0);
+class EmployeeAdvanceClearance(Document):
+	def validate(self):
+		# Calculate unpaid amount
+		if self.advance_amount and self.returned_amount is not None:
+			self.unreturned_amount = self.advance_amount - self.returned_amount
+		else:
+			self.unreturned_amount = self.advance_amount  # fallback if returned_amount not set
+		self.difference_amount = self.invoiced_amount - self.unreturned_amount
 
-            // Optionally clear the field when hidden
-            frm.set_value("difference_account", null);
-        }
-    },
-    setup(frm) {
+	
 
-        frm.set_query("purchase_invoice", function () {
-            return {
-                filters: {
-                    status: ["in", ["Unpaid", "Partly Paid"]],
-                    docstatus: 1
-                }
-            }
-        });
-        frm.set_query("employee", function () {
-            return {
-                filters: {
-                    status: "Active",
-                    company: frm.doc.company
-                }
 
-            }
-        });
-        frm.set_query("employee_advance", function () {
-            if (!frm.doc.employee) {
-                frappe.msgprint("Please select an Employee first.");
-                return {};  // returns empty query — disables options
-            }
+	def on_submit(self):
+		self.create_journal_entry()
+	def on_cancel(self):
+		self.cancel_journal_entry()
+	def on_trash(self):
+		pass
 
-            return {
-                filters: {
-                    status: "Paid",
-                    employee: frm.doc.employee,
-                }
-            }
-        });
+	def create_journal_entry(self):
+		# Check if unpaid amount matches invoiced amount for notification
+		if self.unreturned_amount != self.invoiced_amount:
+			diff_for_msg = self.unreturned_amount - self.invoiced_amount
+			frappe.msgprint(
+				msg="There is a mismatch of {:,.2f} between unpaid amount and invoiced amount.".format(diff_for_msg),
+				indicator="orange"
+			)
 
-        frm.set_query("difference_account", function () {
-            return {
-                filters: {
-                    account_type: "Payable",
-                    company: frm.doc.company
-                }
+		# 1. create a new Journal Entry
+		journal_entry = frappe.new_doc("Journal Entry")
+		journal_entry.voucher_type = "Journal Entry"
+		journal_entry.company = self.company
+		journal_entry.posting_date = today()
 
-            }
-        });
-    },
-    onload: function (frm) {
-        // Clear employee_advance if employee is not set
-        if (!frm.doc.employee) {
-            frm.set_value("employee_advance", null);
-        }
+		# Initialize logic variables
+		difference = 0
+		amount = 0
 
-        // Show/hide and set required for difference_account
-        if ((frm.doc.invoiced_amount || 0) > (frm.doc.unreturned_amount || 0)) {
-            // Show field and make it required
-            frm.set_df_property("difference_account", "hidden", 0);
-            frm.set_df_property("difference_account", "reqd", 1);
+		if self.unreturned_amount and self.invoiced_amount:
+			if self.invoiced_amount > self.unreturned_amount:
+				# Invoice is larger than advance
+				amount = self.unreturned_amount
+				difference = self.invoiced_amount - self.unreturned_amount
+			
+			elif self.invoiced_amount == self.unreturned_amount:
+				# When equal, we use invoiced_amount to clear the advance
+				amount = self.invoiced_amount
+				difference = 0  # No difference to record
+			
+			else:
+				# Invoice is smaller than advance
+				amount = self.invoiced_amount
+				difference = 0
 
-            // Set the company default for difference_account if exists
-            frappe.db.get_value("Company", frm.doc.company, "custom_account_for_difference")
-                .then(r => {
-                    if (r.message && r.message.custom_account_for_difference) {
-                        frm.set_value("difference_account", r.message.custom_account_for_difference);
-                    }
-                });
-        } else {
-            // Hide field and make it optional
-            frm.set_df_property("difference_account", "hidden", 1);
-            frm.set_df_property("difference_account", "reqd", 0);
+		# Row 1: Difference Account (Credit)
+		# Only added if there is an actual remainder
+		if difference > 0:
+			journal_entry.append("accounts", {
+				"account": self.difference_account,
+				"party_type": "Supplier",
+				"party": self.supplier,
+				"credit_in_account_currency": difference,
+				"debit_in_account_currency": 0
+			})
 
-            // Optionally clear the field when hidden
-            frm.set_value("difference_account", null);
-        }
-    },
-    employee: function (frm) {
-        if (!frm.doc.employee_advance) {
-            return;
-        }
-        // Check if the selected advance belongs to the new employee
-        frappe.db.get_value("Employee Advance", frm.doc.employee_advance, "employee", function (r) {
-            if (r && r.employee && r.employee !== frm.doc.employee) {
-                frm.set_value("employee_advance", null);
-                frappe.msgprint("Employee Advance has been cleared because it does not match the selected Employee.");
-            }
-        });
-    },
-});
+		# Row 2: Purchase Invoice Detail (Debit)
+		journal_entry.append("accounts", {
+			"account": self.payable_account,
+			"party_type": "Supplier",
+			"party": self.supplier,
+			"credit_in_account_currency": 0,
+			"debit_in_account_currency": self.invoiced_amount,
+			"reference_type": "Purchase Invoice",
+			"reference_name": self.purchase_invoice
+		})
+
+		# Row 3: Employee Advance Detail (Credit)
+		# This clears the actual Employee Advance document
+		if amount > 0:
+			journal_entry.append("accounts", {
+				"account": self.advance_account,
+				"party_type": "Employee",
+				"party": self.employee,
+				"credit_in_account_currency": amount,
+				"debit_in_account_currency": 0,
+				"reference_type": "Employee Advance",
+				"reference_name": self.employee_advance
+			})
+		
+		journal_entry.insert()
+		
+		# Update your custom DocType fields
+		self.db_set("created_journal_entry", journal_entry.name)
+		self.db_set("difference_of_invoice_and_advance_amount", difference)
+		self.db_set("status", "Cleared")
+		
+		journal_entry.submit()
+		
+		# UI link for the user
+		link = frappe.utils.get_link_to_form("Journal Entry", journal_entry.name)
+		frappe.msgprint(f"Journal Entry {link} is successfully created")
+
+	def cancel_journal_entry(self):
+		if not self.created_journal_entry:
+			frappe.msgprint("No linked Journal Entry to cancel.")
+			return
+
+		try:
+			journal_entry = frappe.get_doc("Journal Entry", self.created_journal_entry)
+			if journal_entry.docstatus == 1:
+				journal_entry.cancel()
+				self.db_set("status", "Cancelled")
+
+				frappe.msgprint(f"Linked Journal Entry {journal_entry.name} has been cancelled.")
+			else:
+				frappe.msgprint(f"Journal Entry {journal_entry.name} is already cancelled or in draft.")
+		except frappe.DoesNotExistError:
+			frappe.msgprint(f"Journal Entry {self.created_journal_entry} not found.")
+
+	
