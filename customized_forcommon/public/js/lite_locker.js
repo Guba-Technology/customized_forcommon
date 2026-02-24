@@ -1,3 +1,4 @@
+// your_app/public/js/lite_locker.js
 let liteLockerExecuted = false;
 
 $(document).on('app_ready', function () {
@@ -12,36 +13,41 @@ $(document).on('app_ready', function () {
             callback: function (r) {
                 if (!r.message) return;
 
-                const manifest = r.message;
                 const view_type = route[0];
                 const identifier = route[1];
-                console.log(view_type, identifier);
-                if (view_type === 'Module' && manifest.modules.includes(identifier)) {
-                    block_and_redirect(identifier);
+                const doc_name = route[2];
+
+                let liteLockerExecuted = false;
+                let locked_item = "";
+
+                // 1. Module Check
+                if (view_type === 'Module' && r.message.modules.includes(identifier)) {
                     liteLockerExecuted = true;
+                    locked_item = identifier;
                 }
-                else if (view_type.split("-")[0] === "Form" && manifest.modules.includes(identifier.split(" ")[0])) {
-                    block_and_redirect(identifier);
+                // 2. Workspace Check
+                else if (view_type === 'Workspaces' && r.message.workspaces.includes(identifier)) {
                     liteLockerExecuted = true;
+                    locked_item = identifier;
                 }
-                else if ((view_type === 'query-report' || view_type === 'report') && manifest.reports.includes(identifier)) {
-                    block_and_redirect(identifier);
+                // 3. DocType Check (List/Form/Report)
+                else if (r.message.doctypes.includes(identifier)) {
                     liteLockerExecuted = true;
+                    locked_item = identifier;
+                }
+                // 4. Report Check
+                else if (['query-report', 'report'].includes(view_type) && r.message.reports.includes(identifier)) {
+                    liteLockerExecuted = true;
+                    locked_item = identifier;
+                }
+                // 5. DocType Detail Check (e.g., viewing the DocType record itself)
+                else if (view_type === 'Form' && identifier === 'DocType' && r.message.doctypes.includes(doc_name)) {
+                    liteLockerExecuted = true;
+                    locked_item = doc_name;
                 }
 
-                else if (view_type === 'Page' && manifest.pages.includes(identifier)) {
-                    block_and_redirect(identifier);
-                    liteLockerExecuted = true;
-                }
-
-                else if (view_type === 'Form' && identifier === 'DocType' && manifest.doctypes.includes(route[2])) {
-                    block_and_redirect(route[2]);
-                    liteLockerExecuted = true;
-                }
-
-                else if (manifest.doctypes.includes(identifier) || manifest.modules.includes(identifier)) {
-                    block_and_redirect(identifier);
-                    liteLockerExecuted = true;
+                if (liteLockerExecuted) {
+                    block_and_redirect(locked_item);
                 }
             }
         });
