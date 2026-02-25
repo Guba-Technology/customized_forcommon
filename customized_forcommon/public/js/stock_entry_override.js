@@ -106,11 +106,16 @@ frappe.ui.form.on("Stock Entry Detail", {
 function set_item_filter(frm) {
     frm.fields_dict.items.grid.get_field("item_code").get_query = function (doc, cdt, cdn) {
         let row = locals[cdt][cdn];
-        let warehouse = row.s_warehouse || doc.from_warehouse;
+        let warehouse;
+        if (doc.stock_entry_type === "Material Issue" || doc.stock_entry_type === "Material Transfer") {
+            warehouse = row.s_warehouse || doc.from_warehouse;
 
-        if (!warehouse) {
-            frappe.msgprint("Please select Source Warehouse first");
-            return {};
+            if (!warehouse) {
+                frappe.msgprint("Please select Source Warehouse first");
+                return {};
+            }
+        } else {
+            warehouse = row.t_warehouse || doc.to_warehouse;
         }
 
         return {
