@@ -198,7 +198,7 @@ override_doctype_class = {
 }
 
 app_include_js = [
-    "/assets/customized_forcommon/js/material_request.js",
+    # "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
@@ -229,7 +229,8 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "Asset":"public/js/asset.js",
     "Customer": "public/js/customer_type.js",
-    "Purchase Order": "public/js/purchase_order.js"
+    "Purchase Order": "public/js/purchase_order.js",
+    "Material Request": "public/js/material_request.js"
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
