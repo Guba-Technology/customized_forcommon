@@ -47,8 +47,7 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer"
-
+                          "Sales Order", "Customer", "Item",
                                                   ]],
         ]
     },
@@ -100,7 +99,7 @@ fixtures = [
         "dt": "Property Setter",
         "filters": [
             ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
-                            "Employee-custom_leave_increment_period-Label",
+                            "Employee-custom_leave_increment_period-Label", "Asset Movement-purpose-options"
 
             ]]
         ]
@@ -194,7 +193,8 @@ override_doctype_class = {
     # "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
-    "Customer": "customized_forcommon.overrides.customer.CustomCustomer"
+    "Customer": "customized_forcommon.overrides.customer.CustomCustomer",
+    "Asset Movement": "customized_forcommon.overrides.asset_movement.CustomAssetMovement"
 }
 
 app_include_js = [
@@ -229,6 +229,9 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "Asset":"public/js/asset.js",
     "Customer": "public/js/customer_type.js",
+    "Item": "public/js/item.js",
+    "Purchase Receipt": "public/js/purchase_reciept.js",
+    "Asset Movement": "public/js/asset_movement.js"
     "Purchase Order": "public/js/purchase_order.js",
     "Material Request": "public/js/material_request.js",
     "Supplier Quotation": "public/js/supplier_quotation_custom.js"

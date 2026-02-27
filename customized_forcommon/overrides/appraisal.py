@@ -22,9 +22,9 @@ class CustomAppraisal(Appraisal):
                 "kra": entry.key_result_area,
                 "per_weightage": entry.per_weightage,
             })
-
+        table = template.rating_criteria if template.custom_criteria_for == "Performance Feedback" else template.custom_self_appraisal_rating_criteria
         # Standard rating criteria
-        for entry in template.rating_criteria:
+        for entry in table:
             self.append("self_ratings", {
                 "criteria": entry.criteria,
                 "per_weightage": entry.per_weightage,
@@ -40,4 +40,4 @@ class CustomAppraisal(Appraisal):
         # else:
         #     print("Template has no custom_self_appraisal_rating_criteria field")
 
-        return self
+        # return self
