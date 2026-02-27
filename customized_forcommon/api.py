@@ -138,3 +138,34 @@ def get_data_from_purchase_order(purchase_order_doc):
     company = purchase_order.company
 
     return {"employee": employee, "date": date, "company": company}
+
+
+@frappe.whitelist()
+def get_item_tax_accounts(item_code, company=None):
+    """
+    Get tax accounts and rates for an Item via Item Tax Templates,
+    filtered by the company.
+    """
+    item = frappe.get_doc("Item", item_code)
+    tax_accounts = []
+
+    for item_tax in item.get("taxes") or []:
+        if item_tax.item_tax_template:
+            template = frappe.get_doc("Item Tax Template", item_tax.item_tax_template)
+
+            for tax_row in template.taxes:
+                account = tax_row.tax_type
+                account_doc = frappe.get_doc("Account", account)
+
+                # Skip accounts that do not belong to the company
+                if company and account_doc.company != company:
+                    continue
+
+                tax_accounts.append({
+                    "template": template.name,
+                    "account": account,
+                    "account_name": account_doc.account_name,
+                    "rate": tax_row.tax_rate
+                })
+
+    return tax_accounts

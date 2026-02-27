@@ -230,7 +230,8 @@ doctype_js = {
     "Asset":"public/js/asset.js",
     "Customer": "public/js/customer_type.js",
     "Purchase Order": "public/js/purchase_order.js",
-    "Material Request": "public/js/material_request.js"
+    "Material Request": "public/js/material_request.js",
+    "Supplier Quotation": "public/js/supplier_quotation_custom.js"
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
