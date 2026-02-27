@@ -231,7 +231,7 @@ doctype_js = {
     "Customer": "public/js/customer_type.js",
     "Item": "public/js/item.js",
     "Purchase Receipt": "public/js/purchase_reciept.js",
-    "Asset Movement": "public/js/asset_movement.js"
+    "Asset Movement": "public/js/asset_movement.js",
     "Purchase Order": "public/js/purchase_order.js",
     "Material Request": "public/js/material_request.js"
 }
