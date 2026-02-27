@@ -130,3 +130,11 @@ def get_designation_counts(designation, company, department=None):
         "job_openings": job_openings
     }
 
+@frappe.whitelist()
+def get_data_from_purchase_order(purchase_order_doc):
+    purchase_order = frappe.get_doc("Purchase Order", purchase_order_doc)
+    employee = purchase_order.custom_employee
+    date = purchase_order.transaction_date
+    company = purchase_order.company
+
+    return {"employee": employee, "date": date, "company": company}

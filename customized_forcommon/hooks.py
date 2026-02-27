@@ -112,7 +112,9 @@ before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creato
 #  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
-    "customized_forcommon.patches.remove_job_card_summary.execute"
+    "customized_forcommon.patches.remove_job_card_summary.execute",
+    "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs"
+
 ]
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
@@ -196,7 +198,7 @@ override_doctype_class = {
 }
 
 app_include_js = [
-    "/assets/customized_forcommon/js/material_request.js",
+    # "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
@@ -230,6 +232,8 @@ doctype_js = {
     "Item": "public/js/item.js",
     "Purchase Receipt": "public/js/purchase_reciept.js",
     "Asset Movement": "public/js/asset_movement.js"
+    "Purchase Order": "public/js/purchase_order.js",
+    "Material Request": "public/js/material_request.js"
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
@@ -266,6 +270,7 @@ jinja = {
 website_redirects = [
     {"source": "/apps", "target": "/app/home"}
 ]
+
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
