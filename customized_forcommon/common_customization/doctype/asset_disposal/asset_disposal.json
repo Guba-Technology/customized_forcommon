@@ -1,0 +1,121 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-26 16:56:50.294950",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "asset",
+  "disposal_type",
+  "salvage_value",
+  "gain_loss",
+  "buyer_reciever",
+  "column_break_otcg",
+  "disposal_method",
+  "approved_by",
+  "buyer",
+  "disposal_date",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "disposal_type",
+   "fieldtype": "Select",
+   "label": "Disposal Type",
+   "options": "\nSale\nWrite-off\nLost\nScrap"
+  },
+  {
+   "fieldname": "salvage_value",
+   "fieldtype": "Currency",
+   "label": "Salvage Value"
+  },
+  {
+   "fieldname": "buyer_reciever",
+   "fieldtype": "Link",
+   "label": "Buyer/Receive",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "buyer",
+   "fieldtype": "Dynamic Link",
+   "label": "Buyer",
+   "options": "buyer_reciever"
+  },
+  {
+   "fieldname": "column_break_otcg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "disposal_method",
+   "fieldtype": "Link",
+   "label": "Disposal Method",
+   "options": "Disposal Method"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User"
+  },
+  {
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "label": "Asset",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "disposal_date",
+   "fieldtype": "Date",
+   "label": "Disposal Date"
+  },
+  {
+   "fieldname": "gain_loss",
+   "fieldtype": "Float",
+   "label": "Gain/Loss"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Disposal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nDisposed"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-26 16:56:50.294950",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Asset Disposal",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
