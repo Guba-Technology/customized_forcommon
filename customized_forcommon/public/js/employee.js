@@ -1,5 +1,9 @@
 frappe.ui.form.on('Employee', {
 
+    onload: function(frm) {
+        frm.set_df_property("gender", "only_select", 1);
+    },
+
     // Triggered whenever personal_email or company_email changes
     personal_email: function(frm) {
         validate_email_field(frm, 'personal_email');
@@ -41,7 +45,7 @@ frappe.ui.form.on('Employee', {
 
             if (dob > max_dob) {
                 frappe.msgprint(
-                    `Date of Birth cannot be after ${frappe.datetime.obj_to_str(max_dob)}`
+                    `Age must be above 18 years old, cannot be after ${frappe.datetime.obj_to_str(max_dob)}`
                 );
                 frappe.validated = false;
             }
