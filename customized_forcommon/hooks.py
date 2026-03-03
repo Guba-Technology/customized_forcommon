@@ -112,9 +112,12 @@ doc_events = {
     "Employee": {
         "validate": "customized_forcommon.doc_events.leave_increment_period.validate_leave_increment_period"
     },
+    "User": {
+        "validate": "customized_forcommon.doc_events.user.validate_birth_date"
+    },
     "File": {
-        "validate": "customized_forcommon.security.validate_file_hook"
-    }
+        # "validate": "customized_forcommon.security.validate_file_hook"
+    },
 }
 scheduler_events = {
     "Hourly":
@@ -155,7 +158,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/pruning_gui.js",
     "/assets/customized_forcommon/js/global_back_button.js",
     "/assets/customized_forcommon/js/company_custom.js",
-    "/assets/customized_forcommon/js/custom_file_uploader.js"
+    "/assets/customized_forcommon/js/custom_file_uploader.js",
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
@@ -174,7 +177,7 @@ doctype_js = {
     "Payment Entry": "public/js/payment_entry.js",
     "User": "public/js/user.js",
     "Module Profile": "public/js/module_profile.js",
-    "Employee": "public/js/employee.js"
+    "Employee": "public/js/employee.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application

@@ -18,7 +18,6 @@ frappe.ui.FileUploader = class CustomFileUploader extends OriginalUploader {
 		// restrict file size (5MB)
 		opts.restrictions.max_file_size = 5 * 1024 * 1024;
 
-		// opts.upload_url = "/api/method/customized_forcommon.security.secure_upload";
 
 		super(opts);
 		
