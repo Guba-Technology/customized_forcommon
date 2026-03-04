@@ -86,5 +86,5 @@ def execute():
             except Exception as e:
                 print(f"❌ Failed to remove {field['fieldname']}: {e}")
 
-    if changed:
-        print("✅ Company is modified.")
+    # if changed:
+    #     print("✅ Company is modified.")

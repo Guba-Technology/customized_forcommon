@@ -1,0 +1,31 @@
+{
+ "attach_files": "",
+ "attach_print": 0,
+ "channel": "System Notification",
+ "creation": "2026-03-03 09:36:19.129344",
+ "date_changed": "contract_end_date",
+ "days_in_advance": 7,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Employee",
+ "enabled": 1,
+ "event": "Days Before",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "Add your message here",
+ "message_type": "Markdown",
+ "modified": "2026-03-03 09:36:19.129344",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Contract End Date",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "owner",
+   "receiver_by_role": "All"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Contract To Be Expired:{{doc.first_name}}"
+}

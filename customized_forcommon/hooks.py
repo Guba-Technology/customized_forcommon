@@ -173,6 +173,9 @@ scheduler_events = {
     "daily":
     [
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
+    ],
+    "daily": [
+        "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
     ]
 
 }
@@ -253,6 +256,10 @@ from customized_forcommon.overrides import custom_gl_entry
 PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
+# Monkey Patching Recruitment Analytics
+from hrms.hr.report.recruitment_analytics import recruitment_analytics
+from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
+recruitment_analytics.execute = custom_recruitment_analytics_execute
 
 # from erpnext.accounts.report.bank_reconciliation_statement import bank_reconciliation_statement as brs
 # from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
