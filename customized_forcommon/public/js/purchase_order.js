@@ -20,7 +20,9 @@ frappe.ui.form.on("Purchase Order", {
                                     company: company,
                                     custom_advance_type: "For Purchase",
                                     reference_doctype: "Purchase Order",
-                                    reference_name: frm.doc.name
+                                    custom_purchase_order_id: frm.doc.name,
+                                    advance_amount: frm.doc.grand_total,
+                                    purpose: "Purchase"
                                 });
                             }
                         }
