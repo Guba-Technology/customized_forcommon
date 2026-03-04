@@ -36,6 +36,7 @@ class Clearance(Document):
 			"Warranty Request",
 			filters={
 				"employee": self.employee,
+				"docstatus": 1,
 				"status": "Active"
 			}
 		)

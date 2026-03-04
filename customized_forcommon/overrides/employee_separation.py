@@ -13,6 +13,7 @@ class CustomEmployeeSeparation(EmployeeSeparation):
             "Warranty Request",
             filters={
                 "employee": self.employee,
+                "docstatus": 1,
                 "status": "Active",  # Only consider active warranty requests
                 "name": ["!=", self.name]  # Exclude current separation request
             },

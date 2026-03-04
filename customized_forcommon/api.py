@@ -2,7 +2,7 @@ from erpnext.accounts.general_ledger import make_gl_entries
 from frappe.utils.nestedset import get_descendants_of
 import frappe
 from frappe import _
-from frappe.utils import today
+from frappe.utils import today, flt, getdate
 
 # updating the status of the purchase invoice 
 @frappe.whitelist()
@@ -141,31 +141,53 @@ def get_data_from_purchase_order(purchase_order_doc):
 
 
 @frappe.whitelist()
-def get_item_tax_accounts(item_code, company=None):
+def get_item_tax_accounts(item_code, company=None, net_amount=0, posting_date=None):
     """
     Get tax accounts and rates for an Item via Item Tax Templates,
-    filtered by the company.
+    filtered by company and respecting Item-level conditions:
+    - valid_from
+    - minimum_net_rate
+    - maximum_net_rate
     """
+    if not posting_date:
+        posting_date = today()
+
     item = frappe.get_doc("Item", item_code)
     tax_accounts = []
 
     for item_tax in item.get("taxes") or []:
-        if item_tax.item_tax_template:
-            template = frappe.get_doc("Item Tax Template", item_tax.item_tax_template)
+        if not item_tax.item_tax_template:
+            continue
 
-            for tax_row in template.taxes:
-                account = tax_row.tax_type
-                account_doc = frappe.get_doc("Account", account)
+        template = frappe.get_doc("Item Tax Template", item_tax.item_tax_template)
 
-                # Skip accounts that do not belong to the company
-                if company and account_doc.company != company:
-                    continue
+        # Convert min/max net rates to float safely
+        min_rate = flt(item_tax.minimum_net_rate)
+        max_rate = flt(item_tax.maximum_net_rate)
+        net_amount = flt(net_amount)
 
-                tax_accounts.append({
-                    "template": template.name,
-                    "account": account,
-                    "account_name": account_doc.account_name,
-                    "rate": tax_row.tax_rate
-                })
+
+        # Check Item-level conditions
+        if getdate(item_tax.valid_from) and getdate(posting_date) < getdate(item_tax.valid_from):
+            continue
+        if min_rate and net_amount < min_rate:
+            continue
+        if max_rate and net_amount > max_rate:
+            continue
+
+        for tax_row in template.taxes:
+            account = tax_row.tax_type
+            account_doc = frappe.get_doc("Account", account)
+
+            # Skip accounts that do not belong to the company
+            if company and account_doc.company != company:
+                continue
+
+            tax_accounts.append({
+                "template": template.name,
+                "account": account,
+                "account_name": account_doc.account_name,
+                "rate": tax_row.tax_rate
+            })
 
     return tax_accounts
