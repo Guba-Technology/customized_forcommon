@@ -61,5 +61,5 @@ def execute():
 
     frappe.db.commit()
 
-    if changed:
-        print("✅ Employee is modified.")
+    # if changed:
+    #     print("✅ Employee is modified.")

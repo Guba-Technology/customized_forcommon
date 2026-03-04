@@ -65,5 +65,5 @@ def execute():
 
     frappe.db.commit()
 
-    if changed:
-        print("✅ Purchase Invoice is modified.")
+    # if changed:
+    #     print("✅ Purchase Invoice is modified.")

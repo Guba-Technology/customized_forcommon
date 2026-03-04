@@ -62,6 +62,6 @@ def execute():
  
     #print("✅ Sales Invoice Patch completed successfully.")
 
-    if changed:
-        print("✅ Sales Invoice Patch completed successfully.")
+    # if changed:
+    #     print("✅ Sales Invoice Patch completed successfully.")
    

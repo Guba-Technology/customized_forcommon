@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-27 16:54:28.122633",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "child_name",
+  "date_of_birth",
+  "photo",
+  "documents"
+ ],
+ "fields": [
+  {
+   "fieldname": "child_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Child Name"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "photo",
+   "fieldtype": "Attach Image",
+   "in_filter": 1,
+   "in_standard_filter": 1,
+   "label": "Photo"
+  },
+  {
+   "fieldname": "documents",
+   "fieldtype": "Attach",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Documents"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-27 16:58:15.070485",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Children Information",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
