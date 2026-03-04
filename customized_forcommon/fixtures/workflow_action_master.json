@@ -103,5 +103,19 @@
   "modified": "2025-05-08 10:55:48.051787",
   "name": "Accept",
   "workflow_action_name": "Accept"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-08-29 09:42:31.397003",
+  "name": "Send To Transit",
+  "workflow_action_name": "Send To Transit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-08-29 09:43:03.048666",
+  "name": "Complete Transfer",
+  "workflow_action_name": "Complete Transfer"
  }
 ]
