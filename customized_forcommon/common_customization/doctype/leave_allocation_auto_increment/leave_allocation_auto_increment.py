@@ -10,11 +10,21 @@ from datetime import datetime
 class LeaveAllocationAutoIncrement(Document):
     def validate(self):
         self.validate_dates()
+        self.validate_empty_employees_table()
+        self.validate_leave_days_to_be_added()
 
     def validate_dates(self):
         if self.from_date and self.to_date:
             if getdate(self.to_date) <= getdate(self.from_date):
                 frappe.throw("To Date must be greater than From Date")
+    def validate_empty_employees_table(self):
+        if not self.employees:
+            frappe.throw("No Employee is found in the selected filters")
+
+    def validate_leave_days_to_be_added(self):
+        if self.filter_by_increment == "Increment This Year":
+            if self.leave_days_to_be_added < 1:
+                frappe.throw("Leaves to be added cannot be less than 1 day")
     def on_submit(self):
         self.make_allocation()
         if self.status == "Pending":
@@ -52,7 +62,7 @@ class LeaveAllocationAutoIncrement(Document):
                     new_leave_allocation.employee = employee
                     new_leave_allocation.department = department
                     new_leave_allocation.company = company
-                    new_leave_allocation.new_leaves_allocated = total_leaves_allocated + 1
+                    new_leave_allocation.new_leaves_allocated = total_leaves_allocated + self.leave_days_to_be_added
                     new_leave_allocation.from_date = from_date
                     new_leave_allocation.to_date = to_date
                     new_leave_allocation.leave_type = leave_type
@@ -124,13 +134,17 @@ def get_ethiopian_fiscal_year_range(today=None):
     return fy_start.date(), fy_end.date()
 
 @frappe.whitelist()
-def get_filtered_employees(increment_filter="All"):
+def get_filtered_employees(increment_filter="All", designation=None):
     fy_start, fy_end = get_ethiopian_fiscal_year_range()
+
+    filters = {"status": "Active"}
+    if designation:
+        filters["designation"] = designation
 
     # Fetch all active employees
     employees = frappe.get_all(
         "Employee",
-        filters={"status": "Active"},
+        filters=filters,
         fields=["name", "employee_name", "company", "department", "custom_next_leave_increment_year"]
     )
 
