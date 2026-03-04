@@ -178,6 +178,7 @@ doctype_js = {
     "User": "public/js/user.js",
     "Module Profile": "public/js/module_profile.js",
     "Employee": "public/js/employee.js",
+    "Item":"public/js/item_field_hide.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
