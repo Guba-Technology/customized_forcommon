@@ -104,7 +104,8 @@ before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creato
 #  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
-    "customized_forcommon.patches.remove_job_card_summary.execute"
+    "customized_forcommon.patches.remove_job_card_summary.execute",
+    "customized_forcommon.prunning.run"
 ]
 
 # Doc Events that will be triggered on specific actions in the specified DocTypes
@@ -175,6 +176,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
+    "/assets/customized_forcommon/js/lite_locker.js",
 ]
 
 
@@ -186,7 +188,9 @@ doctype_js = {
     "Purchase Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Stock Entry": "public/js/stock_entry_override.js",
-    "Purchase Receipt":"public/js/purchase_reciept_itemfilter.js"
+    "Purchase Receipt":"public/js/purchase_reciept_itemfilter.js",
+    "Module Profile": "public/js/module_profile.js",
+    "User": "public/js/user.js",
 }
 
 

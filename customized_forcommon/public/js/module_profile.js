@@ -1,0 +1,20 @@
+frappe.ui.form.on('Module Profile', {
+    refresh: function (frm) {
+        // List of modules you want to KEEP visible
+        const allowed_modules = [
+            "Accounts", "Stock", "Manufacturing",
+            "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
+        ];
+
+        // We loop through the checkboxes and hide any that aren't in our list
+        $('div[data-fieldname="block_modules"] .unit-checkbox').each(function () {
+            let label = $(this).text().trim();
+
+            if (!allowed_modules.includes(label)) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    }
+});

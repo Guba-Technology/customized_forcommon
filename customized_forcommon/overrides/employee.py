@@ -6,8 +6,12 @@ class CustomEmployee(Employee):
     def validate(self):
         super().validate()
         # frappe.msgprint("CustomEmployee.validate triggered for CTC setting")
-        self.set_ctc_from_grade_and_promotion()
+        # self.set_ctc_from_grade_and_promotion()
         self.validate_18_years_old()
+        
+    def autoname(self):
+        """Override autoname to do nothing."""
+        pass
 
     def set_ctc_from_grade_and_promotion(self):
         """Set CTC from Employee Grade and Promotion if available."""
