@@ -22,7 +22,7 @@ MANIFEST_FILE = "lite_mode_lock_manifest.json"
 def get_lit_modules():
     """Safely fetch Allowed Modules dynamically to avoid import-time DB errors."""
     lit_modules = [
-        "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", "Manufacturing",
+        "Accounts", "Stock", "Manufacturing",
         "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
     ]
     try:
