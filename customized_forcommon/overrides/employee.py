@@ -6,7 +6,7 @@ class CustomEmployee(Employee):
     def validate(self):
         super().validate()
         # frappe.msgprint("CustomEmployee.validate triggered for CTC setting")
-        self.set_ctc_from_grade_and_promotion()
+        # self.set_ctc_from_grade_and_promotion()
         self.validate_18_years_old()
 
     def set_ctc_from_grade_and_promotion(self):
