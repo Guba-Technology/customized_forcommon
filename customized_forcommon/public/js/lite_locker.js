@@ -67,7 +67,7 @@ $(document).on('app_ready', function () {
         const d = frappe.msgprint({
             title: __('Access Restricted'),
             indicator: 'red',
-            message: __('The <b>{0}</b> is currently locked in LITE mode. You have been redirected to the home page.', [item]),
+            message: __('<b>{0}</b> is not currently subscribed. You have been redirected to the home page.', [item]),
             primary_action: {
                 label: __('Understood'),
                 action: function () {
