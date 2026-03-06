@@ -16,14 +16,13 @@ ALLOWED_WORKSPACES = [
 ]
 
 HIDDEN_BY_DEFAULT = ["CRM", "Quality Management", "Quality", "Projects", 
-                    "Assets", "Buying", "Selling", "HR", "Payroll"
-                    ]
+                    "Assets", "Buying", "Selling", "HR", "Payroll"]
 MANIFEST_FILE = "lite_mode_lock_manifest.json"
 
 def get_lit_modules():
     """Safely fetch Allowed Modules dynamically to avoid import-time DB errors."""
     lit_modules = [
-        "Accounts", "Stock",  "Manufacturing",
+        "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", "Manufacturing",
         "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
     ]
     try:
