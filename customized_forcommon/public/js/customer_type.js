@@ -13,5 +13,9 @@ frappe.ui.form.on('Customer', {
             field.refresh();
         }
 
+
+        frm.set_df_property('tax_id', 'label', "TIN Number");
+        frm.refresh_field('tax_id');
+
     }
 })

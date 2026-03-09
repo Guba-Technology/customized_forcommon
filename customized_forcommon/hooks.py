@@ -237,7 +237,10 @@ doctype_js = {
     "Asset Movement": "public/js/asset_movement.js",
     "Purchase Order": "public/js/purchase_order.js",
     "Material Request": "public/js/material_request.js",
-    "Supplier Quotation": "public/js/supplier_quotation.js"
+    "Supplier Quotation": "public/js/supplier_quotation.js",
+    "Quotation": "public/js/quotation.js",
+    "Auto Repeat": "public/js/auto_repeat.js",
+    "Stock Entry": "public/js/stock_entry.js",
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
