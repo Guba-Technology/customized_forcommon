@@ -47,8 +47,9 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item",
-                                                  ]],
+                          "Sales Order", "Customer", "Item", "Address"
+                        ]
+            ],
         ]
     },
     {
@@ -99,7 +100,9 @@ fixtures = [
         "dt": "Property Setter",
         "filters": [
             ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
-                            "Employee-custom_leave_increment_period-Label", "Asset Movement-purpose-options"
+                            "Employee-custom_leave_increment_period-Label", "Asset Movement-purpose-options", 
+                            "Address-main-field_order", "Address-state-hidden", "Address-county-hidden", "Address-address_line1-description",
+                            "Address-address_line2-description"
 
             ]]
         ]
