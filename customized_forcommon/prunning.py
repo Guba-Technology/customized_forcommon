@@ -23,7 +23,7 @@ def get_lit_modules():
     """Safely fetch Allowed Modules dynamically to avoid import-time DB errors."""
     lit_modules = [
         "Accounts", "Stock", "Manufacturing",
-        "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
+        "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts", "custom report"
     ]
     try:
         # Include all core frappe modules by default
@@ -106,7 +106,7 @@ def run(mode="lite"):
         return False
 
 def apply_lite_mode():
-    """Bulk apply Lite mode while creating snapshots."""
+    """Bulk apply Lite mode while creating snapshots, with surgical exceptions."""
     manifest = read_manifest()
     if "modules" not in manifest:
         manifest["modules"] = {}
@@ -114,16 +114,13 @@ def apply_lite_mode():
     allowed_modules = get_lit_modules()
     modules = frappe.get_all("Module Def", pluck="name")
     
-    # 1. Handle Module Selections
     for mod in modules:
         if mod not in allowed_modules:
             toggle_module_visibility(mod, hide=True, manifest_ref=manifest)
             frappe.db.sql("DELETE FROM `tabRoute History` WHERE route LIKE %s", f"/app/{mod.lower()}%")
     
-    # 2. Handle Workspace Visibility based on ALLOWED_WORKSPACES
     workspaces = frappe.get_all("Workspace", fields=["name", "label"])
     hidden_standalone_ws = []
-    
     for ws in workspaces:
         label = ws.label or ws.name
         if label not in ALLOWED_WORKSPACES:
@@ -134,6 +131,21 @@ def apply_lite_mode():
     write_manifest(manifest)
 
     toggle_metadata(True)
+
+    # Force Customer and Supplier to be ACTIVE regardless of module status
+    survivors = ["Customer", "Supplier"]
+    for dt in survivors:
+        if frappe.db.exists("DocType", dt):
+            frappe.db.sql("""
+                UPDATE `tabDocType` 
+                SET read_only = 0, 
+                    show_name_in_global_search = 1, 
+                    in_create = 1 
+                WHERE name = %s
+            """, (dt,))
+
+    frappe.db.commit()
+    frappe.clear_cache()
 
 def restore_full_mode():
     """Precision restore using the manifest snapshots."""
