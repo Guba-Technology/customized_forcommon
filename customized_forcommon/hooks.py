@@ -47,7 +47,8 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address"
+                          "Sales Order", "Customer", "Item", "Address",
+                         
                         ]
             ],
         ]
@@ -196,7 +197,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-    # "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
     "Customer": "customized_forcommon.overrides.customer.CustomCustomer",
@@ -240,7 +241,10 @@ doctype_js = {
     "Asset Movement": "public/js/asset_movement.js",
     "Purchase Order": "public/js/purchase_order.js",
     "Material Request": "public/js/material_request.js",
-    "Supplier Quotation": "public/js/supplier_quotation.js"
+    "Supplier Quotation": "public/js/supplier_quotation.js",
+    "Quotation": "public/js/quotation.js",
+    "Auto Repeat": "public/js/auto_repeat.js",
+    "Stock Entry": "public/js/stock_entry.js",
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",

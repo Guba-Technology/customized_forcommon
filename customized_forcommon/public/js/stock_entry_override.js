@@ -2,10 +2,12 @@ frappe.ui.form.on('Stock Entry', {
     onload: function (frm) {
         set_transfer_status(frm);
         toggle_item_row_add(frm);
+        show_approved_by(frm);
     },
 
     stock_entry_type: function (frm) {
         set_transfer_status(frm);
+        show_approved_by(frm);
     },
 
     custom_transfer_status: function (frm) {
@@ -15,8 +17,18 @@ frappe.ui.form.on('Stock Entry', {
     refresh: function (frm) {
         lock_fields_based_on_status(frm);
         toggle_item_row_add(frm);
+        show_approved_by(frm);
     }
 });
+
+function show_approved_by(frm) {
+    if (frm.doc.stock_entry_type === "Disposal") {
+        frm.set_df_property("custom_approved_by", "hidden", 0);
+    } else {
+        frm.set_df_property("custom_approved_by", "hidden", 1);
+    }
+    frm.refresh_field("custom_approved_by");
+}
 
 // --- Helpers ---
 function set_transfer_status(frm) {

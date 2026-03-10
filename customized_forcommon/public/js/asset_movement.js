@@ -29,6 +29,14 @@ frappe.ui.form.on("Asset Movement", {
 				to_employee: { read_only: 0, reqd: 1 },
 			};
         }
+        if (frm.doc.purpose === "Receipt") {
+            fieldnames_to_be_altered = {
+                target_location: { read_only: 0, reqd: 1 },
+                source_location: { read_only: 0, reqd: 0 },
+                from_employee: { read_only: 0, reqd: 0 },
+                to_employee: { read_only: 1, reqd: 0 },
+            };
+        }
 
         if (fieldnames_to_be_altered) {
             Object.keys(fieldnames_to_be_altered).forEach((fieldname) => {
