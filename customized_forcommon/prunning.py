@@ -23,7 +23,8 @@ def get_lit_modules():
     """Safely fetch Allowed Modules dynamically to avoid import-time DB errors."""
     lit_modules = [
         "Accounts", "Stock", "Buying", "Selling", "HR", "Payroll", 
-        "Setup", "Core", "Custom", "Desk", "Email", "Automation", "Common Customization", "Contacts"
+        "Setup", "Core", "Custom", "Desk", "Email", "Automation", 
+        "Common Customization", "Contacts","custom report"
     ]
     try:
         # Include all core frappe modules by default
@@ -119,7 +120,8 @@ def apply_lite_mode():
         if mod not in allowed_modules:
             toggle_module_visibility(mod, hide=True, manifest_ref=manifest)
             frappe.db.sql("DELETE FROM `tabRoute History` WHERE route LIKE %s", f"/app/{mod.lower()}%")
-    
+    for mod in allowed_modules:
+        toggle_module_visibility(mod, hide=False, manifest_ref=manifest)
     # 2. Handle Workspace Visibility based on ALLOWED_WORKSPACES
     workspaces = frappe.get_all("Workspace", fields=["name", "label"])
     hidden_standalone_ws = []
