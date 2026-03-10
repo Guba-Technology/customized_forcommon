@@ -62,30 +62,7 @@
   "value_difference",
   "additional_costs_section",
   "additional_costs",
-  "total_additional_costs",
-  "supplier_info_tab",
-  "contact_section",
-  "supplier",
-  "supplier_name",
-  "supplier_address",
-  "address_display",
-  "accounting_dimensions_section",
-  "project",
-  "other_info_tab",
-  "printing_settings",
-  "select_print_heading",
-  "print_settings_col_break",
-  "letter_head",
-  "more_info",
-  "is_opening",
-  "remarks",
-  "col5",
-  "per_transferred",
-  "total_amount",
-  "job_card",
-  "amended_from",
-  "credit_note",
-  "is_return"
+  "total_additional_costs"
  ],
  "fields": [
   {
@@ -418,164 +395,12 @@
    "read_only": 1
   },
   {
-   "collapsible": 1,
-   "fieldname": "contact_section",
-   "fieldtype": "Section Break",
-   "label": "Supplier Details"
-  },
-  {
-   "fieldname": "supplier",
-   "fieldtype": "Link",
-   "label": "Supplier",
-   "no_copy": 1,
-   "oldfieldname": "supplier",
-   "oldfieldtype": "Link",
-   "options": "Supplier",
-   "print_hide": 1
-  },
-  {
-   "bold": 1,
-   "fieldname": "supplier_name",
-   "fieldtype": "Data",
-   "label": "Supplier Name",
-   "no_copy": 1,
-   "oldfieldname": "supplier_name",
-   "oldfieldtype": "Data",
-   "read_only": 1
-  },
-  {
-   "fieldname": "supplier_address",
-   "fieldtype": "Link",
-   "label": "Supplier Address",
-   "no_copy": 1,
-   "oldfieldname": "supplier_address",
-   "oldfieldtype": "Small Text",
-   "options": "Address"
-  },
-  {
-   "fieldname": "address_display",
-   "fieldtype": "Small Text",
-   "label": "Address"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "printing_settings",
-   "fieldtype": "Section Break",
-   "label": "Printing Settings"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "select_print_heading",
-   "fieldtype": "Link",
-   "label": "Print Heading",
-   "oldfieldname": "select_print_heading",
-   "oldfieldtype": "Link",
-   "options": "Print Heading"
-  },
-  {
-   "fieldname": "letter_head",
-   "fieldtype": "Link",
-   "label": "Letter Head",
-   "options": "Letter Head"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "more_info",
-   "fieldtype": "Section Break",
-   "label": "More Information",
-   "oldfieldtype": "Section Break"
-  },
-  {
-   "fieldname": "is_opening",
-   "fieldtype": "Select",
-   "label": "Is Opening",
-   "options": "No\nYes"
-  },
-  {
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "oldfieldtype": "Link",
-   "options": "Project"
-  },
-  {
-   "fieldname": "remarks",
-   "fieldtype": "Text",
-   "label": "Remarks",
-   "no_copy": 1,
-   "oldfieldname": "remarks",
-   "oldfieldtype": "Text",
-   "print_hide": 1
-  },
-  {
-   "fieldname": "col5",
-   "fieldtype": "Column Break",
-   "print_width": "50%",
-   "width": "50%"
-  },
-  {
-   "fieldname": "per_transferred",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Per Transferred",
-   "no_copy": 1,
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "depends_on": "total_amount",
-   "fieldname": "total_amount",
-   "fieldtype": "Currency",
-   "label": "Total Amount",
-   "options": "Company:company:default_currency",
-   "print_hide_if_no_value": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "job_card",
-   "fieldtype": "Link",
-   "label": "Job Card",
-   "options": "Job Card",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "ignore_user_permissions": 1,
-   "label": "Amended From",
-   "no_copy": 1,
-   "oldfieldname": "amended_from",
-   "oldfieldtype": "Link",
-   "options": "Stock Entry",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "credit_note",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Credit Note",
-   "options": "Journal Entry"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "accounting_dimensions_section",
-   "fieldtype": "Tab Break",
-   "label": "Accounting Dimensions"
-  },
-  {
    "fieldname": "pick_list",
    "fieldtype": "Link",
    "label": "Pick List",
    "options": "Pick List",
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "print_settings_col_break",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -595,17 +420,6 @@
    "label": "Apply Putaway Rule"
   },
   {
-   "default": "0",
-   "fieldname": "is_return",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "in_list_view": 1,
-   "label": "Is Return",
-   "no_copy": 1,
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "collapsible": 1,
    "fieldname": "bom_info_section",
    "fieldtype": "Section Break",
@@ -616,16 +430,6 @@
    "fieldname": "section_break_jwgn",
    "fieldtype": "Section Break",
    "label": "Default Warehouse"
-  },
-  {
-   "fieldname": "other_info_tab",
-   "fieldtype": "Tab Break",
-   "label": "Other Info"
-  },
-  {
-   "fieldname": "supplier_info_tab",
-   "fieldtype": "Tab Break",
-   "label": "Supplier Info"
   },
   {
    "fieldname": "stock_entry_details_tab",
@@ -695,13 +499,14 @@
   {
    "fieldname": "total_rejected_quantity",
    "fieldtype": "Int",
-   "label": "Total Rejected Quantity"
+   "label": "Total Rejected Quantity",
+   "non_negative": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-09 15:48:16.686796",
+ "modified": "2026-03-10 14:15:34.079912",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Material Receipt for Transfer",
