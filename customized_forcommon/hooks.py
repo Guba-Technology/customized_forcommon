@@ -196,7 +196,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-    # "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
     "Customer": "customized_forcommon.overrides.customer.CustomCustomer",

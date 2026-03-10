@@ -1,10 +1,11 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
  "creation": "2026-03-09 10:43:19.580561",
  "doctype": "DocType",
  "engine": "InnoDB",
-"field_order": [
+ "field_order": [
   "stock_entry_details_tab",
   "naming_series",
   "stock_entry_type",
@@ -51,9 +52,11 @@
   "last_scanned_warehouse",
   "items_section",
   "items",
-  "get_stock_and_rate",
+  "remark_list",
+  "total_rejected_quantity",
   "section_break_19",
   "total_outgoing_value",
+  "reference_document",
   "column_break_22",
   "total_incoming_value",
   "value_difference",
@@ -82,8 +85,7 @@
   "job_card",
   "amended_from",
   "credit_note",
-  "is_return",
-  "tab_connections"
+  "is_return"
  ],
  "fields": [
   {
@@ -93,7 +95,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "MAT-STE-.YYYY.-",
+   "options": "MAT-MRT-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -360,14 +362,6 @@
    "oldfieldtype": "Table",
    "options": "Stock Entry Detail",
    "reqd": 1
-  },
-  {
-   "fieldname": "get_stock_and_rate",
-   "fieldtype": "Button",
-   "label": "Update Rate and Availability",
-   "oldfieldtype": "Button",
-   "options": "get_stock_and_rate",
-   "print_hide": 1
   },
   {
    "fieldname": "section_break_19",
@@ -680,26 +674,38 @@
    "read_only": 1
   },
   {
-   "fieldname": "tab_connections",
-   "fieldtype": "Tab Break",
-   "label": "Connections",
-   "show_dashboard": 1
-  },
-  {
    "depends_on": "eval: doc.last_scanned_warehouse",
    "fieldname": "last_scanned_warehouse",
    "fieldtype": "Data",
    "is_virtual": 1,
    "label": "Last Scanned Warehouse"
+  },
+  {
+   "fieldname": "remark_list",
+   "fieldtype": "Table",
+   "label": "Remark List",
+   "options": "Material Receipt for Transfer Items"
+  },
+  {
+   "fieldname": "reference_document",
+   "fieldtype": "Link",
+   "label": "Reference Document",
+   "options": "Stock Entry"
+  },
+  {
+   "fieldname": "total_rejected_quantity",
+   "fieldtype": "Int",
+   "label": "Total Rejected Quantity"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-09 10:43:19.580561",
+ "modified": "2026-03-09 15:48:16.686796",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Material Receipt for Transfer",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

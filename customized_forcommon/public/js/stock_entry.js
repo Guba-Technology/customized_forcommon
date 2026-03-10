@@ -19,8 +19,6 @@ function show_approved_by(frm) {
     } else {
         frm.set_df_property("custom_approved_by", "hidden", 1);
         frm.set_df_property("custom_disposal_account", "hidden", 1);
-        frm.set_value("custom_approved_by", null);
-        frm.set_value("custom_disposal_account", null);
     }
     frm.refresh_field("custom_approved_by");
     frm.refresh_field("custom_disposal_account");
