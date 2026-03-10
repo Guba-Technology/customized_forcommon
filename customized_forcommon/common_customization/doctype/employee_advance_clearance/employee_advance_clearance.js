@@ -22,7 +22,7 @@ frappe.ui.form.on("Employee Advance Clearance", {
             frm.set_df_property("difference_account", "reqd", 0);
 
             // Optionally clear the field when hidden
-            frm.set_value("difference_account", null);
+            // frm.set_value("difference_account", null);
         }
     },
     setup(frm) {
@@ -93,7 +93,7 @@ frappe.ui.form.on("Employee Advance Clearance", {
             frm.set_df_property("difference_account", "reqd", 0);
 
             // Optionally clear the field when hidden
-            frm.set_value("difference_account", null);
+            // frm.set_value("difference_account", null);
         }
     },
     employee: function (frm) {

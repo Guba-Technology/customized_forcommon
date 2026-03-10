@@ -8,6 +8,8 @@ app_license = "mit"
 # Required Apps
 required_apps = ["erpnext", "hrms"]
 
+# Redirect the root "/" to /app/home
+home_page = "/app/home"
 # Branding
 
 
@@ -22,7 +24,8 @@ fixtures = [
                 "Employee Lifecycle", "Recruitment", "Leaves",
                 "Inventory", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
-                "Payables",  "Receivables", "Financial Reports"
+                "Payables",  "Receivables", "Financial Reports", "Home",
+                "Payroll", "Tax & Benefits", "Salary Payout"
             ]],
         ],
         "strict": False # do not check for existing records
@@ -108,11 +111,14 @@ doc_events = {
     },
     "Employee": {
         "validate": "customized_forcommon.doc_events.leave_increment_period.validate_leave_increment_period"
-    }
-
-   
+    },
+    "User": {
+        "validate": "customized_forcommon.doc_events.user.validate_birth_date"
+    },
+    "File": {
+        # "validate": "customized_forcommon.security.validate_file_hook"
+    },
 }
-
 scheduler_events = {
     "Hourly":
     [
@@ -150,7 +156,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/payment_request_extend.js",
     "/assets/customized_forcommon/js/lite_locker.js",
     "/assets/customized_forcommon/js/pruning_gui.js",
-    "/assets/customized_forcommon/js/global_back_button.js"
+    "/assets/customized_forcommon/js/global_back_button.js",
+    "/assets/customized_forcommon/js/company_custom.js",
+    "/assets/customized_forcommon/js/custom_file_uploader.js",
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
@@ -167,8 +175,10 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "User": "public/js/validate_useremail.js",
-    "Employee": "public/js/validate_employeeemail.js"
+    "User": "public/js/user.js",
+    "Module Profile": "public/js/module_profile.js",
+    "Employee": "public/js/employee.js",
+    "Item":"public/js/item_field_hide.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
@@ -192,6 +202,8 @@ website_context = {
 	"favicon": "/assets/customized_forcommon/images/tele-logo.png",
 	"splash_image": "/assets/customized_forcommon/images/tele-logo.png",
 }
+
+post_install = "customized_forcommon.utils.gender_value_remover.execute"
 
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"

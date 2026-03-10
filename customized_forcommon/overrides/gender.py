@@ -6,6 +6,8 @@ class CustomGender(Gender):
     def validate(self):
         if hasattr(super(), "validate"):
             super().validate()
+        if frappe.flags.in_setup_wizard:
+            return
         self.restrict_to_create_gender()
 
     def restrict_to_create_gender(self):
