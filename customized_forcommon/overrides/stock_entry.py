@@ -5,7 +5,6 @@ from frappe.utils import flt
 
 class CustomStockEntry(ERPNextStockEntry):
     def after_insert(self):
-        super().after_insert()  # call default logic first
         if self.stock_entry_type == "Material Issue for Transfer":
             self.create_material_receipt_from_issue()  # create Material Receipt for Transfer on creation of Material Issue for Transfer
     def on_update(self):
