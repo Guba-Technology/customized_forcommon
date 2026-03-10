@@ -47,7 +47,8 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address"
+                          "Sales Order", "Customer", "Item", "Address",
+                         
                         ]
             ],
         ]

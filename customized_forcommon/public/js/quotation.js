@@ -15,7 +15,10 @@ frappe.ui.form.on('Quotation', {
           callback: function(r) {
              if (r.message.custom_quotation_valid_date) {
                 valid_till_date = r.message.custom_quotation_valid_date;
-            frm.set_value("valid_till", valid_till_date);
+                if (valid_till_date == 0 || valid_till_date == null) {
+                    valid_till_date = 5;
+                }
+            frm.set_value("valid_till", frappe.datetime.add_days(frappe.datetime.get_today(), valid_till_date));
             frm.set_df_property("valid_till", "read_only", 1);
             frm.refresh_field("valid_till"); 
             }
