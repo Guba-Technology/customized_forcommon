@@ -21,7 +21,7 @@ def override_bom_creator():
     
 override_bom_creator()
 
-
+# Moneky path the bank reconcillation statement
 import erpnext.accounts.report.bank_reconciliation_statement.bank_reconciliation_statement as brs
 from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
 
