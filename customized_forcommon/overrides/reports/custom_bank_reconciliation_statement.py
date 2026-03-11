@@ -99,7 +99,7 @@ def execute(filters=None):
         {
             "payment_entry": _("Deposits in Transit Entries"),
             "payment_document": None,
-            "debit": deposit_total or 0.0,
+            "debit": flt(deposit_total),
             "credit": 0,
             "account_currency": account_currency,
             "is_summary_row": 1,
@@ -111,7 +111,7 @@ def execute(filters=None):
             "payment_entry": _("Withdrawals in Transit Entries"),
             "payment_document": None,
             "debit": 0,
-            "credit": withdraw_total or 0.0,
+            "credit": flt(withdraw_total),
             "account_currency": account_currency,
             "is_summary_row": 1,
         },
