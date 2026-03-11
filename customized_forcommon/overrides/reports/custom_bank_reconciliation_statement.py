@@ -19,7 +19,6 @@ def execute(filters=None):
     # Main entries
     # -------------------------
     data = get_entries(filters)
-    data = deduplicate_entries(data)
 
     # Balance as per system
     balance_as_per_system = get_balance_on(filters["account"], filters["report_date"])
@@ -37,7 +36,6 @@ def execute(filters=None):
     # In-Transit Entries
     # -------------------------
     deposit_entries, deposit_total = get_in_transit_entries(filters, "custom_deposit_in_transit")
-    deposit_entries = deduplicate_entries(deposit_entries)
     # Remove duplicates already in main data
     deposit_entries = [
         d for d in deposit_entries if (d.get("payment_document"), d.get("payment_entry")) not in
@@ -45,7 +43,6 @@ def execute(filters=None):
     ]
 
     withdraw_entries, withdraw_total = get_in_transit_entries(filters, "custom_withdrawals_in_transit")
-    withdraw_entries = deduplicate_entries(withdraw_entries)
     withdraw_entries = [
         d for d in withdraw_entries if (d.get("payment_document"), d.get("payment_entry")) not in
         {(x.get("payment_document"), x.get("payment_entry")) for x in data}
@@ -131,19 +128,6 @@ def execute(filters=None):
 
     return columns, data
 
-
-# -------------------------
-# Helper Functions
-# -------------------------
-def deduplicate_entries(entries):
-    seen = set()
-    unique_entries = []
-    for d in entries:
-        key = (d.get("payment_document"), d.get("payment_entry"))
-        if key not in seen:
-            seen.add(key)
-            unique_entries.append(d)
-    return unique_entries
 
 
 def get_columns():
