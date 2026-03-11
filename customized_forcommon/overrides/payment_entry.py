@@ -6,6 +6,34 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import get_outstanding
 from frappe.utils import comma_or, flt
 from frappe import _
 class CustomPaymentEntry(PaymentEntry):
+    def before_validate(self):
+        """
+        Ensure party_account_currency exists
+        BEFORE ERPNext calls set_missing_ref_details()
+        """
+
+        if getattr(self, "party_account_currency", None):
+            return
+
+        # RECEIVE → Customer
+        if self.payment_type == "Receive":
+            self.party_account_currency = (
+                self.paid_from_account_currency
+                or frappe.db.get_value("Account", self.paid_from, "account_currency")
+            )
+
+        # PAY → Supplier / Employee
+        else:
+            self.party_account_currency = (
+                self.paid_to_account_currency
+                or frappe.db.get_value("Account", self.paid_to, "account_currency")
+            )
+
+        # Absolute safety net
+        if not self.party_account_currency:
+            self.party_account_currency = frappe.get_cached_value(
+                "Company", self.company, "default_currency"
+            )
     def get_valid_reference_doctypes(self):
         if self.party_type == "Customer":
             return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning", "Payment Entry","Payment Request",)

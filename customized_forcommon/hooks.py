@@ -165,7 +165,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.BOMCreator",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
 
 }
@@ -176,7 +176,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/bom_creator_extended.js",
+    #"/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/payment_request_extend.js"    
 ]
 # web_include_js = [
@@ -190,11 +190,11 @@ website_redirects = [
 # js files to be included in the doctype views
 doctype_js = {
     "Material Request": "public/js/material_request.js",
-    # "BOM Creator": "public/js/bom_creator_extended.js",
+    "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
-
+    "Payment Request": "public/js/payment_request_extend.js",
     "Payment Entry": "public/js/payment_entry.js"
 }
 
@@ -458,4 +458,3 @@ jinja = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
->>>>>>> 808a4ab7c633384d0dcf600dd3fef5775b939025
