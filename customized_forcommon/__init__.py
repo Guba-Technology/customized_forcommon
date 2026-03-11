@@ -20,3 +20,10 @@ def override_bom_creator():
     bom_creator.add_sub_assembly = add_sub_assembly
     
 override_bom_creator()
+
+
+import erpnext.accounts.report.bank_reconciliation_statement.bank_reconciliation_statement as brs
+from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
+
+# Force the override at the moment the app loads
+brs.execute = cb.execute
