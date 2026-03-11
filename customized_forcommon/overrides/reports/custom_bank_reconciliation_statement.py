@@ -214,10 +214,11 @@ def get_in_transit_entries(filters, account_field):
         FROM `tabJournal Entry Account` jvd
         JOIN `tabJournal Entry` jv ON jvd.parent = jv.name
         WHERE jvd.account=%(transit_account)s
-          AND jv.docstatus=1
-          AND jv.posting_date <= %(report_date)s
-          AND jv.company=%(company)s
-          AND jvd.against_account=%(bank_account)s
+        AND jv.docstatus=1
+        AND (jv.custom_reversed IS NULL OR jv.custom_reversed = 0)
+        AND jv.posting_date <= %(report_date)s
+        AND jv.company=%(company)s
+        AND jvd.against_account=%(bank_account)s
         """,
         {"transit_account": transit_account, "report_date": report_date, "company": company, "bank_account": bank_account},
         as_dict=True,

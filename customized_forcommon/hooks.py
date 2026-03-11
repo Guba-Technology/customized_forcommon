@@ -47,7 +47,7 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address",
+                          "Sales Order", "Customer", "Item", "Address", "Journal Entry"
                          
                         ]
             ],
@@ -157,6 +157,9 @@ doc_events = {
     "User": {
         "before_load": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
         "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
+    },
+    "Journal Entry": {
+        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
     }
 }
 
