@@ -43,3 +43,25 @@ def execute():
         print("Property Setter created: portal_users_tab → Hidden")
     else:
         print("Property Setter for portal_users_tab already exists")
+
+    # --- Hide is_fixed_asset in Item ---
+    if not frappe.db.exists("Property Setter", {
+        "doc_type": "Item",
+        "field_name": "is_fixed_asset",
+        "property": "hidden"
+    }):
+        ps_item = frappe.get_doc({
+            "doctype": "Property Setter",
+            "doctype_or_field": "DocField",
+            "doc_type": "Item",
+            "field_name": "is_fixed_asset",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        })
+        ps_item.insert(ignore_permissions=True)
+        print("Property Setter created: Item.is_fixed_asset → Hidden")
+    else:
+        print("Property Setter for Item.is_fixed_asset already exists")
+
+    frappe.db.commit()
