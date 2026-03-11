@@ -269,14 +269,10 @@ from hrms.hr.report.recruitment_analytics import recruitment_analytics
 from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
 recruitment_analytics.execute = custom_recruitment_analytics_execute
 
-from erpnext.accounts.report.bank_reconciliation_statement import bank_reconciliation_statement as brs
-from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
 
-brs.execute = cb.execute
-
-override_report_js = {
-    "Bank Reconciliation Statement": "public/js/bank_reconciliation_statement.js"
-}
+# override_report_js = {
+#     "Bank Reconciliation Statement": "public/js/bank_reconciliation_statement.js"
+# }
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
