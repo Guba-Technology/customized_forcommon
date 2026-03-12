@@ -4,6 +4,9 @@ frappe.ui.form.on("Bulk Additional Salary", {
         frm.fields_dict.employees.grid.cannot_add_rows = true;
     },
     refresh(frm) {
+        if (frm.doc.filtered_by === "All") {
+            frm.set_value("value", "");
+        }
         if (!frm.is_new()) return;
         clear_employees(frm);
         load_employees(frm);
