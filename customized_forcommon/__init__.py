@@ -29,8 +29,8 @@ from customized_forcommon.overrides.reports import custom_bank_reconciliation_st
 brs.execute = cb.execute
 
 # Purchase Analytics:
-# import erpnext.buying.report.purchase_analytics.purchase_analytics as pa
-# from customized_forcommon.overrides.reports import custom_purchase_analytics as cpa
+import erpnext.buying.report.purchase_analytics.purchase_analytics as pa
+from customized_forcommon.overrides.reports import custom_purchase_analytics as cpa
 
-# # Force override at app load
-# pa.execute = cpa.execute
+# Force override at app load
+pa.execute = cpa.execute
