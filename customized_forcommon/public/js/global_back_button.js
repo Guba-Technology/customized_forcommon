@@ -1,3 +1,4 @@
+// Back Button Injection Script
 frappe.provide("frappe.ui");
 
 $(document).ready(() => {
@@ -29,25 +30,25 @@ function inject_back_button() {
 
     if ($target.length > 0) {
         const back_btn = `
-            <button class="btn btn-sm btn-secondary btn-global-back" 
-                    title="${__("Go Back")}"
-                    style="
-                        margin-right: 12px; 
-                        display: inline-flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        height: 28px; 
-                        width: 32px; 
-                        border-radius: 6px;
-                        background-color: #94cdfc;
-                        border: 1px solid var(--border-color);
-                        box-shadow: var(--shadow-sm);
-                    ">
-                <svg class="icon icon-sm" style="stroke: var(--primary-color); fill: var(--primary-color);">
-                    <use href="#icon-arrow-left"></use>
-                </svg>
-            </button>
-        `;
+    <button class="btn btn-sm btn-secondary btn-global-back" 
+            title="${__("Go Back")}"
+            style="
+                margin-right: 12px; 
+                display: inline-flex; 
+                align-items: center; 
+                justify-content: center; 
+                height: 28px; 
+                padding: 0 8px; 
+                border-radius: 6px;
+                background-color: #ffffff;
+                border: 1px solid var(--border-color);
+            ">
+        <svg class="icon icon-sm" style="stroke: #0a66b1; fill: #0a66b1; margin-right: 4px;">
+            <use href="#icon-arrow-left"></use>
+        </svg>
+        <span style="color: #0a66b1; font-weight: 500;">Back</span>
+    </button>
+`;
 
         const $btn = $(back_btn);
         $target.prepend($btn);
