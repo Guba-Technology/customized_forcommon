@@ -13,8 +13,26 @@ def execute(filters=None):
     if not filters.get("account"):
         return columns, []
 
+    company = filters.get("company")
+    if not company:
+        frappe.throw(_("Please select a Company to proceed."))
+
+    # Check if the custom transit accounts are set
+    deposit_transit_account = frappe.get_cached_value("Company", company, "custom_deposit_in_transit")
+    withdraw_transit_account = frappe.get_cached_value("Company", company, "custom_withdrawals_in_transit")
+
+    if not deposit_transit_account or not withdraw_transit_account:
+        frappe.throw(
+            _("Please set both 'Deposit in Transit Account' and 'Withdrawal in Transit Account' in the Company before running this report.")
+        )
+
     account_currency = frappe.get_cached_value("Account", filters.account, "account_currency")
+
+    # -------------------------
+    # Main entries
+    # -------------------------
     data = get_entries(filters)
+    data = deduplicate_entries(data)
 
     # Balance as per system
     balance_as_per_system = get_balance_on(filters["account"], filters["report_date"])
@@ -22,19 +40,33 @@ def execute(filters=None):
     # Total outstanding cheques/deposits
     total_debit, total_credit = 0, 0
     for d in data:
-        total_debit += flt(d["debit"])
-        total_credit += flt(d["credit"])
+        total_debit += flt(d.get("debit", 0))
+        total_credit += flt(d.get("credit", 0))
 
     # Amounts not reflected in system
     amounts_not_reflected_in_system = get_amounts_not_reflected_in_system(filters)
 
     # -------------------------
-    # In-Transit Entries & Totals
+    # In-Transit Entries
     # -------------------------
     deposit_entries, deposit_total = get_in_transit_entries(filters, "custom_deposit_in_transit")
-    withdraw_entries, withdraw_total = get_in_transit_entries(filters, "custom_withdrawals_in_transit")
+    deposit_entries = deduplicate_entries(deposit_entries)
+    # Remove duplicates already in main data
+    deposit_entries = [
+        d for d in deposit_entries if (d.get("payment_document"), d.get("payment_entry")) not in
+        {(x.get("payment_document"), x.get("payment_entry")) for x in data}
+    ]
 
-    # Final calculated bank balance
+    withdraw_entries, withdraw_total = get_in_transit_entries(filters, "custom_withdrawals_in_transit")
+    withdraw_entries = deduplicate_entries(withdraw_entries)
+    withdraw_entries = [
+        d for d in withdraw_entries if (d.get("payment_document"), d.get("payment_entry")) not in
+        {(x.get("payment_document"), x.get("payment_entry")) for x in data}
+    ]
+
+    # -------------------------
+    # Calculated Bank Balance
+    # -------------------------
     bank_bal = (
         flt(balance_as_per_system)
         - flt(total_debit)
@@ -44,26 +76,70 @@ def execute(filters=None):
         - withdraw_total
     )
 
+    # -------------------------
     # Build report data
+    # -------------------------
     data += [
+        # General Ledger balance
         get_balance_row(_("Bank Statement balance as per General Ledger"), balance_as_per_system, account_currency),
+
         {},
+
+        # Outstanding Cheques and Deposits
         {
             "payment_entry": _("Outstanding Cheques and Deposits to clear"),
+            "payment_document": None,
             "debit": total_debit,
             "credit": total_credit,
             "account_currency": account_currency,
+            "is_summary_row": 1,
         },
-        get_balance_row(_("Cheques and Deposits incorrectly cleared"), amounts_not_reflected_in_system, account_currency),
+
+        # Cheques and Deposits incorrectly cleared
+        {
+            "payment_entry": _("Cheques and Deposits incorrectly cleared"),
+            "payment_document": None,
+            "debit": amounts_not_reflected_in_system if amounts_not_reflected_in_system > 0 else 0,
+            "credit": abs(amounts_not_reflected_in_system) if amounts_not_reflected_in_system < 0 else 0,
+            "account_currency": account_currency,
+            "is_summary_row": 1,
+        },
+
         {},
-        # Append all deposit in-transit transactions
+
+        # Deposit in Transit Entries
         *deposit_entries,
-        {"payment_entry": _("Deposits in Transit Entries"), "debit": deposit_total, "credit": 0, "account_currency": account_currency},
-        # Append all withdrawal in-transit transactions
+        {
+            "payment_entry": _("Deposits in Transit Entries"),
+            "payment_document": None,
+            "debit": flt(deposit_total),
+            "credit": 0,
+            "account_currency": account_currency,
+            "is_summary_row": 1,
+        },
+
+        # Withdrawals in Transit Entries
         *withdraw_entries,
-        {"payment_entry": _("Withdrawals in Transit Entries"), "debit": 0, "credit": withdraw_total, "account_currency": account_currency},
+        {
+            "payment_entry": _("Withdrawals in Transit Entries"),
+            "payment_document": None,
+            "debit": 0,
+            "credit": flt(withdraw_total),
+            "account_currency": account_currency,
+            "is_summary_row": 1,
+        },
+
         {},
-        get_balance_row(_("Calculated Bank Statement balance"), bank_bal, account_currency),
+
+        # Calculated Bank Statement balance
+        {
+            "payment_entry": f"<b>{_('Calculated Bank Statement balance')}</b>",
+            "payment_document": None,
+            "debit": bank_bal if bank_bal > 0 else 0,
+            "credit": abs(bank_bal) if bank_bal < 0 else 0,
+            "account_currency": account_currency,
+            "is_summary_row": 1,
+        },
     ]
 
     return columns, data
@@ -72,6 +148,16 @@ def execute(filters=None):
 # -------------------------
 # Helper Functions
 # -------------------------
+def deduplicate_entries(entries):
+    seen = set()
+    unique_entries = []
+    for d in entries:
+        key = (d.get("payment_document"), d.get("payment_entry"))
+        if key not in seen:
+            seen.add(key)
+            unique_entries.append(d)
+    return unique_entries
+
 
 def get_columns():
     return [
@@ -109,10 +195,6 @@ def get_amounts_not_reflected_in_system(filters):
 
 
 def get_in_transit_entries(filters, account_field):
-    """
-    Fetch all transactions posted to in-transit accounts (Journal Entry + Payment Entry)
-    Returns both the list of entries and total (debit or credit depending on type)
-    """
     company = filters.get("company")
     bank_account = filters.get("account")
     transit_account = frappe.get_cached_value("Company", company, account_field)
@@ -122,9 +204,7 @@ def get_in_transit_entries(filters, account_field):
     report_date = filters.get("report_date")
     entries = []
 
-    # -------------------------
     # Journal Entry transactions
-    # -------------------------
     je_entries = frappe.db.sql(
         """
         SELECT
@@ -134,24 +214,18 @@ def get_in_transit_entries(filters, account_field):
         FROM `tabJournal Entry Account` jvd
         JOIN `tabJournal Entry` jv ON jvd.parent = jv.name
         WHERE jvd.account=%(transit_account)s
-          AND jv.docstatus=1
-          AND jv.posting_date <= %(report_date)s
-          AND jv.company=%(company)s
-          AND jvd.against_account=%(bank_account)s
+        AND jv.docstatus=1
+        AND (jv.custom_reversed IS NULL OR jv.custom_reversed = 0)
+        AND jv.posting_date <= %(report_date)s
+        AND jv.company=%(company)s
+        AND jvd.against_account=%(bank_account)s
         """,
-        {
-            "transit_account": transit_account,
-            "report_date": report_date,
-            "company": company,
-            "bank_account": bank_account,
-        },
+        {"transit_account": transit_account, "report_date": report_date, "company": company, "bank_account": bank_account},
         as_dict=True,
     )
     entries += je_entries
 
-    # -------------------------
     # Payment Entry transactions
-    # -------------------------
     pe_entries = frappe.db.sql(
         """
         SELECT
@@ -167,29 +241,16 @@ def get_in_transit_entries(filters, account_field):
           AND company=%(company)s
           AND (paid_to=%(bank_account)s OR paid_from=%(bank_account)s)
         """,
-        {
-            "transit_account": transit_account,
-            "report_date": report_date,
-            "company": company,
-            "bank_account": bank_account,
-        },
+        {"transit_account": transit_account, "report_date": report_date, "company": company, "bank_account": bank_account},
         as_dict=True,
     )
     entries += pe_entries
 
-    # -------------------------
-    # Calculate totals
-    # -------------------------
-    total_debit = sum(flt(d["debit"]) for d in entries)
-    total_credit = sum(flt(d["credit"]) for d in entries)
+    total_debit = sum(flt(d.get("debit", 0)) for d in entries)
+    total_credit = sum(flt(d.get("credit", 0)) for d in entries)
 
-    if account_field == "custom_deposit_in_transit":
-    # Deposits: transit account is credited (money coming in to bank)
-        total = total_credit
-    else:
-        # Withdrawals: transit account is debited (money leaving the bank)
-        total = total_debit
-
+    # Deposits are credited, withdrawals are debited
+    total = total_credit if account_field == "custom_deposit_in_transit" else total_debit
     return entries, total
 
 

@@ -47,7 +47,7 @@ fixtures = [
                           "Employee Onboarding",
                           "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address",
+                          "Sales Order", "Customer", "Item", "Address", "Journal Entry"
                          
                         ]
             ],
@@ -157,6 +157,9 @@ doc_events = {
     "User": {
         "before_load": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
         "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
+    },
+    "Journal Entry": {
+        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
     }
 }
 
@@ -212,6 +215,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
+    "/assets/customized_forcommon/js/purchase_analytics.js",
+    "/assets/customized_forcommon/js/custom_purchase_order_analysis.js"
 
 ]
 
@@ -270,10 +276,6 @@ from hrms.hr.report.recruitment_analytics import recruitment_analytics
 from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
 recruitment_analytics.execute = custom_recruitment_analytics_execute
 
-# from erpnext.accounts.report.bank_reconciliation_statement import bank_reconciliation_statement as brs
-# from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb
-
-# brs.execute = cb.execute
 
 # override_report_js = {
 #     "Bank Reconciliation Statement": "public/js/bank_reconciliation_statement.js"
