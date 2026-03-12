@@ -51,7 +51,7 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application",
+                          "Training Event", "Leave Application", "Journal Entry"
                           ]],
 
         ]
@@ -145,6 +145,9 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+     "Journal Entry": {
+        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
+    }
 }
 
 scheduler_events = {
@@ -178,7 +181,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
-    "/assets/customized_forcommon/js/list_sidebar_override.js"
+    "/assets/customized_forcommon/js/list_sidebar_override.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
 
 ]
 

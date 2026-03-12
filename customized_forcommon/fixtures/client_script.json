@@ -2,6 +2,39 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
+  "dt": "BOM",
+  "enabled": 1,
+  "modified": "2025-05-19 10:50:45.670645",
+  "module": "Common Customization",
+  "name": "Calculating Quantity Based on Item Shape",
+  "script": "frappe.ui.form.on('BOM Item', {\r\n    custom_density: function (frm, cdt, cdn) {\r\n        set_density_value(cdt, cdn);\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_shape: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_length: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_width: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_height: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_outer_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_inner_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_number_of_sides: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_density_value: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    }\r\n});\r\n\r\n\r\n// Set density value based on selected material\r\nfunction set_density_value(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n    const density_values = {\r\n        \"Aluminum\": 2.70,\r\n        \"Brass\": 8.50,\r\n        \"Bronze\": 8.80,\r\n        \"Copper\": 8.96,\r\n        \"Gold\": 19.32,\r\n        \"Iron\": 7.87,\r\n        \"Lead\": 11.34,\r\n        \"Nickel\": 8.90,\r\n        \"Platinum\": 21.45,\r\n        \"Silver\": 10.49,\r\n        \"Stainless Steel\": 8.00,\r\n        \"Steel (Carbon)\": 7.85,\r\n        \"Titanium\": 4.51,\r\n        \"Zinc\": 7.14\r\n    };\r\n\r\n    if (row.custom_density in density_values) {\r\n        frappe.model.set_value(cdt, cdn, 'custom_density_value', density_values[row.custom_density]);\r\n    }\r\n}\r\n\r\n// Calculate quantity based on shape and dimensions\r\nfunction calculate_quantity(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n\r\n    let qty = 1;\r\n    let density = parseFloat(row.custom_density_value || 0); // in kg/m³\r\n    if (!density || !row.custom_shape) return;\r\n\r\n    // Dimensions in mm, convert to meters\r\n    let length = parseFloat(row.custom_length || 0) / 1000;\r\n    let width = parseFloat(row.custom_width || 0) / 1000;\r\n    let height = parseFloat(row.custom_height || 0) / 1000;\r\n\r\n    if (row.custom_shape === \"Rectangle\") {\r\n        let volume_m3 = length * width * height;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Circular\") {\r\n        let diameter = parseFloat(row.custom_diameter || 0) / 1000;\r\n        let radius = diameter / 2;\r\n        let volume_m3 = Math.PI * Math.pow(radius, 2) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Tube\") {\r\n        let outer_d = parseFloat(row.custom_outer_diameter || 0) / 1000;\r\n        let inner_d = parseFloat(row.custom_inner_diameter || 0) / 1000;\r\n        let volume_m3 = (Math.PI / 4) * (Math.pow(outer_d, 2) - Math.pow(inner_d, 2)) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Polygon\") {\r\n        let n_sides = parseInt(row.custom_number_of_sides || 0);\r\n        let side_length = parseFloat(row.custom_width || 0) / 1000;\r\n        let area = (n_sides * Math.pow(side_length, 2)) / (4 * Math.tan(Math.PI / n_sides));\r\n        let volume_m3 = area * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n\r\n    frappe.model.set_value(cdt, cdn, 'qty', Math.floor(qty));\r\n}\r\n\r\n\r\n\r\nfrappe.ui.form.on('BOM Item', {\r\n\trefresh(frm) {\r\n\t\t// your code here\r\n\t}\r\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Quality Inspection",
+  "enabled": 1,
+  "modified": "2025-06-10 09:28:31.903628",
+  "module": "Common Customization",
+  "name": "Adding \"Rework\" option in Status",
+  "script": "frappe.ui.form.on('Quality Inspection', {\n\tonload: function(frm){\n\t    const field = frm.fields_dict.status;\n\t    const new_option = \"Rework\";\n\t    \n\t    if(!field.df.options.includes(new_option)){\n\t        field.df.options += '\\n' + new_option;\n\t        field.refresh()\n\t    }\n\t    \n\t    \n\t}\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Quality Inspection",
+  "enabled": 1,
+  "modified": "2025-06-10 11:14:47.344809",
+  "module": "Common Customization",
+  "name": "Fetching Quantity According to Reference Type",
+  "script": "frappe.ui.form.on('Quality Inspection', {\r\n    reference_name(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    item_code(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    reference_type(frm) {\r\n        fetch_custom_quantity(frm);\r\n    }\r\n});\r\n\r\nfunction fetch_custom_quantity(frm) {\r\n    const ref_type = frm.doc.reference_type;\r\n    const ref_name = frm.doc.reference_name;\r\n    const item = frm.doc.item_code;\r\n\r\n    const supported_types = [\r\n        \"Purchase Receipt\",\r\n        \"Purchase Invoice\",\r\n        \"Delivery Note\",\r\n        \"Sales Invoice\",\r\n        \"Stock Entry\",\r\n        \"Job Card\"\r\n    ];\r\n\r\n    if (supported_types.includes(ref_type) && ref_name && (ref_type === \"Job Card\" || item)) {\r\n        frappe.call({\r\n            method: \"customized_forcommon.api.get_reference_item_qty\",\r\n            args: {\r\n                reference_type: ref_type,\r\n                reference_name: ref_name,\r\n                item_code: item || \"\"\r\n            },\r\n            callback: function (r) {\r\n                if (r.message !== undefined) {\r\n                    frm.set_value(\"custom_quantity\", r.message);\r\n                } else {\r\n                    frm.set_value(\"custom_quantity\", null);\r\n                }\r\n            }\r\n        });\r\n    } else {\r\n        frm.set_value(\"custom_quantity\", null);\r\n    }\r\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
   "dt": "Payment Entry",
   "enabled": 1,
   "modified": "2025-04-28 10:29:53.214269",
@@ -46,17 +79,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "BOM",
-  "enabled": 1,
-  "modified": "2025-05-19 10:50:45.670645",
-  "module": "Common Customization",
-  "name": "Calculating Quantity Based on Item Shape",
-  "script": "frappe.ui.form.on('BOM Item', {\r\n    custom_density: function (frm, cdt, cdn) {\r\n        set_density_value(cdt, cdn);\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_shape: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_length: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_width: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_height: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_outer_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_inner_diameter: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_number_of_sides: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    },\r\n    custom_density_value: function (frm, cdt, cdn) {\r\n        calculate_quantity(cdt, cdn);\r\n    }\r\n});\r\n\r\n\r\n// Set density value based on selected material\r\nfunction set_density_value(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n    const density_values = {\r\n        \"Aluminum\": 2.70,\r\n        \"Brass\": 8.50,\r\n        \"Bronze\": 8.80,\r\n        \"Copper\": 8.96,\r\n        \"Gold\": 19.32,\r\n        \"Iron\": 7.87,\r\n        \"Lead\": 11.34,\r\n        \"Nickel\": 8.90,\r\n        \"Platinum\": 21.45,\r\n        \"Silver\": 10.49,\r\n        \"Stainless Steel\": 8.00,\r\n        \"Steel (Carbon)\": 7.85,\r\n        \"Titanium\": 4.51,\r\n        \"Zinc\": 7.14\r\n    };\r\n\r\n    if (row.custom_density in density_values) {\r\n        frappe.model.set_value(cdt, cdn, 'custom_density_value', density_values[row.custom_density]);\r\n    }\r\n}\r\n\r\n// Calculate quantity based on shape and dimensions\r\nfunction calculate_quantity(cdt, cdn) {\r\n    let row = locals[cdt][cdn];\r\n\r\n    let qty = 1;\r\n    let density = parseFloat(row.custom_density_value || 0); // in kg/m³\r\n    if (!density || !row.custom_shape) return;\r\n\r\n    // Dimensions in mm, convert to meters\r\n    let length = parseFloat(row.custom_length || 0) / 1000;\r\n    let width = parseFloat(row.custom_width || 0) / 1000;\r\n    let height = parseFloat(row.custom_height || 0) / 1000;\r\n\r\n    if (row.custom_shape === \"Rectangle\") {\r\n        let volume_m3 = length * width * height;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Circular\") {\r\n        let diameter = parseFloat(row.custom_diameter || 0) / 1000;\r\n        let radius = diameter / 2;\r\n        let volume_m3 = Math.PI * Math.pow(radius, 2) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Tube\") {\r\n        let outer_d = parseFloat(row.custom_outer_diameter || 0) / 1000;\r\n        let inner_d = parseFloat(row.custom_inner_diameter || 0) / 1000;\r\n        let volume_m3 = (Math.PI / 4) * (Math.pow(outer_d, 2) - Math.pow(inner_d, 2)) * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n    else if (row.custom_shape === \"Polygon\") {\r\n        let n_sides = parseInt(row.custom_number_of_sides || 0);\r\n        let side_length = parseFloat(row.custom_width || 0) / 1000;\r\n        let area = (n_sides * Math.pow(side_length, 2)) / (4 * Math.tan(Math.PI / n_sides));\r\n        let volume_m3 = area * length;\r\n        qty = volume_m3 * density;\r\n    }\r\n\r\n    frappe.model.set_value(cdt, cdn, 'qty', Math.floor(qty));\r\n}\r\n\r\n\r\n\r\nfrappe.ui.form.on('BOM Item', {\r\n\trefresh(frm) {\r\n\t\t// your code here\r\n\t}\r\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Sales Order",
   "enabled": 1,
   "modified": "2025-06-04 16:06:42.686440",
@@ -74,28 +96,6 @@
   "module": "Common Customization",
   "name": "Adding \"Material Cost\" option in Purpose",
   "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Quality Inspection",
-  "enabled": 1,
-  "modified": "2025-06-10 09:28:31.903628",
-  "module": "Common Customization",
-  "name": "Adding \"Rework\" option in Status",
-  "script": "frappe.ui.form.on('Quality Inspection', {\n\tonload: function(frm){\n\t    const field = frm.fields_dict.status;\n\t    const new_option = \"Rework\";\n\t    \n\t    if(!field.df.options.includes(new_option)){\n\t        field.df.options += '\\n' + new_option;\n\t        field.refresh()\n\t    }\n\t    \n\t    \n\t}\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
-  "dt": "Quality Inspection",
-  "enabled": 1,
-  "modified": "2025-06-10 11:14:47.344809",
-  "module": "Common Customization",
-  "name": "Fetching Quantity According to Reference Type",
-  "script": "frappe.ui.form.on('Quality Inspection', {\r\n    reference_name(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    item_code(frm) {\r\n        fetch_custom_quantity(frm);\r\n    },\r\n    reference_type(frm) {\r\n        fetch_custom_quantity(frm);\r\n    }\r\n});\r\n\r\nfunction fetch_custom_quantity(frm) {\r\n    const ref_type = frm.doc.reference_type;\r\n    const ref_name = frm.doc.reference_name;\r\n    const item = frm.doc.item_code;\r\n\r\n    const supported_types = [\r\n        \"Purchase Receipt\",\r\n        \"Purchase Invoice\",\r\n        \"Delivery Note\",\r\n        \"Sales Invoice\",\r\n        \"Stock Entry\",\r\n        \"Job Card\"\r\n    ];\r\n\r\n    if (supported_types.includes(ref_type) && ref_name && (ref_type === \"Job Card\" || item)) {\r\n        frappe.call({\r\n            method: \"customized_forcommon.api.get_reference_item_qty\",\r\n            args: {\r\n                reference_type: ref_type,\r\n                reference_name: ref_name,\r\n                item_code: item || \"\"\r\n            },\r\n            callback: function (r) {\r\n                if (r.message !== undefined) {\r\n                    frm.set_value(\"custom_quantity\", r.message);\r\n                } else {\r\n                    frm.set_value(\"custom_quantity\", null);\r\n                }\r\n            }\r\n        });\r\n    } else {\r\n        frm.set_value(\"custom_quantity\", null);\r\n    }\r\n}",
   "view": "Form"
  },
  {
