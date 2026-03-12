@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation",
                            "Routing",
-                          "Training Event", "Leave Application", "Dunning"
+                          "Training Event", "Leave Application", "Dunning", "Journal Entry"
                           ]],
         ]
     },
@@ -136,6 +136,9 @@ doc_events = {
     },
     "Account": {
         "validate": "customized_forcommon.doc_events.account_validation.validate_account",
+    },
+     "Journal Entry": {
+        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
     }
 
    
@@ -178,6 +181,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/lite_locker.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
 ]
 
 

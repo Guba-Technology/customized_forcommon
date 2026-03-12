@@ -17,7 +17,7 @@
   "hide_custom": 0,
   "icon": "buying",
   "indicator_color": null,
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Procurement",
   "links": [
    {
@@ -1913,7 +1913,7 @@
   "hide_custom": 0,
   "icon": "sell",
   "indicator_color": null,
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Sales and Marketing",
   "links": [
    {
@@ -3077,7 +3077,7 @@
   "hide_custom": 0,
   "icon": "assets",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Fixed Assets",
   "links": [
    {
@@ -3505,7 +3505,7 @@
   "hide_custom": 0,
   "icon": "hr",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Human Resource",
   "links": [
    {
@@ -6435,7 +6435,7 @@
   "hide_custom": 0,
   "icon": "integration",
   "indicator_color": null,
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Integrations",
   "links": [
    {
@@ -6830,7 +6830,7 @@
   "hide_custom": 1,
   "icon": "milestone",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Shift & Attendance",
   "links": [
    {
@@ -7357,7 +7357,7 @@
   "hide_custom": 0,
   "icon": "star",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Performance",
   "links": [
    {
@@ -7714,7 +7714,7 @@
   "hide_custom": 1,
   "icon": "expenses",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Expense Claims",
   "links": [
    {
@@ -8963,7 +8963,7 @@
   "hide_custom": 0,
   "icon": "non-profit",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Leaves",
   "links": [
    {
@@ -9393,7 +9393,7 @@
   "hide_custom": 0,
   "icon": "users",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Recruitment",
   "links": [
    {
@@ -9822,7 +9822,7 @@
   "hide_custom": 0,
   "icon": "assign",
   "indicator_color": "",
-  "is_hidden": 0,
+  "is_hidden": 1,
   "label": "Employee Lifecycle",
   "links": [
    {
