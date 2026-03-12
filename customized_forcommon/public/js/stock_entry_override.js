@@ -2,7 +2,7 @@ frappe.ui.form.on('Stock Entry', {
     onload: function (frm) {
         set_transfer_status(frm);
         toggle_item_row_add(frm);
-        set_item_filter(frm);
+        // set_item_filter(frm);
     },
 
     stock_entry_type: function (frm) {
@@ -86,7 +86,7 @@ function lock_fields_based_on_status(frm) {
 }
 frappe.ui.form.on("Stock Entry Detail", {
     s_warehouse(frm, cdt, cdn) {
-        set_item_filter(frm);
+        // set_item_filter(frm);
     },
     items_add(frm, cdt, cdn) {
         if (
