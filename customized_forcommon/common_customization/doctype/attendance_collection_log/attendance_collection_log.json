@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EMP-ACL-.######",
+ "creation": "2026-03-11 13:45:54.855021",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "attendance_date",
+  "in",
+  "out",
+  "employee_checkin",
+  "attendance",
+  "attendance_collection",
+  "data_dispatched_to",
+  "reference_document",
+  "status",
+  "amended_from",
+  "column_break_opsu",
+  "deducted_days",
+  "deducted_hours"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "attendance_date",
+   "fieldtype": "Date",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Attendance Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "in",
+   "fieldtype": "Datetime",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "IN",
+   "read_only": 1
+  },
+  {
+   "fieldname": "out",
+   "fieldtype": "Datetime",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "OUT",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_checkin",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee Checkin",
+   "options": "Employee Checkin",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attendance",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Attendance",
+   "options": "Attendance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Paid\nNew",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Attendance Collection Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attendance_collection",
+   "fieldtype": "Link",
+   "label": "Attendance Collection",
+   "options": "Attendance Collection",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_document",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Document",
+   "options": "data_dispatched_to",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_dispatched_to",
+   "fieldtype": "Link",
+   "label": "Data Dispatched To",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_opsu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deducted_days",
+   "fieldtype": "Int",
+   "label": "Deducted Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deducted_hours",
+   "fieldtype": "Float",
+   "label": "Deducted Hours",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-12 15:58:11.128742",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Attendance Collection Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
