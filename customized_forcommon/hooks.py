@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "Routing",
                           "Training Event", "Leave Application",
-
+                          
                           "Training Result", "Travel Request",
                           "Clearance", "Employee Grievance",
                           "Employee Incentive","Employee Promotion","Employee Transfer",
@@ -103,7 +103,7 @@ fixtures = [
             ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
                             "Employee-custom_leave_increment_period-Label", "Asset Movement-purpose-options", 
                             "Address-main-field_order", "Address-state-hidden", "Address-county-hidden", "Address-address_line1-description",
-                            "Address-address_line2-description"
+                            "Address-address_line2-description","Salary Structure-deductions-allow_on_submit","Salary Structure-earnings-allow_on_submit"
 
             ]]
         ]
@@ -201,7 +201,9 @@ override_doctype_class = {
     "Appraisal": "customized_forcommon.overrides.appraisal.CustomAppraisal",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
     "Customer": "customized_forcommon.overrides.customer.CustomCustomer",
-    "Asset Movement": "customized_forcommon.overrides.asset_movement.CustomAssetMovement"
+    "Asset Movement": "customized_forcommon.overrides.asset_movement.CustomAssetMovement",
+    "Attendance": "customized_forcommon.overrides.attendance.CustomAttendance",
+    "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
 }
 
 app_include_js = [
