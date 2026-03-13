@@ -22,7 +22,8 @@ fixtures = [
                 "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
-                "Payables",  "Receivables", "Financial Reports", "Expense Claim"
+                "Payables",  "Receivables", "Financial Reports", "Expense Claim",
+                "Salary Payout"
 
                             ]],
         ],
