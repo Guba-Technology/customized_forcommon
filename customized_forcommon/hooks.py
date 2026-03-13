@@ -23,7 +23,7 @@ fixtures = [
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports", "Expense Claim",
-                "Salary Payout"
+                "Salary Payout", "Tax & Benefits"
 
                             ]],
         ],
