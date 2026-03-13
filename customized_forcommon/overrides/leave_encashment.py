@@ -5,6 +5,9 @@ class CustomLeaveEncashment(LeaveEncashment):
     def before_save(self):
         # super().before_save()
         self.calculate_total_encashment_amount()
+    def on_submit(self):
+        super().on_submit()
+        self.calculate_total_encashment_amount()
     def calculate_total_encashment_amount(self):
         employee = frappe.get_doc("Employee", self.employee)
         ctc = employee.ctc
