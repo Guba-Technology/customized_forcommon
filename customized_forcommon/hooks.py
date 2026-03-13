@@ -160,6 +160,12 @@ doc_events = {
     },
     "Journal Entry": {
         "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
+    },
+    "Company": {
+        "on_update": "customized_forcommon.doc_events.company.update_employee_fuel_price"
+    },
+    "Employee": {
+        "validate": "customized_forcommon.doc_events.employee.update_fuel_payment"
     }
 }
 
