@@ -205,6 +205,12 @@ website_context = {
 
 post_install = "customized_forcommon.utils.gender_value_remover.execute"
 
+# single_session/hooks.py
+on_login = "customized_forcommon.session_control.single_session"
+
+has_permission = {
+    "*": "customized_forcommon.permissions_message.custom_permission_message"
+}
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]

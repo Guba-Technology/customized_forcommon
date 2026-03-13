@@ -24,3 +24,4 @@ customized_forcommon.patches.v2.employee_custom_fields
 customized_forcommon.patches.v1.make_system_notifications_readonly
 customized_forcommon.patches.v1.user_custom_feld
 customized_forcommon.patches.v1.change_labelss
+customized_forcommon.patches.v1.set_user_simultaneous_sessions_default
