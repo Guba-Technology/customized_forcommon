@@ -159,6 +159,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/global_back_button.js",
     "/assets/customized_forcommon/js/company_custom.js",
     "/assets/customized_forcommon/js/custom_file_uploader.js",
+    "/assets/customized_forcommon/js/session_logout.js",
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
