@@ -1,15 +1,4 @@
 __version__ = "0.0.1"
-import frappe
-from frappe.auth import LoginManager
-
-class CustomLoginManager(LoginManager):
-    def login(self, user):
-        # Check for existing sessions first
-        if frappe.db.exists("Sessions", {"user": user, "status": "Active"}):
-            frappe.throw("Active session exists. Please logout first.")
-        
-        # Proceed with normal login if no active session
-        super().login(user)
 
 def override_core_delete_check():
 	import frappe.model.delete_doc
