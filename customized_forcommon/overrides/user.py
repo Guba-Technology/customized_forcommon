@@ -23,7 +23,7 @@ class CustomUser(BaseUser):
 
     def check_allowed_users(self):
         """Enforce allowed users from site_config.json with dynamic messages."""
-        allowed_users = frappe.local.conf.get('no_of_allowed_users')
+        allowed_users = frappe.local.conf.get('no_of_allowed_users')+2 #excluding Administrator and Guest users
         if not allowed_users:
             return  # No limit → skip
 
@@ -40,11 +40,11 @@ class CustomUser(BaseUser):
         if active_users > allowed_users:
             if self.is_new():  
                 frappe.throw(
-                    f"Cannot create a new user. Maximum allowed active users is <b>{allowed_users}</b>."
+                    f"Cannot create a new user. Maximum allowed active users is <b>{allowed_users-2}</b>."
                 )
             else:
                 frappe.throw(
-                    f"Cannot enable this user. Maximum allowed active users is <b>{allowed_users}</b>."
+                    f"Cannot enable this user. Maximum allowed active users is <b>{allowed_users-2}</b>."
                 )
 
     def on_update(self):
