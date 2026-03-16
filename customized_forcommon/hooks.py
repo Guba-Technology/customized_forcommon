@@ -167,6 +167,26 @@ doc_events = {
     },
     "Employee": {
         "validate": "customized_forcommon.doc_events.employee.update_fuel_payment"
+    },
+    "Employee Advance": {
+        "validate": [
+            "customized_forcommon.doc_events.employee_advance.validate_payment_type",
+        ],
+       
+    },
+      "Payment Entry": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry"
+    },
+
+    "Additional Salary": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation"
+    },
+
+    "Expense Claim": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
     }
 }
 
@@ -175,22 +195,18 @@ permission_query_conditions = {
 }
 
 scheduler_events = {
-    "Hourly":
+    "hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
     ],
 
-     "Daily":
+     "daily":
     [
         "customized_forcommon.scheduler.customer_license_checker.execute",
-    ],
-    "daily":
-    [
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
-    ],
-    "daily": [
         "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
-    ]
+        "customized_forcommon.scheduler.employee_advance.process_fixed_repayments"
+    ],
 
 }
 
@@ -260,12 +276,12 @@ doctype_js = {
     "Quotation": "public/js/quotation.js",
     "Auto Repeat": "public/js/auto_repeat.js",
     "Stock Entry": "public/js/stock_entry.js",
+    "Employee Advance": "public/js/employee_advance.js"
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
     "Asset Borrowing": "public/js/assetborrow_list.js"
 }
-
 
 # this is used to override the get_leaves_for_period method in leave_application
 # this is used to customize the leave balance calculation logic when half day leaves are used
@@ -283,10 +299,12 @@ from hrms.hr.report.recruitment_analytics import recruitment_analytics
 from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
 recruitment_analytics.execute = custom_recruitment_analytics_execute
 
+# Monkey Patch for employee advance
+import hrms.hr.doctype.employee_advance.employee_advance as ea
+from customized_forcommon.overrides.employee_advance import create_return_through_additional_salary
 
-# override_report_js = {
-#     "Bank Reconciliation Statement": "public/js/bank_reconciliation_statement.js"
-# }
+ea.create_return_through_additional_salary = create_return_through_additional_salary
+
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
