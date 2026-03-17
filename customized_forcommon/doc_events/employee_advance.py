@@ -88,7 +88,7 @@ def calculate_repayment_amount_during_additional_salary_cancellation(doc, method
 
 def calculate_repayment_amount_during_expense_claim(doc, method):
     for row in doc.get("advances", []):
-        if not row.advance:
+        if not row.employee_advance:
             continue
-        ea = frappe.get_doc("Employee Advance", row.advance)
+        ea = frappe.get_doc("Employee Advance", row.employee_advance)
         update_repayment_amount(ea)
