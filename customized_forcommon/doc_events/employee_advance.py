@@ -92,3 +92,62 @@ def calculate_repayment_amount_during_expense_claim(doc, method):
             continue
         ea = frappe.get_doc("Employee Advance", row.employee_advance)
         update_repayment_amount(ea)
+
+
+def create_first_repayment_on_payment(doc, method):
+    """
+    Create first Additional Salary for Employee Advance
+    if this is the first repayment and the starting payroll date is today or earlier.
+    """
+    # Loop through all references in Payment Entry
+    for ref in getattr(doc, "references", []):
+        if ref.reference_doctype != "Employee Advance":
+            continue
+
+        ea = frappe.get_doc("Employee Advance", ref.reference_name)
+
+        # Skip if first repayment is already created
+        if ea.custom_payroll_dates:
+            continue
+
+        # Only create if repayment is from salary (or repay_unclaimed_amount_from_salary = 1)
+        if not ea.repay_unclaimed_amount_from_salary:
+            continue
+
+        # Only create if the starting payroll date is today or earlier
+        if getdate(ea.custom_starting_payroll_date) > getdate(frappe.utils.today()):
+            continue
+
+        # Amount to be deducted is the current custom_repayment_amount
+        deduction = flt(ea.custom_repayment_amount)
+        if deduction <= 0:
+            continue
+
+        # Create Additional Salary
+        salary = frappe.new_doc("Additional Salary")
+        salary.employee = ea.employee
+        salary.company = ea.company
+        salary.salary_component = ea.custom_salary_component
+        salary.amount = deduction
+        salary.currency = ea.currency
+        salary.payroll_date = frappe.utils.today()
+        salary.overwrite_salary_structure_amount = 0
+        salary.ref_doctype = "Employee Advance"
+        salary.ref_docname = ea.name
+        salary.custom_auto_created = 1
+
+        salary.insert(ignore_permissions=True)
+        salary.submit()
+
+        # Add to custom_payroll_dates child table
+        frappe.get_doc({
+            "doctype": "Employee Advance Auto Repayment Dates",
+            "parent": ea.name,
+            "parenttype": "Employee Advance",
+            "parentfield": "custom_payroll_dates",
+            "payroll_date": frappe.utils.today(),
+            "repaid_amount": deduction,
+            "reference": salary.name
+        }).insert(ignore_permissions=True)
+
+        frappe.db.commit()

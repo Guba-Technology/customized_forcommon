@@ -176,7 +176,10 @@ doc_events = {
        
     },
       "Payment Entry": {
-        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry",
+        "on_submit": [
+            "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry",
+            "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
+        ],
         "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry"
     },
 
