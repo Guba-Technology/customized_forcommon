@@ -160,6 +160,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/company_custom.js",
     "/assets/customized_forcommon/js/custom_file_uploader.js",
     "/assets/customized_forcommon/js/session_logout.js",
+    "/assets/customized_forcommon/js/custom_message.js"
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
@@ -210,7 +211,7 @@ post_install = "customized_forcommon.utils.gender_value_remover.execute"
 on_login = "customized_forcommon.session_control.single_session"
 
 has_permission = {
-    "*": "customized_forcommon.permissions_message.custom_permission_message"
+    # "*": "customized_forcommon.permissions_message.custom_permission_message"
 }
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
