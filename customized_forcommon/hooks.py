@@ -160,6 +160,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/company_custom.js",
     "/assets/customized_forcommon/js/custom_file_uploader.js",
     "/assets/customized_forcommon/js/session_logout.js",
+    "/assets/customized_forcommon/js/custom_message.js"
 ]
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
