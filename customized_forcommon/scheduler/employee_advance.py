@@ -1,21 +1,26 @@
 import frappe
 from frappe.utils import getdate, add_months, today, flt, get_first_day, get_last_day
 
-def process_fixed_repayments():
+def process_repayments():
+    """
+    Scheduler: create Additional Salary for all Employee Advances
+    where repayment is from salary, docstatus=1, status=Paid, and repayment type is active.
+    Uses `custom_repayment_amount` directly.
+    """
     advances = frappe.get_all(
         "Employee Advance",
         filters={
             "docstatus": 1,
             "status": "Paid",
             "repay_unclaimed_amount_from_salary": 1,
-            "custom_repayment_type": "Fixed",
         },
-        fields=["name"],
+        fields=["name", "custom_repayment_type"],
     )
 
     for adv_row in advances:
         adv = frappe.get_doc("Employee Advance", adv_row.name)
 
+        # Remaining amount
         remaining = flt(adv.paid_amount) - flt(adv.claimed_amount) - flt(adv.return_amount)
         if remaining <= 0:
             continue
@@ -26,20 +31,21 @@ def process_fixed_repayments():
         if getdate(today()) < next_date:
             continue
 
-        # Calculate deduction: never exceed remaining
-        deduction = min(adv.custom_repayment_amount, remaining)
+        # Use doc event-calculated repayment amount
+        deduction = min(flt(adv.custom_repayment_amount), remaining)
+        if deduction <= 0:
+            continue
 
         try:
             salary = create_additional_salary(adv, deduction, next_date)
         except frappe.ValidationError:
-            # Log and skip if duplicate or conflict with manual entry
             frappe.log_error(
                 title=f"Failed Additional Salary: {adv.name}",
                 message=f"Could not create Additional Salary on {next_date} for {adv.name}."
             )
             continue
 
-        # Insert child table row (safe for submitted document)
+        # Record repayment in child table
         frappe.get_doc({
             "doctype": "Employee Advance Auto Repayment Dates",
             "parent": adv.name,
@@ -50,14 +56,18 @@ def process_fixed_repayments():
             "reference": salary.name,
         }).insert(ignore_permissions=True)
 
-        frappe.db.commit()  # commit after each advance so retries are safe
+        # Decrease remaining months if applicable
+        if adv.custom_repayment_type == "Number of Months" and adv.custom_remaining_months > 0:
+            adv.db_set("custom_remaining_months", adv.custom_remaining_months - 1)
+
+        frappe.db.commit()
+
 
 def get_next_payroll_date(adv):
     today_date = getdate(today())
 
     if not adv.custom_payroll_dates:
         start_date = getdate(adv.custom_starting_payroll_date)
-        # first repayment: allow creation if start_date is within current month
         first_day = get_first_day(today_date)
         last_day = get_last_day(today_date)
         if first_day <= start_date <= last_day:
@@ -65,7 +75,6 @@ def get_next_payroll_date(adv):
         else:
             return start_date
 
-    # subsequent repayments
     last_row = adv.custom_payroll_dates[-1]
     return add_months(getdate(last_row.payroll_date), 1)
 

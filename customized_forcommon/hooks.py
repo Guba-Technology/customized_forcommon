@@ -177,10 +177,9 @@ doc_events = {
     },
       "Payment Entry": {
         "on_submit": [
-            "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry",
             "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
         ],
-        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry"
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation"
     },
 
     "Additional Salary": {
@@ -209,7 +208,7 @@ scheduler_events = {
         "customized_forcommon.scheduler.customer_license_checker.execute",
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
         "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
-        "customized_forcommon.scheduler.employee_advance.process_fixed_repayments"
+        "customized_forcommon.scheduler.employee_advance.process_repayments"
     ],
 
 }
