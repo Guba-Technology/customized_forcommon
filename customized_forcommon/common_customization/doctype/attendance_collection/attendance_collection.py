@@ -18,73 +18,74 @@ def process_compensatory_leave_request(docname, selected_rows):
 def create_dispatched_request(docname, selected_rows, target_doctype):
     if isinstance(selected_rows, str):
         selected_rows = json.loads(selected_rows)
+    
     working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours") or 0
     if not working_hours or working_hours <= 0:
         frappe.throw(_("Please set Standard Working Hours in HR Settings before processing requests."))
+    
     att_col_doc = frappe.get_doc("Attendance Collection", docname)
     
-    # 1. Filter and Validate Rows
     target_checkins = [row for row in att_col_doc.employee_checkin_list if row.name in selected_rows and row.status != "Paid"]
     if not target_checkins:
         frappe.throw(_("No valid or unpaid rows selected."))
 
-    # 2. Strict Validation for Compensatory Leave
-    if target_doctype == "Compensatory Leave Request":
-        for row in target_checkins:
-            if not row.attendance:
-                frappe.throw(_("Row for {0} does not have an Attendance record. Please create/sync attendance first.").format(row.attendance_date))
-            
-            # Check if the date is actually a holiday
-            is_holiday = check_if_holiday(row.attendance, row.attendance_date)
-            if not is_holiday:
-                frappe.throw(_("Date {0} is not a Holiday. Compensatory Leave is only allowed for Holidays.").format(row.attendance_date))
-
-    # 3. Initialize the Request Document
     new_request = frappe.new_doc(target_doctype)
     new_request.employee = att_col_doc.employee
     new_request.status = "Draft"
     
-    # 4. Map Fields based on DocType
     if target_doctype == "Overtime Request":
         new_request.overtime_request_date = frappe.utils.nowdate()
-        days = att_col_doc.days_to_be_deducted or 0
-        hours = att_col_doc.hours_to_be_deducted or 0
-        total_ot = (8 * days) + hours
-
+        
+        daily_totals = {}
         for checkin in target_checkins:
+            dt = checkin.attendance_date
+            if checkin.inn and checkin.out:
+                diff = frappe.utils.time_diff_in_seconds(checkin.out, checkin.inn)
+                row_hours = diff / 3600
+            else:
+                row_hours = working_hours
+            
+            if dt not in daily_totals:
+                daily_totals[dt] = {
+                    "hours": 0,
+                    "shift": checkin.shift_type or get_shift_for_checkin(att_col_doc.employee, checkin)
+                }
+            daily_totals[dt]["hours"] += row_hours
+
+        for date, data in daily_totals.items():
             new_request.append("ot_list", {
-                "date": checkin.attendance_date,
-                "shift_type": get_shift_for_checkin(att_col_doc.employee, checkin),
-                "overtime_hours": total_ot
+                "date": date,
+                "shift_type": data["shift"],
+                "overtime_hours": data["hours"]
             })
     
     elif target_doctype == "Compensatory Leave Request":
-        sorted_dates = sorted([getdate(r.attendance_date) for r in target_checkins])
+        sorted_dates = sorted([frappe.utils.getdate(r.attendance_date) for r in target_checkins])
         new_request.work_from_date = sorted_dates[0]
         new_request.work_end_date = sorted_dates[-1]
-        new_request.reason =att_col_doc.reason or  _("Generated from Attendance Collection")
+        new_request.reason = att_col_doc.reason or _("Generated from Attendance Collection")
+        
         if not new_request.leave_type:
             new_request.leave_type = frappe.db.get_value("Leave Type", {"is_compensatory": 1}, "name")
 
     new_request.insert(ignore_permissions=True)
 
-    # 5. Finalize: Update Status and Logs
     for checkin in target_checkins:
-        checkin.status = "Paid"
         log_doc = frappe.new_doc("Attendance Collection Log")
-        log_doc.employee = att_col_doc.employee
-        log_doc.attendance_date = checkin.attendance_date
-        log_doc.inn = checkin.inn 
-        log_doc.out = checkin.out
-        log_doc.employee_checkin = checkin.employee_checkin
-        log_doc.attendance = checkin.attendance
-        log_doc.attendance_collection = att_col_doc.name
-        log_doc.data_dispatched_to = target_doctype
-        log_doc.reference_document = new_request.name
-        log_doc.deducted_days = att_col_doc.total_days or 0
-        log_doc.deducted_hours = att_col_doc.total_hours or 0
-        log_doc.status = "Paid"
+        log_doc.update({
+            "employee": att_col_doc.employee,
+            "attendance_date": checkin.attendance_date,
+            "inn": checkin.inn,
+            "out": checkin.out,
+            "employee_checkin": checkin.employee_checkin,
+            "attendance": checkin.attendance,
+            "attendance_collection": att_col_doc.name,
+            "data_dispatched_to": target_doctype,
+            "reference_document": new_request.name,
+            "status": "Paid"
+        })
         log_doc.insert(ignore_permissions=True)
+        checkin.status = "Paid"
 
     att_col_doc.days_to_be_deducted = 0
     att_col_doc.hours_to_be_deducted = 0
@@ -203,7 +204,7 @@ def sync_remaining_attendance_for_employee(employee):
                 "employee": employee,
                 "time": ["between", [start_time, end_time]]
             },
-            fields=["name", "time", "log_type", "offshift"],
+            fields=["name", "time", "log_type", "offshift","shift"],
             order_by="time asc"
         )
 
@@ -223,6 +224,7 @@ def sync_remaining_attendance_for_employee(employee):
                 "out": pair.get("out"),
                 "employee_checkin": checkin_ref, 
                 "attendance": att_doc.name if att_doc else None, 
+                "shift_type": att_doc.shift if att_doc else None,
                 "status": "New"
             })
 
@@ -266,3 +268,14 @@ def get_in_out_pairs(checkins):
         pairs.append({"inn": current_in.time, "out": None, "checkin_ref": current_in.name})
 
     return pairs
+@frappe.whitelist()
+def get_processed_employee_attendance(docname):
+    emp_checkin_list = frappe.get_all(
+        "Employee Checkin List",
+        filters={
+            "parent": docname, 
+            "status": "Paid"
+        },
+        fields=["name", "attendance_date", "inn", "out", "employee_checkin", "attendance", "shift_type"]
+    )
+    return emp_checkin_list

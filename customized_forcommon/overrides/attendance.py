@@ -15,7 +15,7 @@ class CustomAttendance(Attendance):
         checkins = frappe.get_all(
             "Employee Checkin",
             filters={"attendance": self.name},
-            fields=["name", "time", "log_type", "offshift"],
+            fields=["name", "time", "log_type", "offshift", "shift"],
             order_by="time asc"
         )
 
@@ -103,6 +103,7 @@ class CustomAttendance(Attendance):
                 "out": pair.get("out"),
                 "employee_checkin": checkin_ref, 
                 "attendance": self.name,
+                "shift_type": self.shift if self.shift else None,
                 "status": "New"
             })
 

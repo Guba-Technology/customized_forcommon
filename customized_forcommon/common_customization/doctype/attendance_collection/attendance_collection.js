@@ -3,6 +3,7 @@ const METHOD_PATH = "customized_forcommon.common_customization.doctype.attendanc
 frappe.ui.form.on("Attendance Collection", {
     onload: function(frm) {
         frm.trigger('filter_paid_rows');
+        populate_processed_employee_attendance_list(frm);
         frm.set_df_property("days_to_be_deducted", "read_only", 1);
         frm.set_df_property("hours_to_be_deducted", "read_only", 1);
 
@@ -57,38 +58,119 @@ frappe.ui.form.on("Attendance Collection", {
         frm.trigger('calculate_from_system_selection');
     },
 
-    calculate_from_system_selection: function(frm) {
-        let grid = frm.fields_dict.employee_checkin_list.grid;
-        let selected_row_names = grid ? grid.get_selected() : [];
-        
-        let unique_dates = new Set();
-        let total_minutes = 0;
+  calculate_from_system_selection: async function(frm) {
+    const grid = frm.fields_dict.employee_checkin_list.grid;
+    const selected_row_names = grid ? grid.get_selected() : [];
+    
+    const working_hours = flt(await frappe.db.get_single_value("HR Settings", "standard_working_hours")) || 8;
+    const mins_per_day = working_hours * 60;
 
-        (frm.doc.employee_checkin_list || []).forEach(row => {
-            if (selected_row_names.includes(row.name) && row.status !== "Paid") {
-                if (row.attendance_date) {
-                    unique_dates.add(row.attendance_date);
-                }
+    let total_seconds = 0;
+    let missing_punch_days = 0;
+    let has_selection = selected_row_names.length > 0;
 
-                let start = row.inn; 
-                if (start && row.out) {
-                    total_minutes += frappe.datetime.get_minute_diff(row.out, start);
+    (frm.doc.employee_checkin_list || []).forEach(row => {
+        if (selected_row_names.includes(row.name) && row.status !== "Paid") {
+            
+            if (row.inn && row.out) {
+                let diff_ms = new Date(row.out) - new Date(row.inn);
+                if (diff_ms > 0) {
+                    total_seconds += (diff_ms / 1000);
                 }
+            } else {
+                missing_punch_days += 1;
             }
-        });
+        }
+    });
 
-        frm.set_value("total_days", unique_dates.size);
-        frm.set_value("days_to_be_deducted", unique_dates.size);
-        frm.set_value("hours_to_be_deducted", total_minutes / 60);
-        frm.set_value("total_hours", total_minutes / 60);
+    let total_minutes = total_seconds / 60;
+    
+    let worked_days = working_hours > 0 ? Math.floor(total_minutes / mins_per_day) : 0;
+    let remaining_hours = working_hours > 0 ? (total_minutes % mins_per_day) / 60 : total_minutes / 60;
 
-        let is_active = selected_row_names.length > 0 || unique_dates.size > 0;
-        const fields = ["total_days", "total_hours", "utilize_it_on", "days_to_be_deducted", "hours_to_be_deducted", "section_break_deductibles"];
-        fields.forEach(f => frm.set_df_property(f, "hidden", is_active ? 0 : 1));
+    let final_days = missing_punch_days + worked_days;
 
+    frm.set_value("days_to_be_deducted", final_days);
+    frm.set_value("total_days", final_days);
+    
+    frm.set_value("hours_to_be_deducted", remaining_hours);
+    frm.set_value("total_hours", remaining_hours);
+
+    const fields_to_toggle = [
+        "total_days", "total_hours", "utilize_it_on", 
+        "days_to_be_deducted", "hours_to_be_deducted", 
+        "section_break_deductibles"
+    ];
+    
+    fields_to_toggle.forEach(f => frm.set_df_property(f, "hidden", has_selection ? 0 : 1));
+
+    if (typeof handle_dynamic_buttons === "function") {
         handle_dynamic_buttons(frm, selected_row_names);
     }
+},
 });
+
+function populate_processed_employee_attendance_list(frm) {
+    if (frm.is_new()) return;
+
+    frappe.call({
+        method: "customized_forcommon.common_customization.doctype.attendance_collection.attendance_collection.get_processed_employee_attendance",
+        args: {
+            docname: frm.doc.name
+        },
+        callback: function(r) {
+            let html_content = "";
+
+            if (r.message && r.message.length > 0) {
+                html_content = `
+                    <table class="table table-bordered table-condensed" style="background-color: #fff; font-size: 13px;">
+                        <thead>
+                            <tr style="background-color: #f8f9fa;">
+                                <th>Date</th>
+                                <th>In</th>
+                                <th>Out</th>
+                                <th>Shift</th>
+                                <th>Checkin Link</th>
+                                <th>Attendance Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                r.message.forEach(data => {
+                    // Generate internal Desk links
+                    let checkin_link = data.employee_checkin 
+                        ? `<a href="/app/employee-checkin/${data.employee_checkin}" target="_blank" class="text-info font-weight-bold">${data.employee_checkin}</a>` 
+                        : '<span class="text-muted">-</span>';
+                    
+                    let attendance_link = data.attendance 
+                        ? `<a href="/app/attendance/${data.attendance}" target="_blank" class="text-info font-weight-bold">${data.attendance}</a>` 
+                        : '<span class="text-muted">-</span>';
+
+                    html_content += `
+                        <tr>
+                            <td>${frappe.datetime.str_to_user(data.attendance_date)}</td>
+                            <td>${data.inn ? frappe.datetime.str_to_user(data.inn) : "-"}</td>
+                            <td>${data.out ? frappe.datetime.str_to_user(data.out) : "-"}</td>
+                            <td>${data.shift_type || "-"}</td>
+                            <td>${checkin_link}</td>
+                            <td>${attendance_link}</td>
+                        </tr>
+                    `;
+                });
+
+                html_content += `</tbody></table>`;
+            } else {
+                html_content = `<div class="text-muted text-center" style="padding: 20px; border: 1px dashed #ccc;">No processed records to display.</div>`;
+            }
+
+            // Target the wrapper of your HTML field
+            let field_wrapper = frm.get_field("processed_employee_attendance_list").$wrapper;
+            field_wrapper.html(html_content);
+        }
+    });
+}
+
 
 function handle_dynamic_buttons(frm, selected_rows) {
     frm.remove_custom_button(__('Process Overtime'));
