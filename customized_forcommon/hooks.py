@@ -201,6 +201,7 @@ scheduler_events = {
     "hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+        "customized_forcommon.scheduler.employee_advance.process_repayments"
     ],
 
      "daily":
