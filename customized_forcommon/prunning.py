@@ -31,7 +31,7 @@ def get_lit_modules():
         "Accounts", "Stock", "Manufacturing",
         "Setup", "Core", "Custom", "Desk",
         "Email", "Automation",
-        "Common Customization", "Contacts", "custom report", "Buying"
+        "Common Customization", "Contacts", "custom report", "Buying", "Selling"
     ]
     try:
         # Include all core frappe modules by default
