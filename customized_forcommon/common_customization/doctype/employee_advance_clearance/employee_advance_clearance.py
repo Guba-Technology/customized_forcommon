@@ -12,7 +12,7 @@ class EmployeeAdvanceClearance(Document):
 			self.unreturned_amount = self.advance_amount - self.returned_amount
 		else:
 			self.unreturned_amount = self.advance_amount  # fallback if returned_amount not set
-		self.difference_amount = self.invoiced_amount - self.unreturned_amount
+		self.difference_amount = abs(self.invoiced_amount - self.unreturned_amount)
 
 	
 
