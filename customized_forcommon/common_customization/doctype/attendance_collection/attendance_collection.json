@@ -18,7 +18,8 @@
   "hours_to_be_deducted",
   "reason",
   "section_break_child_table",
-  "employee_checkin_list"
+  "employee_checkin_list",
+  "processed_employee_attendance_list"
  ],
  "fields": [
   {
@@ -50,7 +51,7 @@
    "description": "Select from list of recorded attendance days to utilize it in overtime or compensatory leave.\n",
    "fieldname": "employee_checkin_list",
    "fieldtype": "Table",
-   "label": "Employee Checkin List",
+   "label": "Employee Attendance List",
    "options": "Employee Checkin List"
   },
   {
@@ -100,12 +101,17 @@
    "fieldname": "reason",
    "fieldtype": "Small Text",
    "label": "Reason"
+  },
+  {
+   "fieldname": "processed_employee_attendance_list",
+   "fieldtype": "HTML",
+   "label": "Processed Employee Attendance List"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-12 14:16:34.929746",
+ "modified": "2026-03-18 14:20:46.130075",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Attendance Collection",
