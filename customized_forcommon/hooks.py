@@ -104,13 +104,17 @@ fixtures = [
         "filters": [
             ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on",
                             "Employee-custom_leave_increment_period-Label", "Asset Movement-purpose-options", 
-                            "Address-main-field_order", "Address-state-hidden", "Address-county-hidden", "Address-address_line1-description",
-                            "Address-address_line2-description","Salary Structure-deductions-allow_on_submit","Salary Structure-earnings-allow_on_submit",
+                            "Address-main-field_order", "Address-state-hidden", "Address-county-hidden", 
+                            "Address-address_line1-description",
+                            "Address-address_line2-description",
+                            "Salary Structure-deductions-allow_on_submit",
+                            "Salary Structure-earnings-allow_on_submit",
                             "Salary Structure-net_pay-allow_on_submit",
                             "Salary Structure-total_deduction-allow_on_submit",
-                            "Salary Structure-total_earning-allow_on_submit"
+                            "Salary Structure-total_earning-allow_on_submit",
+                            "Stock Entry-add_to_transit-depends_on"
                             
-                           ,
+                           
 
             ]]
         ]
@@ -325,7 +329,8 @@ website_redirects = [
 
 # Extend the existing dashboard
 override_doctype_dashboards = {
-    "Purchase Order": "customized_forcommon.overrides.purchase_order_dashboard.get_data"
+    "Purchase Order": "customized_forcommon.overrides.purchase_order_dashboard.get_data",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry_dashboard.get_data",
 }
 
 # migrations = [
