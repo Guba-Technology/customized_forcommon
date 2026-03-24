@@ -81,7 +81,7 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
             frm.refresh_field("leaves_to_be_allocated");
         }
     },
-    grade(frm) {
+    employee_group(frm) {
         frm.set_value("employees", []);  // Clear previous selection
         frm.trigger("get_employees");
     },
@@ -94,7 +94,7 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
 
         frappe.call({
             method: "customized_forcommon.common_customization.doctype.leave_allocation_auto_increment.leave_allocation_auto_increment.get_filtered_employees",
-            args: { increment_filter, grade: frm.doc.grade },
+            args: { increment_filter, employee_group: frm.doc.employee_group },
             callback(r) {
                 if (r.message) {
                     frappe.model.with_doc(frm.doc.doctype, frm.doc.name, function () {

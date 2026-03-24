@@ -11,7 +11,7 @@
   "leave_period",
   "from_date",
   "to_date",
-  "grade",
+  "employee_group",
   "column_break_mptb",
   "leave_type",
   "max_days_of_leave_type",
@@ -129,17 +129,17 @@
    "non_negative": 1
   },
   {
-   "fieldname": "grade",
+   "fieldname": "employee_group",
    "fieldtype": "Link",
-   "label": "Employee Grade",
-   "options": "Employee Grade"
+   "label": "Employee Group",
+   "options": "Employee Group"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-24 15:45:27.135762",
+ "modified": "2026-03-24 16:05:12.276269",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Leave Allocation Auto Increment",
