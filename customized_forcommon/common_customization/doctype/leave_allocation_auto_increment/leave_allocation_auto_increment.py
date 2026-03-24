@@ -134,12 +134,12 @@ def get_ethiopian_fiscal_year_range(today=None):
     return fy_start.date(), fy_end.date()
 
 @frappe.whitelist()
-def get_filtered_employees(increment_filter="All", designation=None):
+def get_filtered_employees(increment_filter="All", grade=None):
     fy_start, fy_end = get_ethiopian_fiscal_year_range()
 
     filters = {"status": "Active"}
-    if designation:
-        filters["designation"] = designation
+    if grade:
+        filters["grade"] = grade
 
     # Fetch all active employees
     employees = frappe.get_all(
