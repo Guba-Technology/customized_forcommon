@@ -11,6 +11,7 @@ class PromotionTest(Document):
 		self.check_duplicates()
 		self.make_document_submitted()
 		self.check_result_not_more_than_100()
+		self.calculate_and_set_ranks()
 
 	def check_duplicates(self):
 		if not self.employees_for_promotion_test:
@@ -33,21 +34,6 @@ class PromotionTest(Document):
 				frappe.throw(
 					_("Result for employee {0} cannot be more than 100.").format(row.employee)
 				)
-
-	def make_document_submitted(self):
-		if self.status == "Finished":
-			self.docstatus = 1
-			frappe.msgprint(_("Promotion Test has been Finished."), alert=True)
-
-	def before_cancel(self):
-		if self.status == "Finished":
-			frappe.throw(_("Cannot cancel a Promotion Test that has already been finished."))
-
-	
-	def on_update(self):
-		# Trigger ranking every time the document is saved (updated)
-		self.calculate_and_set_ranks()
-
 	def calculate_and_set_ranks(self):
 		# 1. Clear existing ranks in the 'Promotion Test Rank' table
 		self.set("promotion_test_rank", []) # Clears all rows
@@ -75,7 +61,7 @@ class PromotionTest(Document):
 			# If this is not the first employee AND their result is different from the previous one,
 			# then update the rank. Otherwise, they share the same rank as the previous.
 			if i > 0 and emp_data['result'] != previous_result:
-				current_rank = i + 1
+				current_rank += 1
 
 			# Add a new row to the 'Promotion Test Rank' child table
 			self.append("promotion_test_rank", {
@@ -89,3 +75,13 @@ class PromotionTest(Document):
 		
 		frappe.msgprint("Promotion Test Ranks calculated successfully!", alert=True)
 
+	def make_document_submitted(self):
+		if self.status == "Finished":
+			self.docstatus = 1
+			frappe.msgprint(_("Promotion Test has been Finished."), alert=True)
+
+	def before_cancel(self):
+		if self.status == "Finished":
+			frappe.throw(_("Cannot cancel a Promotion Test that has already been finished."))
+
+	
