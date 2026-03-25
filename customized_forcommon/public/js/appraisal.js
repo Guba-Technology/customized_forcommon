@@ -1,25 +1,5 @@
 frappe.ui.form.on("Appraisal", {
     onload: function(frm) {
-        const style = document.createElement("style");
-        style.innerHTML = `
-            /* Hide the standard row index */
-            .grid-row .row-index,
-            .grid-heading-row .row-index {
-                display: none !important;
-            }
-            /* Hide the Rating stars */
-            [data-fieldname="rating"], 
-            .modal-body [data-fieldname="rating"] {
-                display: none !important;
-            }
-            /* Make the custom number column stand out slightly */
-            [data-fieldname="custom_no"] {
-                font-weight: bold;
-                color: #525252;
-                width: 40px !important;
-            }
-        `;
-        document.head.appendChild(style);
     },
 
     refresh: function(frm) {

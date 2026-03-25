@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "EMP-SA-.######",
+ "creation": "2026-03-23 14:58:15.004409",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vxkp",
+  "employee",
+  "amended_from",
+  "column_break_ohqa",
+  "appraisal",
+  "appraisal_template",
+  "section_break_seha",
+  "self_evaluation_result",
+  "total_score"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vxkp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Self Appraisal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_ohqa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "appraisal_template",
+   "fieldtype": "Link",
+   "label": "Appraisal Template",
+   "options": "Appraisal Template"
+  },
+  {
+   "fieldname": "section_break_seha",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "self_evaluation_result",
+   "fieldtype": "Table",
+   "label": "Self evaluation result",
+   "options": "Employee Feedback Rating"
+  },
+  {
+   "fieldname": "appraisal",
+   "fieldtype": "Link",
+   "label": "Appraisal",
+   "options": "Appraisal"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "label": "Total Score"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-23 15:08:14.655461",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Self Appraisal",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
