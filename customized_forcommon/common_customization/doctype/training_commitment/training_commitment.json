@@ -15,6 +15,7 @@
   "qualification",
   "year_taken",
   "witness",
+  "level",
   "section_break_mlda",
   "details"
  ],
@@ -84,16 +85,22 @@
    "fieldname": "details",
    "fieldtype": "Small Text",
    "label": "Details"
+  },
+  {
+   "fieldname": "level",
+   "fieldtype": "Link",
+   "label": "Level",
+   "options": "Level"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-22 09:12:04.014415",
+ "modified": "2026-03-25 09:21:36.211283",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Commitment",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -110,6 +117,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

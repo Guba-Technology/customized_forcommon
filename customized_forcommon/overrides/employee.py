@@ -77,6 +77,7 @@ class CustomEmployee(Employee):
             dob = getdate(self.date_of_birth if self.date_of_birth else nowdate()) #
             age = (todate - dob).days // 365  # Calculate age in years
             if age < 18:
-                frappe.throw(
+                frappe.msgprint(
                     frappe._("Employee must be at least 18 years old. Current age: {} years").format(age),
+                    alert=True
                 )
