@@ -10,10 +10,12 @@
   "employee_name",
   "designation",
   "grade",
+  "criteria",
   "result"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -21,6 +23,7 @@
    "options": "Employee"
   },
   {
+   "columns": 2,
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
@@ -29,6 +32,7 @@
    "read_only": 1
   },
   {
+   "columns": 1,
    "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Data",
@@ -37,6 +41,7 @@
    "read_only": 1
   },
   {
+   "columns": 1,
    "fetch_from": "employee.grade",
    "fieldname": "grade",
    "fieldtype": "Data",
@@ -45,11 +50,21 @@
    "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "result",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Result",
    "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "criteria",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Criteria",
+   "options": "Promotion Test Criteria",
    "reqd": 1
   }
  ],
