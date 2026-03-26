@@ -8330,7 +8330,7 @@
     "description": null,
     "hidden": 0,
     "icon": null,
-    "is_query_report": 0,
+    "is_query_report": 1,
     "label": "Training Report",
     "link_count": 0,
     "link_to": "Training Report",
@@ -8340,11 +8340,11 @@
     "parent": "Employee Lifecycle",
     "parentfield": "links",
     "parenttype": "Workspace",
-    "report_ref_doctype": "Training Evaluation",
+    "report_ref_doctype": null,
     "type": "Link"
    }
   ],
-  "modified": "2026-03-25 11:04:24.633740",
+  "modified": "2026-03-25 16:28:19.979116",
   "module": "HR",
   "name": "Employee Lifecycle",
   "number_cards": [],

@@ -14,7 +14,10 @@
   "appraisal_template",
   "section_break_seha",
   "self_evaluation_result",
-  "total_score"
+  "section_break_vnex",
+  "total_score",
+  "column_break_rsbb",
+  "reflection"
  ],
  "fields": [
   {
@@ -66,14 +69,28 @@
   {
    "fieldname": "total_score",
    "fieldtype": "Float",
-   "label": "Total Score"
+   "label": "Total Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_vnex",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rsbb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reflection",
+   "fieldtype": "Small Text",
+   "label": "Reflection"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-23 15:08:14.655461",
+ "modified": "2026-03-26 10:25:55.803482",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Self Appraisal",

@@ -51,6 +51,7 @@ fixtures = [
                           "Sales Order", "Customer", "Item", "Address", "Journal Entry",
                           "Additional Salary",
                           "Employee Performance Feedback","Interview Round","Interview Feedback",
+                          "Skill Assessment",
                          
                         ]
             ],
@@ -119,6 +120,7 @@ fixtures = [
                             "Skill Assessment-rating-in_list_view",
                             "Interview-expected_average_rating-hidden",
                             "Interview-average_rating-hidden",
+                            
                             
                            
 
