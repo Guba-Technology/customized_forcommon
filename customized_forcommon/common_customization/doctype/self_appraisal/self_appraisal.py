@@ -34,7 +34,7 @@ class SelfAppraisal(Document):
 				if score > weight:
 					frappe.throw(f"Score ({score}) cannot exceed weight ({weight}) at row {i}")
 				total_score += score
-				self.total_score = round(total_score / 20, 2) # convert into 5%
+				self.total_score = total_score
 				total_weight += weight
 			if total_weight > 100:
 				frappe.throw(f"Total weight ({total_weight}) cannot exceed 100%")
@@ -66,7 +66,7 @@ class SelfAppraisal(Document):
 				"per_weightage": row.per_weightage,  
 				"custom_score": row.custom_score
 			})
-
+		appraisal_doc.reflections = self.reflection
 		appraisal_doc.self_score = self.total_score
 		appraisal_doc.save()
 		link = f"<a href='/app/appraisal/{appraisal_doc.name}'>{appraisal_doc.name}</a>"
