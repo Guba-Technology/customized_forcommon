@@ -36,23 +36,13 @@ fixtures = [
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request",
-                         "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
-                          "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "Routing",
-                          "Training Event", "Leave Application",
-                          
-                          "Training Result", "Travel Request",
-                          "Clearance", "Employee Grievance",
-                          "Employee Incentive","Employee Promotion","Employee Transfer",
-                          "Employee Onboarding",
-                          "Appraisal Template", "Appraisal Template Goal",
-                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address", "Journal Entry",
-                          "Additional Salary",
-                          "Employee Performance Feedback","Interview Round","Interview Feedback",
-                          "Skill Assessment",
-                         
+                         "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
+                         "Training Program", "Purchase Reciept", "Stock Entry", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "Routing", "Training Event", "Leave Application",
+                          "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
+                          "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
+                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
+                          "Journal Entry",  "Additional Salary", "HR Settings"
                         ]
             ],
         ]
@@ -184,7 +174,10 @@ doc_events = {
         "on_update": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
     "Employee": {
-        "validate": "customized_forcommon.doc_events.employee.update_fuel_payment"
+        "validate": ["customized_forcommon.doc_events.employee.update_fuel_payment",
+                     "customized_forcommon.doc_events.employee.calculate_severance_amount"
+        ]
+
     },
     "Employee Advance": {
         "validate": [
