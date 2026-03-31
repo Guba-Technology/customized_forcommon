@@ -104,7 +104,13 @@ fixtures = [
                             "Salary Structure-net_pay-allow_on_submit",
                             "Salary Structure-total_deduction-allow_on_submit",
                             "Salary Structure-total_earning-allow_on_submit",
-                            "Stock Entry-add_to_transit-depends_on"
+                            "Stock Entry-add_to_transit-depends_on",
+                            "Interview Round-expected_average_rating-hidden",
+                            "Skill Assessment-rating-reqd",
+                            "Skill Assessment-rating-in_list_view",
+                            "Interview-expected_average_rating-hidden",
+                            "Interview-average_rating-hidden",
+                            
                             
                            
 
@@ -168,7 +174,10 @@ doc_events = {
         "on_update": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
     "Employee": {
-        "validate": "customized_forcommon.doc_events.employee.update_fuel_payment"
+        "validate": ["customized_forcommon.doc_events.employee.update_fuel_payment",
+                     "customized_forcommon.doc_events.employee.calculate_severance_amount"
+        ]
+
     },
     "Employee Advance": {
         "validate": [
@@ -234,6 +243,7 @@ override_doctype_class = {
     "Asset Movement": "customized_forcommon.overrides.asset_movement.CustomAssetMovement",
     "Attendance": "customized_forcommon.overrides.attendance.CustomAttendance",
     "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
+    "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
 }
 
 app_include_js = [
@@ -282,7 +292,12 @@ doctype_js = {
     "Quotation": "public/js/quotation.js",
     "Auto Repeat": "public/js/auto_repeat.js",
     "Stock Entry": "public/js/stock_entry.js",
-    "Employee Advance": "public/js/employee_advance.js"
+    "Employee Advance": "public/js/employee_advance.js",
+    "Employee Performance Feedback":"public/js/employee_performance_feedback.js",
+    "Interview Round":"public/js/interview_round.js",
+    "Interview Feedback":"public/js/interview_feedback.js",
+    "Interview":"public/js/interview.js",
+
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
