@@ -183,7 +183,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/lite_locker.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
 ]
-
+page_js = {
+	"print": "public/js/print_override.js"
+}
 
 # js files to be included in the doctype views
 doctype_js = {
