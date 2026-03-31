@@ -256,7 +256,9 @@ app_include_js = [
 
 ]
 
-
+page_js = {
+	"print": "public/js/print_override.js"
+}
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
 # ]
