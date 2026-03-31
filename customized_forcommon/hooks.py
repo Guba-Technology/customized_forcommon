@@ -147,6 +147,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/payment_request_extend.js"    
 ]
+page_js = {
+	"print": "public/js/print_override.js"
+}
 # web_include_js = [
 # "/assets/customized_forcommon/js/redirect_apps.js"
 # ]
