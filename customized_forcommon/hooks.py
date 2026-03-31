@@ -36,21 +36,13 @@ fixtures = [
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request",
-                         "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
-                          "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "Routing",
-                          "Training Event", "Leave Application",
-                          
-                          "Training Result", "Travel Request",
-                          "Clearance", "Employee Grievance",
-                          "Employee Incentive","Employee Promotion","Employee Transfer",
-                          "Employee Onboarding",
-                          "Appraisal Template", "Appraisal Template Goal",
-                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating",
-                          "Sales Order", "Customer", "Item", "Address", "Journal Entry",
-                          "Additional Salary"
-                         
+                         "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
+                         "Training Program", "Purchase Reciept", "Stock Entry", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "Routing", "Training Event", "Leave Application",
+                          "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
+                          "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
+                          "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
+                          "Journal Entry",  "Additional Salary", "HR Settings"
                         ]
             ],
         ]
