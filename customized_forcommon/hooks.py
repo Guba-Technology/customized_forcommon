@@ -200,6 +200,9 @@ doc_events = {
     "Expense Claim": {
         "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
         "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
+    },
+    "HR Settings": {
+        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year"
     }
 }
 
