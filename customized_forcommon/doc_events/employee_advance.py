@@ -5,22 +5,21 @@ from frappe.utils import today, getdate, flt
 def validate_payment_type(doc, method):
     if doc.repay_unclaimed_amount_from_salary != 1:
         return
-
-    if doc.custom_repayment_type == "Fixed":
-        doc.custom_fixed_repayment_amount_original = doc.custom_repayment_amount
-
-    if doc.custom_repayment_type == "Number of Months":
-        doc.custom_remaining_months = doc.custom_number_of_month
-    
+  
     clear_repayment_info(doc)
     validate_number_of_month(doc)
     validate_rate(doc)
     validate_repayment_amount(doc)
     validate_starting_payroll_date(doc)
+    if doc.custom_repayment_type == "Fixed":
+        doc.custom_fixed_repayment_amount_original = doc.custom_repayment_amount
+
+    if doc.custom_repayment_type == "Number of Months":
+        doc.custom_remaining_months = doc.custom_number_of_month
 
 def clear_repayment_info(doc):
     if doc.is_new():
-        doc.set("custom_repayment_amount", 0)
+        # doc.set("custom_repayment_amount", 0)
         doc.set("custom_payroll_dates", [])
 
 def validate_number_of_month(doc):

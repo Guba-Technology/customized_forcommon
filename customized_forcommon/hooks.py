@@ -227,6 +227,7 @@ doctype_js = {
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
+    "Employee Advance": "public/js/employee_advance.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
