@@ -302,7 +302,6 @@ doctype_js = {
     "Interview Round":"public/js/interview_round.js",
     "Interview Feedback":"public/js/interview_feedback.js",
     "Interview":"public/js/interview.js",
-    "Employee": "public/js/employee.js",
 
 }
 doctype_list_js = {
