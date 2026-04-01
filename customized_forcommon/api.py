@@ -2,7 +2,7 @@ from erpnext.accounts.general_ledger import make_gl_entries
 from frappe.utils.nestedset import get_descendants_of
 import frappe
 from frappe import _
-from frappe.utils import today, flt, getdate
+from frappe.utils import today, flt, getdate, date_diff
 
 # updating the status of the purchase invoice 
 @frappe.whitelist()
@@ -191,3 +191,29 @@ def get_item_tax_accounts(item_code, company=None, net_amount=0, posting_date=No
             })
 
     return tax_accounts
+
+def calculate_severance_amount(doc):
+    if not doc.relieving_date or not doc.date_of_joining or not doc.custom_apply_severance_pay:
+        return 0
+
+    hr_settings = frappe.get_doc("HR Settings")
+    starting_year = hr_settings.custom_severenace_pay_starting_year or 1
+
+    basic_salary = doc.ctc or 0  # change to base if available
+    if basic_salary <= 0:
+        return 0
+
+    daily_wage = basic_salary / 30
+
+    total_days = date_diff(doc.relieving_date, doc.date_of_joining)
+    full_years = int(total_days / 365)
+
+    if full_years < starting_year:
+        return 0
+
+    if full_years <= 1:
+        severance = daily_wage * 30
+    else:
+        severance = (daily_wage * 30) + ((full_years - 1) * 10 * daily_wage)
+
+    return severance
