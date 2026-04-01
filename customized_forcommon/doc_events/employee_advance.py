@@ -20,7 +20,7 @@ def validate_payment_type(doc, method):
 
 def clear_repayment_info(doc):
     if doc.is_new():
-        doc.set("custom_repayment_amount", 0)
+        # doc.set("custom_repayment_amount", 0)
         doc.set("custom_payroll_dates", [])
 
 def validate_number_of_month(doc):
