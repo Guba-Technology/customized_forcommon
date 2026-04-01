@@ -147,6 +147,10 @@ doc_events = {
     },
      "Journal Entry": {
         "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
+    },
+    "HR Settings": {
+        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
+        "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
     }
 }
 
