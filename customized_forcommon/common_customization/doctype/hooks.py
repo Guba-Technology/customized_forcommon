@@ -46,7 +46,7 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application",
+                          "Training Event", "Leave Application", "Additional Salary", "HR Settings"
                           ]],
         ]
     },
@@ -138,6 +138,27 @@ doc_events = {
     },
     "User Company Assignment": {
         "after_insert": "customized_forcommon.common_customization.doctype.user_company_assignment.UserCompanyAssignment.on_update"
+    },
+     "Payment Entry": {
+        "on_submit": [
+            "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
+        ],
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation"
+    },
+
+    "Additional Salary": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation"
+    },
+
+    "Expense Claim": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
+    },
+     "HR Settings": {
+        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
+        "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
+
     }
 
 }

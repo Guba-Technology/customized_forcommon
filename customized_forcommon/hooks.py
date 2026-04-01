@@ -51,7 +51,7 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application", "Journal Entry"
+                          "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings"
                           ]],
 
         ]
@@ -148,12 +148,35 @@ doc_events = {
      "Journal Entry": {
         "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
     },
+    "Employee Advance": {
+        "validate": [
+            "customized_forcommon.doc_events.employee_advance.validate_payment_type",
+        ],
+       
+    },
+      "Payment Entry": {
+        "on_submit": [
+            "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
+        ],
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation"
+    },
+
+    "Additional Salary": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation"
+    },
+
+    "Expense Claim": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
+    },
     "HR Settings": {
         "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
         "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
     },
       "Employee": {
-        "validate": ["customized_forcommon.doc_events.employee.calculate_severance_amount"
+        "validate": [
+            "customized_forcommon.doc_events.employee.calculate_severance_amount"
         ]
 
     },
@@ -163,6 +186,9 @@ scheduler_events = {
     "Hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+    ],
+    "daily":[
+         "customized_forcommon.scheduler.employee_advance.process_repayments"
     ]
 }
 
@@ -201,7 +227,6 @@ doctype_js = {
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
-    "Employee": "public/js/employee.js"
 }
 page_js = {
 	"print": "public/js/print_override.js"
