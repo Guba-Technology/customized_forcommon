@@ -151,7 +151,12 @@ doc_events = {
     "HR Settings": {
         "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
         "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
-    }
+    },
+      "Employee": {
+        "validate": ["customized_forcommon.doc_events.employee.calculate_severance_amount"
+        ]
+
+    },
 }
 
 scheduler_events = {
@@ -196,6 +201,7 @@ doctype_js = {
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
+    "Employee": "public/js/employee.js"
 }
 page_js = {
 	"print": "public/js/print_override.js"
