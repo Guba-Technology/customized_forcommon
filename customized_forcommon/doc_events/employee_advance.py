@@ -113,7 +113,18 @@ def create_first_repayment_on_payment(doc, method):
         # capture months before any decrease
         initial_months = ea.custom_remaining_months
         # first repayment amount
-        deduction = get_remaining_amount(ea) / initial_months
+        # first repayment amount
+        deduction = 0
+        if ea.custom_repayment_type == "Fixed":
+            deduction = ea.custom_repayment_amount
+        elif ea.custom_repayment_type == "Number of Months":
+            deduction = get_remaining_amount(ea) / initial_months
+        elif ea.custom_repayment_type == "Salary Percentage":
+            deduction = get_remaining_amount(ea) * ea.custom_rate / 100
+        else:
+            deduction = 0
+        if deduction <= 0:
+            continue
         if deduction <= 0:
             continue
 
