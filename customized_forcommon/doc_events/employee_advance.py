@@ -5,18 +5,17 @@ from frappe.utils import today, getdate, flt
 def validate_payment_type(doc, method):
     if doc.repay_unclaimed_amount_from_salary != 1:
         return
-
-    if doc.custom_repayment_type == "Fixed":
-        doc.custom_fixed_repayment_amount_original = doc.custom_repayment_amount
-
-    if doc.custom_repayment_type == "Number of Months":
-        doc.custom_remaining_months = doc.custom_number_of_month
-    
+  
     clear_repayment_info(doc)
     validate_number_of_month(doc)
     validate_rate(doc)
     validate_repayment_amount(doc)
     validate_starting_payroll_date(doc)
+    if doc.custom_repayment_type == "Fixed":
+        doc.custom_fixed_repayment_amount_original = doc.custom_repayment_amount
+
+    if doc.custom_repayment_type == "Number of Months":
+        doc.custom_remaining_months = doc.custom_number_of_month
 
 def clear_repayment_info(doc):
     if doc.is_new():
@@ -32,6 +31,10 @@ def validate_rate(doc):
     if doc.custom_repayment_type == "Salary Percentage":
         if doc.custom_rate <= 0:
             frappe.throw("Rate must be greater than 0")
+        employee_ctc = flt(frappe.db.get_value("Employee", doc.employee, "ctc"))
+        if not employee_ctc  or employee_ctc <= 0:
+            frappe.throw(f"Please set the CTC for {doc.employee}")
+        
 
 def validate_repayment_amount(doc):
     if doc.custom_repayment_type == "Fixed":
@@ -113,18 +116,16 @@ def create_first_repayment_on_payment(doc, method):
         # capture months before any decrease
         initial_months = ea.custom_remaining_months
         # first repayment amount
-        # first repayment amount
         deduction = 0
         if ea.custom_repayment_type == "Fixed":
             deduction = ea.custom_repayment_amount
         elif ea.custom_repayment_type == "Number of Months":
             deduction = get_remaining_amount(ea) / initial_months
         elif ea.custom_repayment_type == "Salary Percentage":
-            deduction = get_remaining_amount(ea) * ea.custom_rate / 100
+            employee_ctc = flt(frappe.db.get_value("Employee", ea.employee, "ctc"))
+            deduction =employee_ctc * ea.custom_rate / 100
         else:
             deduction = 0
-        if deduction <= 0:
-            continue
         if deduction <= 0:
             continue
 
