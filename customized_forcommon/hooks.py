@@ -51,7 +51,7 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application"
+                          "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings"
                           ]],
 
         ]
@@ -66,21 +66,27 @@ fixtures = [
     },
     {
         "dt": "Client Script",
-        "filters":[
-            ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
-                          "Sales Invoice", "Employee", "Quality Inspection",
-                          "Sales Order", "Material Request", "Leave Application",
-
-                          ]]
+        "filters": [
+            ["dt", "in", [
+                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry", "Sales Invoice", "Employee",
+                "BOM", "Quality Inspection", "Sales Order", "Material Request", "Leave Application"
+            ]]
+        ]
+    },
+    {
+        "dt": "Print Format",
+        "filters": [
+            ["dt", "in", [
+                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry", "Sales Invoice", "Employee",
+                "BOM", "Quality Inspection", "Sales Order", "Material Request"
+            ]]
         ]
     },
     {
         "dt": "Print Format",
         "filters": [
             ["name", "in", [
-                "Stock Entry Print Format",
-                "Purchase Order Print Format",
-                "Purchase Receipt Print Format",
+                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
                 "Quotation Print Format"
             ]]
         ]
@@ -107,9 +113,6 @@ fixtures = [
         ]
     }
 ]
-before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creator.execute",
-                  "customized_forcommon.patcher.execute",]
-
 
 
 # Hooks
@@ -142,12 +145,50 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+     "Journal Entry": {
+        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
+    },
+    "Employee Advance": {
+        "validate": [
+            "customized_forcommon.doc_events.employee_advance.validate_payment_type",
+        ],
+       
+    },
+      "Payment Entry": {
+        "on_submit": [
+            "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
+        ],
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation"
+    },
+
+    "Additional Salary": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation"
+    },
+
+    "Expense Claim": {
+        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
+        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
+    },
+    "HR Settings": {
+        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
+        "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
+    },
+      "Employee": {
+        "validate": [
+            "customized_forcommon.doc_events.employee.calculate_severance_amount"
+        ]
+
+    },
 }
 
 scheduler_events = {
     "Hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+    ],
+    "daily":[
+         "customized_forcommon.scheduler.employee_advance.process_repayments"
     ]
 }
 
@@ -165,7 +206,7 @@ override_doctype_class = {
     "Material Request": "customized_forcommon.overrides.material_request.CustomMaterialRequest",
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
-    "BOM Creator": "customized_forcommon.overrides.bom_creator.BOMCreator",
+    "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
 
 }
@@ -176,22 +217,17 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_invoice.js",
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
-    "/assets/customized_forcommon/js/payment_request_extend.js",    
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
 ]
 
-website_redirects = [
-    {"source": "/apps", "target": "/app/home"}
-]
 # js files to be included in the doctype views
 doctype_js = {
     "Material Request": "public/js/material_request.js",
     "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Purchase Invoice": "public/js/sales_invoice.js",
-    "Payment Request": "public/js/payment_request_extend.js",
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Employee Advance": "public/js/employee_advance.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
@@ -199,17 +235,243 @@ page_js = {
 # WARNING: Monkey patching HRMS method; revisit on upgrade
 import hrms.hr.doctype.leave_application.leave_application as leave_application_module
 import customized_forcommon.overrides.leave_balance as custom_module
-from customized_forcommon.overrides.custom_add_advance_gl_for_reference import custom_add_advance_gl_for_reference
-from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
-from customized_forcommon.overrides import custom_gl_entry
-# Monkey patch the original PaymentEntry method
-PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
+
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
 
+# Apps
+# ------------------
 
+# required_apps = []
 
-jinja = {
-    "methods": "customized_forcommon.utils.amharic_currency"
-}
+# Each item in the list will be shown as an app in the apps page
+# add_to_apps_screen = [
+# 	{
+# 		"name": "customized_forcommon",
+# 		"logo": "/assets/customized_forcommon/logo.png",
+# 		"title": "Blood Bank Customization",
+# 		"route": "/customized_forcommon",
+# 		"has_permission": "customized_forcommon.api.permission.has_app_permission"
+# 	}
+# ]
 
+# Includes in <head>
+# ------------------
+
+# include js, css files in header of desk.html
+# app_include_css = "/assets/customized_forcommon/css/customized_forcommon.css"
+# app_include_js = "/assets/customized_forcommon/js/customized_forcommon.js"
+
+# include js, css files in header of web template
+# web_include_css = "/assets/customized_forcommon/css/customized_forcommon.css"
+# web_include_js = "/assets/customized_forcommon/js/customized_forcommon.js"
+
+# include custom scss in every website theme (without file extension ".scss")
+# website_theme_scss = "customized_forcommon/public/scss/website"
+
+# include js, css files in header of web form
+# webform_include_js = {"doctype": "public/js/doctype.js"}
+# webform_include_css = {"doctype": "public/css/doctype.css"}
+
+# include js in page
+# page_js = {"page" : "public/js/file.js"}
+
+# include js in doctype views
+# doctype_js = {"doctype" : "public/js/doctype.js"}
+# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+# doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
+# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+
+# Svg Icons
+# ------------------
+# include app icons in desk
+# app_include_icons = "customized_forcommon/public/icons.svg"
+
+# Home Pages
+# ----------
+
+# application home page (will override Website Settings)
+# home_page = "login"
+
+# website user home page (by Role)
+# role_home_page = {
+# 	"Role": "home_page"
+# }
+
+# Generators
+# ----------
+
+# automatically create page for each record of this doctype
+# website_generators = ["Web Page"]
+
+# Jinja
+# ----------
+
+# add methods and filters to jinja environment
+# jinja = {
+# 	"methods": "customized_forcommon.utils.jinja_methods",
+# 	"filters": "customized_forcommon.utils.jinja_filters"
+# }
+
+# Installation
+# ------------
+
+# before_install = "customized_forcommon.install.before_install"
+# after_install = "customized_forcommon.install.after_install"
+
+# Uninstallation
+# ------------
+
+# before_uninstall = "customized_forcommon.uninstall.before_uninstall"
+# after_uninstall = "customized_forcommon.uninstall.after_uninstall"
+
+# Integration Setup
+# ------------------
+# To set up dependencies/integrations with other apps
+# Name of the app being installed is passed as an argument
+
+# before_app_install = "customized_forcommon.utils.before_app_install"
+# after_app_install = "customized_forcommon.utils.after_app_install"
+
+# Integration Cleanup
+# -------------------
+# To clean up dependencies/integrations with other apps
+# Name of the app being uninstalled is passed as an argument
+
+# before_app_uninstall = "customized_forcommon.utils.before_app_uninstall"
+# after_app_uninstall = "customized_forcommon.utils.after_app_uninstall"
+
+# Desk Notifications
+# ------------------
+# See frappe.core.notifications.get_notification_config
+
+# notification_config = "customized_forcommon.notifications.get_notification_config"
+
+# Permissions
+# -----------
+# Permissions evaluated in scripted ways
+
+# permission_query_conditions = {
+# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+# }
+#
+# has_permission = {
+# 	"Event": "frappe.desk.doctype.event.event.has_permission",
+# }
+
+# DocType Class
+# ---------------
+# Override standard doctype classes
+
+# override_doctype_class = {
+# 	"ToDo": "custom_app.overrides.CustomToDo"
+# }
+
+# Document Events
+# ---------------
+# Hook on document methods and events
+
+# doc_events = {
+# 	"*": {
+# 		"on_update": "method",
+# 		"on_cancel": "method",
+# 		"on_trash": "method"
+# 	}
+# }
+
+# Scheduled Tasks
+# ---------------
+
+# scheduler_events = {
+# 	"all": [
+# 		"customized_forcommon.tasks.all"
+# 	],
+# 	"daily": [
+# 		"customized_forcommon.tasks.daily"
+# 	],
+# 	"hourly": [
+# 		"customized_forcommon.tasks.hourly"
+# 	],
+# 	"weekly": [
+# 		"customized_forcommon.tasks.weekly"
+# 	],
+# 	"monthly": [
+# 		"customized_forcommon.tasks.monthly"
+# 	],
+# }
+
+# Testing
+# -------
+
+# before_tests = "customized_forcommon.install.before_tests"
+
+# Overriding Methods
+# ------------------------------
+#
+# override_whitelisted_methods = {
+# 	"frappe.desk.doctype.event.event.get_events": "customized_forcommon.event.get_events"
+# }
+#
+# each overriding function accepts a `data` argument;
+# generated from the base implementation of the doctype dashboard,
+# along with any modifications made in other Frappe apps
+# override_doctype_dashboards = {
+# 	"Task": "customized_forcommon.task.get_dashboard_data"
+# }
+
+# exempt linked doctypes from being automatically cancelled
+#
+# auto_cancel_exempted_doctypes = ["Auto Repeat"]
+
+# Ignore links to specified DocTypes when deleting documents
+# -----------------------------------------------------------
+
+# ignore_links_on_delete = ["Communication", "ToDo"]
+
+# Request Events
+# ----------------
+# before_request = ["customized_forcommon.utils.before_request"]
+# after_request = ["customized_forcommon.utils.after_request"]
+
+# Job Events
+# ----------
+# before_job = ["customized_forcommon.utils.before_job"]
+# after_job = ["customized_forcommon.utils.after_job"]
+
+# User Data Protection
+# --------------------
+
+# user_data_fields = [
+# 	{
+# 		"doctype": "{doctype_1}",
+# 		"filter_by": "{filter_by}",
+# 		"redact_fields": ["{field_1}", "{field_2}"],
+# 		"partial": 1,
+# 	},
+# 	{
+# 		"doctype": "{doctype_2}",
+# 		"filter_by": "{filter_by}",
+# 		"partial": 1,
+# 	},
+# 	{
+# 		"doctype": "{doctype_3}",
+# 		"strict": False,
+# 	},
+# 	{
+# 		"doctype": "{doctype_4}"
+# 	}
+# ]
+
+# Authentication and authorization
+# --------------------------------
+
+# auth_hooks = [
+# 	"customized_forcommon.auth.validate"
+# ]
+
+# Automatically update python controller files with type annotations for this app.
+# export_python_type_annotations = True
+
+# default_log_clearing_doctypes = {
+# 	"Logging DocType Name": 30  # days to retain logs
+# }
