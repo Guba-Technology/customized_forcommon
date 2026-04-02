@@ -31,6 +31,10 @@ def validate_rate(doc):
     if doc.custom_repayment_type == "Salary Percentage":
         if doc.custom_rate <= 0:
             frappe.throw("Rate must be greater than 0")
+        employee_ctc = flt(frappe.db.get_value("Employee", doc.employee, "ctc"))
+        if not employee_ctc  or employee_ctc <= 0:
+            frappe.throw(f"Please set the CTC for {doc.employee}")
+        
 
 def validate_repayment_amount(doc):
     if doc.custom_repayment_type == "Fixed":
@@ -118,7 +122,8 @@ def create_first_repayment_on_payment(doc, method):
         elif ea.custom_repayment_type == "Number of Months":
             deduction = get_remaining_amount(ea) / initial_months
         elif ea.custom_repayment_type == "Salary Percentage":
-            deduction = get_remaining_amount(ea) * ea.custom_rate / 100
+            employee_ctc = flt(frappe.db.get_value("Employee", ea.employee, "ctc"))
+            deduction =employee_ctc * ea.custom_rate / 100
         else:
             deduction = 0
         if deduction <= 0:
