@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation",
                            "Routing",
-                          "Training Event", "Leave Application", "Dunning", "Journal Entry"
+                          "Training Event", "Leave Application", "Dunning", "Journal Entry", "Customer"
                           ]],
         ]
     },
