@@ -40,7 +40,7 @@ fixtures = [
                           "Stock Entry", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation",
                            "Routing",
-                          "Training Event", "Leave Application", "Dunning", "Journal Entry"
+                          "Training Event", "Leave Application", "Dunning", "Journal Entry", "Customer"
                           ]],
         ]
     },
@@ -183,7 +183,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/lite_locker.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
 ]
-
+page_js = {
+	"print": "public/js/print_override.js"
+}
 
 # js files to be included in the doctype views
 doctype_js = {
