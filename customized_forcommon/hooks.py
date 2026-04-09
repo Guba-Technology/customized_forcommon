@@ -91,7 +91,7 @@ fixtures = [
         "dt": "Property Setter",
         "filters": [
             ["name", "in", ["Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",         
+                            "Employee-custom_leave_increment_period-Label", "Journal Entry-total_amount_in_words-fieldtype"        
                             
             ]]
         ]
