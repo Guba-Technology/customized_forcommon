@@ -42,7 +42,7 @@ fixtures = [
                           "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
-                          "Journal Entry",  "Additional Salary", "HR Settings"
+                          "Journal Entry",  "Additional Salary", "HR Settings",
                         ]
             ],
         ]
@@ -110,10 +110,7 @@ fixtures = [
                             "Skill Assessment-rating-in_list_view",
                             "Interview-expected_average_rating-hidden",
                             "Interview-average_rating-hidden",
-                            
-                            
-                           
-
+                            "Sales Taxes and Charges-charge_type-options",
             ]]
         ]
     }
@@ -205,7 +202,27 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
         "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
 
+    },
+    "Sales Invoice": {
+        "validate": [
+            "customized_forcommon.doc_events.tax_logic.calculate_total_factory_share",
+            "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_factory_share",
+            "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_sidf"
+        ]
+    },
+    "Sales Order": {
+        "validate": [
+            "customized_forcommon.doc_events.tax_logic.calculate_total_factory_share",
+            "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_factory_share",
+            "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_sidf"
+        ]
+    },
+    "POS Invoice": {
+        "validate": [
+            "customized_forcommon.doc_events.tax_logic.block_factory_share_and_sidf"
+        ]
     }
+
 }
 
 permission_query_conditions = {
@@ -259,7 +276,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
     "/assets/customized_forcommon/js/purchase_analytics.js",
-    "/assets/customized_forcommon/js/custom_purchase_order_analysis.js"
+    "/assets/customized_forcommon/js/custom_purchase_order_analysis.js",
 
 ]
 
