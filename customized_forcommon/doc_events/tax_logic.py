@@ -1,4 +1,5 @@
 import frappe
+from erpnext.accounts.general_ledger import make_gl_entries
 
 def calculate_total_factory_share(doc, method):
     total_factory_share = 0
@@ -35,3 +36,41 @@ def block_factory_share_and_sidf(doc, method):
             frappe.throw("On Factory Share is only allowed for Sales Invoice and Sales Order")
         if  tax.charge_type ==  tax.charge_type == "SIDF":
              frappe.throw("SIDF is only allowed for Sales Invoice and Sales Order")
+
+
+def make_custom_tax_gl(doc, method):
+
+    gl_entries = []
+
+    for tax in doc.get("taxes", []):
+
+        if tax.charge_type not in ["On Factory Share", "SIDF"]:
+            continue
+
+        if not tax.tax_amount:
+            continue
+
+        amount = tax.tax_amount
+
+        # 🔹 TAX ACCOUNT ENTRY
+        gl_entries.append(doc.get_gl_dict({
+            "account": tax.account_head,
+            "against": doc.customer,
+            "credit": amount if amount > 0 else 0,
+            "debit": abs(amount) if amount < 0 else 0,
+            "cost_center": tax.cost_center or doc.cost_center
+        }))
+
+        # 🔹 CUSTOMER (RECEIVABLE) ENTRY  ✅ FIXED
+        gl_entries.append(doc.get_gl_dict({
+            "account": doc.debit_to,
+            "party_type": "Customer",      # 🔥 REQUIRED
+            "party": doc.customer,         # 🔥 REQUIRED
+            "against": tax.account_head,
+            "debit": amount if amount > 0 else 0,
+            "credit": abs(amount) if amount < 0 else 0,
+            "cost_center": doc.cost_center
+        }))
+
+    if gl_entries:
+        make_gl_entries(gl_entries)
