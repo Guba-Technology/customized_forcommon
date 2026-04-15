@@ -208,14 +208,15 @@ doc_events = {
             "customized_forcommon.doc_events.tax_logic.calculate_total_factory_share",
             "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_factory_share",
             "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_sidf"
-        ]
+        ],
+        "on_submit": "customized_forcommon.doc_events.tax_logic.make_custom_tax_gl"
     },
     "Sales Order": {
         "validate": [
             "customized_forcommon.doc_events.tax_logic.calculate_total_factory_share",
             "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_factory_share",
             "customized_forcommon.doc_events.tax_logic.calculate_tax_amount_for_sidf"
-        ]
+        ],
     },
     "POS Invoice": {
         "validate": [
@@ -319,6 +320,7 @@ doctype_js = {
     "Interview Round":"public/js/interview_round.js",
     "Interview Feedback":"public/js/interview_feedback.js",
     "Interview":"public/js/interview.js",
+    "Sales Order": "public/js/sales_order.js",
 
 }
 doctype_list_js = {
