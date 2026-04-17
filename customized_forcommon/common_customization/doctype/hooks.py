@@ -30,7 +30,8 @@ fixtures = [
                 
                 "Employee Lifecycle", "Recruitment", "Leaves", "Procurement",
                 "Manufacturing", "Stock", "Assets", "Sales and Marketing",
-                "Expense Claims", "Shift & Attendance", "Performance", "Users"
+                "Expense Claims", "Shift & Attendance", "Performance", "Users",
+                "Accounting & Finance"
                             
                             ]],
         ],
