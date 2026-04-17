@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "autoname": "field:lc_number",
+ "creation": "2026-04-17 10:57:51.115993",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "lc_number",
+  "company",
+  "supplier",
+  "lc_opening_date",
+  "column_break_1",
+  "lc_amount",
+  "currency",
+  "bank",
+  "status",
+  "section_break_links",
+  "linked_purchase_orders",
+  "linked_purchase_invoices",
+  "section_break_1",
+  "total_purchase_amount",
+  "total_lc_charges",
+  "is_landed_cost_created",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "lc_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "LC Number",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "lc_opening_date",
+   "fieldtype": "Date",
+   "label": "LC Opening Date"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lc_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "LC Amount",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bank",
+   "fieldtype": "Link",
+   "label": "Bank",
+   "options": "Bank"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nOpen\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Financial Summary"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_purchase_amount",
+   "fieldtype": "Currency",
+   "label": "Total Purchase Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_lc_charges",
+   "fieldtype": "Currency",
+   "label": "Total LC Charges",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_landed_cost_created",
+   "fieldtype": "Check",
+   "label": "Landed Cost Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_links",
+   "fieldtype": "Section Break",
+   "label": "Linked Transactions (Auto)"
+  },
+  {
+   "fieldname": "linked_purchase_orders",
+   "fieldtype": "Table",
+   "label": "Linked Purchase Orders",
+   "options": "LC Linked Document"
+  },
+  {
+   "fieldname": "linked_purchase_invoices",
+   "fieldtype": "Table",
+   "label": "Linked Purchase Invoices",
+   "options": "LC Linked Document"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "LC Master",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-17 10:59:11.870392",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "LC Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Accounts Manager",
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "lc_number"
+}
