@@ -62,6 +62,8 @@ def increase_remaining_month(ea):
 
 def update_repayment_amount(ea):
     remaining = get_remaining_amount(ea)
+    repayment = 0
+    next_repayment = 0
 
     if ea.custom_repayment_type == "Fixed":
         if remaining >= ea.custom_fixed_repayment_amount_original:
@@ -77,6 +79,7 @@ def update_repayment_amount(ea):
         else:
             repayment = flt(remaining / months)
 
+    # for Salary Percentage Type
     elif ea.custom_repayment_type == "Salary Percentage":
         employee_ctc = flt(frappe.db.get_value("Employee", ea.employee, "ctc"))
         rate = flt(ea.custom_rate)
@@ -84,15 +87,15 @@ def update_repayment_amount(ea):
         if not employee_ctc or not rate:
             return
 
-        repayment = employee_ctc * rate / 100
+        next_repayment = employee_ctc * rate / 100
 
-        if repayment > remaining:
-            repayment = remaining
-
-    else:
-        return
+        if remaining == 0:
+            next_repayment = 0
+        elif next_repayment > remaining:
+            next_repayment = remaining
 
     ea.db_set("custom_repayment_amount", repayment)
+    ea.db_set("custom_next_repayment_amount", next_repayment)
 
 
 # PAYMENT ENTRY (FIRST REPAYMENT)
