@@ -167,24 +167,25 @@ def get_columns_for_leave_types() -> list[dict]:
 
 def get_columns_for_days(filters: Filters) -> list[dict]:
     days = []
-    current_date = getdate(filters.from_date)
+    start_date = getdate(filters.from_date)
     end_date = getdate(filters.to_date)
 
-    while current_date <= end_date:
-        day_str = cstr(current_date.day)  # Day number
-        weekday = day_abbr[current_date.weekday()]  # e.g., Mon, Tue
-        label = f"{day_str} {weekday}"
+    while start_date <= end_date:
+        day_of_month = start_date.day
+        weekday = day_abbr[start_date.weekday()]
+        label = f"{day_of_month} {weekday}"
 
         days.append({
             "label": label,
             "fieldtype": "Data",
-            "fieldname": cstr(current_date),  # safer than just day_str for multi-month
+            "fieldname": cstr(day_of_month),  # ✅ must match row key
             "width": 65
         })
 
-        current_date = add_days(current_date, 1)  
+        start_date = add_days(start_date, 1)
 
     return days
+
 
 
 def get_total_days_in_month(filters: Filters) -> int:
@@ -409,6 +410,7 @@ def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attend
 			attendance_for_employee[0].update({"employee": employee, "employee_name": details.employee_name})
 
 			records.extend(attendance_for_employee)
+			# frappe.msgprint(f"Employee: {employee}, Attendance Data: {attendance_for_employee}", alert=True)
 
 	return records
 
@@ -504,27 +506,37 @@ def get_attendance_status_for_detailed_view(
 ) -> list[dict]:
 	"""Returns list of shift-wise attendance status for employee
 	[
-	        {'shift': 'Morning Shift', 1: 'A', 2: 'P', 3: 'A'....},
-	        {'shift': 'Evening Shift', 1: 'P', 2: 'A', 3: 'P'....}
+	        {'shift': 'Morning Shift', '7': 'A', '8': 'P', ...},
+	        {'shift': 'Evening Shift', '7': 'P', '8': 'A', ...}
 	]
 	"""
 	total_days = get_total_days_in_month(filters)
 	attendance_values = []
 
+	start_date = getdate(filters.from_date)
+
 	for shift, status_dict in employee_attendance.items():
 		row = {"shift": shift}
 
-		for day in range(1, total_days + 1):
-			status = status_dict.get(day)
+		for i in range(total_days):
+			current_date = add_days(start_date, i)
+			day_of_month = current_date.day
+
+			# Get attendance status for that day
+			status = status_dict.get(day_of_month)
 			if status is None and holidays:
-				status = get_holiday_status(day, holidays)
+				status = get_holiday_status(day_of_month, holidays)
 
 			abbr = status_map.get(status, "")
-			row[cstr(day)] = abbr
+			row[cstr(day_of_month)] = abbr
 
+		# ✅ append only once per shift
 		attendance_values.append(row)
 
+	
+
 	return attendance_values
+
 
 
 def get_holiday_status(day: int, holidays: list) -> str:

@@ -19,15 +19,9 @@ frappe.query_reports["Income Tax Report"] = {
 {
 	"fieldname":"year",
 	"label": "Fiscal Year",
-	"fieldtype": "Select",
-	"options": (() => {
-		let options = [];
-		let currentYear = (new Date()).getFullYear();
-		for (let i = 0; i <= 20; i++) {
-			options.push((currentYear - i).toString());
-		}
-		return options.join("\n");
-	})()
+	"fieldtype": "Link",
+	"options": "Fiscal Year",
+	
 }
 		
 	]

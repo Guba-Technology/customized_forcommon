@@ -16,7 +16,7 @@ class VATPurchaseReport:
         self.filters.setdefault("vat_payable_account", get_company_info.get_vat_payable_account())
         self.vat_re = get_company_info.get_vat_receivable_account()
     def execute(self, filters=None):
-        if not self.filters["vat_account"]:
+        if not self.filters["vat_account"] or not self.filters["vat_payable_account"]:
             frappe.throw(
                 "VAT payable account or VAT receivable account not found. Please set in <a href='/app/company/{0}'>{0}</a> <br> available at <b>VAT Account</b> tab".format(
                     get_company_info.Company
@@ -36,6 +36,7 @@ class VATPurchaseReport:
             {"label": "Seller TIN", "fieldname": "seller_tin", "fieldtype": "Data"},
             {"label": "Seller Name", "fieldname": "seller_name", "fieldtype": "Data"},
             {"label": "Date of Purchase", "fieldname": "date_of_Purchase", "fieldtype": "Date"},
+            {"label":"VAT Date","fieldname":"vat_date","fieldtype":"Date"},
             {"label": "MRC Number", "fieldname": "mrc_number", "fieldtype": "Data"},
             {"label": "VAT Receipt Number", "fieldname": "vat_receipt_number", "fieldtype": "Data"},
             {"label": "Description", "fieldname": "description", "fieldtype": "Data"},
@@ -52,12 +53,18 @@ class VATPurchaseReport:
     def get_data(self):
         invoices = frappe.get_list("Purchase Invoice", filters=self.build_purchase_vat_filters(), fields=[
             "name", "custom_vat_category", "custom_type_of_purchase", "tax_id",
-            "seller_name", "posting_date", "custom_mrc_number",
-            "custom_vat_receipt_number", "custom_description"
+            "seller_name", "posting_date", "custom_mrc_number","supplier",
+            "custom_vat_receipt_number", "custom_description", "custom_vat_date"
         ])
 
         data = []
         for invoice in invoices:
+            tax_id = ""
+            if invoice.tax_id:
+                tax_id = invoice.tax_id
+            else:  
+                customer = frappe.get_doc("Supplier",{"name": invoice.supplier})
+                tax_id = customer.tax_id
             vat_payable = 0
             vat_receivable = 0
             items = frappe.get_all("Purchase Invoice Item",
@@ -72,7 +79,7 @@ class VATPurchaseReport:
             vat_payable += sum(i.get("rate",0) for i in taxes)
             
             tax_half = frappe.get_all("Purchase Taxes and Charges",
-                filters={"parent": invoice.name, "account_head": self.vat_re},
+                filters={"parent": invoice.name, "account_head": self.filters['vat_account']},
                 fields=["rate"])
             vat_receivable = sum(i.get("rate",0) for i in tax_half)
             
@@ -81,7 +88,8 @@ class VATPurchaseReport:
                 continue
             elif self.filters["vat_type"] == "Non VAT" and vat_rate != 0:
                 continue
-            elif self.filters["vat_type"] == "7.5 percent" and abs(vat_rate) != 7.5:
+            elif self.filters["vat_type"] == "7.5 percent" and  abs(vat_rate) != 7.5:
+                # abs(vat_rate) == 15 and abs(vat_rate) == 0:   a condition for filtering any vat value other than 15 and 0
                 continue
             else:
                 pass
@@ -92,14 +100,15 @@ class VATPurchaseReport:
                 receivable = item["amount"] * vat_receivable / 100 
                 payable = item["amount"] * vat_payable / 100 
                 vat = receivable + payable
-                value_after_vat = item["amount"] - vat
+                value_after_vat = item["amount"] + vat
                 data.append({
                     "sales_invoice": invoice.name,
                     "vat_category": invoice.custom_vat_category,
                     "type_of_purchase": invoice.custom_type_of_purchase,
-                    "seller_tin": invoice.tax_id,
-                    "seller_name": invoice.seller_name,
+                    "seller_tin": tax_id,
+                    "seller_name": invoice.seller_name if invoice.seller_name else invoice.supplier,
                     "date_of_Purchase": invoice.posting_date,
+                    "vat_date": invoice.custom_vat_date,
                     "mrc_number": invoice.custom_mrc_number,
                     "vat_receipt_number": invoice.custom_vat_receipt_number,
                     "description": invoice.custom_description,
@@ -115,22 +124,34 @@ class VATPurchaseReport:
         return data
 
     def build_purchase_vat_filters(self):
-        filters = {"docstatus":1}
-        year = self.filters.get("year", datetime.date.today().year)
+        filters = {"docstatus":0}
+        # year = self.filters.get("year", datetime.date.today().year)
+        fiscal_year = self.filters.get("year")
+        year_satrt, year_end = get_fiscal_year(fiscal_year) if fiscal_year else get_fiscal_year(None)
         month = self.filters.get("month")
-
+        vat_date = self.filters.get("vat_date")
+        from_date = self.filters.get("from_date")
+        to_date = self.filters.get("to_date")
+        year = year_satrt.year
         if month:
+            if int(month) < year_satrt.month:
+                year = year_end.year
             lsd = GetLastDay(month)
-            filters["posting_date"] = ["between", [
+            filters["custom_vat_date"] = ["between", [
                 f"{year}-{month}-01",
                 f"{year}-{month}-{lsd.get_last_day()}"
             ]]
         elif self.filters.get("year"):
             lsd = GetLastDay(month if month else datetime.date.today().month)
-            filters["posting_date"] = ["between", [
-                f"{year}-{month if month else '01'}-01",
-                f"{year}-{month if month else '12'}-{lsd.get_last_day()}"
+            filters["custom_vat_date"] = ["between", [
+                f"{year_satrt.year}-{month if month else year_satrt.month}-01",
+                f"{year_end.year}-{month if month else year_end.month}-{lsd.get_last_day()}"
             ]]
+
+        if vat_date:
+            filters["custom_vat_date"] = ["between", [vat_date, vat_date]]
+        if from_date:
+            filters["custom_vat_date"] = ["between", [from_date, to_date]]
 
         vat_map = {"goods": "good", "services": "services"}
         if self.filters.get("vat_category") in vat_map:
@@ -153,3 +174,15 @@ class VATPurchaseReport:
 
 def execute(filters=None):
     return VATPurchaseReport(filters).execute()
+def get_fiscal_year(year):
+        if year == None:
+            recent_fy_name = frappe.db.get_value("Fiscal Year",filters={},fieldname="name",order_by="year_start_date desc")
+            if recent_fy_name:
+                fy = frappe.get_doc("Fiscal Year", recent_fy_name)
+                year_start = fy.year_start_date
+                year_end = fy.year_end_date
+                return year_start, year_end
+        fy = frappe.get_doc("Fiscal Year", year)
+        year_start = fy.year_start_date
+        year_end = fy.year_end_date
+        return year_start, year_end

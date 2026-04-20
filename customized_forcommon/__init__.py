@@ -9,6 +9,17 @@ def override_core_delete_check():
 
 override_core_delete_check()
 
+# customized_forcommon/overrides/__init__.py
+
+def override_bom_creator():
+    import erpnext.manufacturing.doctype.bom_creator.bom_creator as bom_creator
+    from customized_forcommon.overrides.bom_creator import get_children, add_sub_assembly
+
+    # Patch safely
+    bom_creator.get_children = get_children
+    bom_creator.add_sub_assembly = add_sub_assembly
+    
+override_bom_creator()
 # Moneky path the bank reconcillation statement
 import erpnext.accounts.report.bank_reconciliation_statement.bank_reconciliation_statement as brs
 from customized_forcommon.overrides.reports import custom_bank_reconciliation_statement as cb

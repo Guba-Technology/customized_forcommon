@@ -10,7 +10,7 @@ frappe.query_reports["pension report"] = {
 			"options": "Employee",
 		},
 		{
-			"fieldname": "custom_employee_tin",
+			"fieldname": "tin_number",
 			"label": "Employee TIN",
 			"fieldtype": "Data",
 			
@@ -20,11 +20,7 @@ frappe.query_reports["pension report"] = {
 			"label": "Full Name",
 			"fieldtype": "Data",
 		},
-		{
-			"fieldname": "custom_pid",
-			"label": "Pension ID",
-			"fieldtype": "Data",
-		},
+		
 		{
 			"fieldname":"date_of_joining",
 			"label": "Start Date",

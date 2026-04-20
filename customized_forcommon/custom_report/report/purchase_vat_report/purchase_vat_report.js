@@ -18,21 +18,31 @@ frappe.query_reports["Purchase VAT Report"] = {
 {
 	"fieldname":"year",
 	"label": "Fiscal Year",
-	"fieldtype": "Select",
-	"options": (() => {
-		let options = [];
-		let currentYear = (new Date()).getFullYear();
-		for (let i = 0; i <= 20; i++) {
-			options.push((currentYear - i).toString());
-		}
-		return options.join("\n");
-	})()
+	"fieldtype": "Link",
+	"options": "Fiscal Year",
+
+},
+{
+	"fieldname":"vat_date",
+	"label": "VAT Date",
+	"fieldtype": "Date",
+
 },
 {
 				"fieldname":"vat_type",
 				"label": "VAT type",
 				"fieldtype": "Select",
 				"options":"\nVAT\nNon VAT\n7.5 percent"
+			},
+			{
+				"fieldname":"from_date",
+				"label": "From Date",
+				"fieldtype": "Date",
+			},
+			{
+				"fieldname":"to_date",
+				"label": "To Date",
+				"fieldtype": "Date",
 			}
 
 	]
