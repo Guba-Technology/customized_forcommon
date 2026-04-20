@@ -34,7 +34,10 @@ def process_repayments():
             continue
 
         # Use already calculated repayment amount
-        deduction = min(flt(adv.custom_repayment_amount), remaining)
+        if adv.custom_repayment_type == "Salary Percentage":
+            deduction = min(flt(adv.custom_next_repayment_amount), remaining)
+        else:
+            deduction = min(flt(adv.custom_repayment_amount), remaining)
         if deduction <= 0:
             continue
 
