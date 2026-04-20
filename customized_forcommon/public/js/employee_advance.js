@@ -1,4 +1,9 @@
 frappe.ui.form.on("Employee Advance", {
+    refresh(frm) {
+        if (frm.is_new()) {
+            frm.set_value("custom_repayment_amount", 0)
+        }
+    },
     repay_unclaimed_amount_from_salary(frm) {
         if (frm.doc.repay_unclaimed_amount_from_salary == 0) {
             frm.set_value("custom_repayment_type", "");
