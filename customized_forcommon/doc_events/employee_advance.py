@@ -123,7 +123,7 @@ def create_first_repayment_on_payment(doc, method):
             deduction = get_remaining_amount(ea) / initial_months
         elif ea.custom_repayment_type == "Salary Percentage":
             employee_ctc = flt(frappe.db.get_value("Employee", ea.employee, "ctc"))
-            deduction =employee_ctc * ea.custom_rate / 100
+            deduction = employee_ctc * ea.custom_rate / 100
         else:
             deduction = 0
         if deduction <= 0:
