@@ -5,6 +5,9 @@ class CustomLeaveEncashment(LeaveEncashment):
     def before_save(self):
         # super().before_save()
         self.calculate_total_encashment_amount()
+    def before_submit(self):
+        self.calculate_total_encashment_amount()
+        super().before_submit()
     def on_submit(self):
         super().on_submit()
         self.calculate_total_encashment_amount()
