@@ -3,7 +3,26 @@ from frappe import _
 from hrms.hr.report.recruitment_analytics.recruitment_analytics import execute as original_execute
 
 def custom_recruitment_analytics_execute(filters=None):
+    if not filters:
+        filters = frappe._dict({})
+    else:
+        filters = frappe._dict(filters)
+
+    if filters.from_date:
+        filters.on_date = filters.from_date
+    elif filters.to_date:
+        filters.on_date = filters.to_date
+
     columns, data = original_execute(filters)
+
+    if filters.from_date and filters.to_date:
+        valid_plans = frappe.get_all("Staffing Plan", filters={
+            "company": filters.company,
+            "from_date": [">=", filters.from_date],
+            "to_date": ["<=", filters.to_date]
+        }, pluck="name")
+        
+        data = [row for row in data if row.get("staffing_plan") in valid_plans]
 
     columns.extend([
         {"label": _("Written Score"), "fieldname": "written_test_score", "fieldtype": "Float", "width": 100},
