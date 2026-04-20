@@ -30,11 +30,14 @@ def process_repayments():
         next_date = get_next_payroll_date(adv)
 
         # Skip if not yet time
-        if getdate(today()) < next_date:
-            continue
+        # if getdate(today()) < next_date:
+        #     continue
 
         # Use already calculated repayment amount
-        deduction = min(flt(adv.custom_repayment_amount), remaining)
+        if adv.custom_repayment_type == "Salary Percentage":
+            deduction = min(flt(adv.custom_next_repayment_amount), remaining)
+        else:
+            deduction = min(flt(adv.custom_repayment_amount), remaining)
         if deduction <= 0:
             continue
 
