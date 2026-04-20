@@ -30,8 +30,8 @@ def process_repayments():
         next_date = get_next_payroll_date(adv)
 
         # Skip if not yet time
-        # if getdate(today()) < next_date:
-        #     continue
+        if getdate(today()) < next_date:
+            continue
 
         # Use already calculated repayment amount
         if adv.custom_repayment_type == "Salary Percentage":
