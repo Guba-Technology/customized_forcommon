@@ -24,6 +24,27 @@ frappe.ui.form.on("Employee Advance Clearance", {
             // Optionally clear the field when hidden
             // frm.set_value("difference_account", null);
         }
+        // Show/hide and set required for difference_account
+        if ((frm.doc.invoiced_amount || 0) > (frm.doc.unreturned_amount || 0)) {
+            // Show field and make it required
+            frm.set_df_property("difference_account", "hidden", 0);
+            frm.set_df_property("difference_account", "reqd", 1);
+
+            // Set the company default for difference_account if exists
+            frappe.db.get_value("Company", frm.doc.company, "custom_account_for_difference")
+                .then(r => {
+                    if (r.message && r.message.custom_account_for_difference) {
+                        frm.set_value("difference_account", r.message.custom_account_for_difference);
+                    }
+                });
+        } else {
+            // Hide field and make it optional
+            frm.set_df_property("difference_account", "hidden", 1);
+            frm.set_df_property("difference_account", "reqd", 0);
+
+            // Optionally clear the field when hidden
+            // frm.set_value("difference_account", null);
+        }
     },
     setup(frm) {
 
@@ -67,8 +88,19 @@ frappe.ui.form.on("Employee Advance Clearance", {
 
             }
         });
+
+        frm.set_query("difference_account", function () {
+            return {
+                filters: {
+                    account_type: "Payable",
+                    company: frm.doc.company
+                }
+
+            }
+        });
     },
     onload: function (frm) {
+        // Clear employee_advance if employee is not set
         // Clear employee_advance if employee is not set
         if (!frm.doc.employee) {
             frm.set_value("employee_advance", null);

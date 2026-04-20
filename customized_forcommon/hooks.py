@@ -9,7 +9,20 @@ app_license = "mit"
 required_apps = ["erpnext", "hrms"]
 
 # Branding
-
+# Branding
+email_brand_image = "/assets/customized_forcommon/images/gift.png"
+default_mail_footer = """
+	<span>
+		Sent via
+		<a class="text-muted" href="https://gubatech.com?source=via_email_footer" target="_blank">
+			ERP
+		</a>
+	</span>
+"""
+website_context = {
+	"favicon": "/assets/customized_forcommon/images/gift.png",
+	"splash_image": "/assets/customized_forcommon/images/gift.png",
+}
 
 # Fixtures
 fixtures = [
@@ -51,7 +64,7 @@ fixtures = [
         "dt": "Server Script",
         "filters": [
             ["reference_doctype", "in", [
-                "Employee", "Employee External Work History", "Purchase Invoice", "Employee Lifecycle",
+                "Employee", "Employee External Work History", "Purchase Invoice", "Employee Lifecycle"
             ]]
         ]
     },
@@ -70,9 +83,7 @@ fixtures = [
         "dt": "Print Format",
         "filters": [
             ["name", "in", [
-                "Stock Entry Print Format",
-                "Purchase Order Print Format",
-                "Purchase Receipt Print Format",
+                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
                 "Quotation Print Format"
             ]]
         ]
@@ -115,10 +126,9 @@ fixtures = [
         ]
     }
 ]
-before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creator.execute",
-                  "customized_forcommon.patcher.execute",]
 
 
+# Hooks
 #  this will be applied after the app is migrated
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
@@ -127,11 +137,12 @@ after_migrate = [
 
 ]
 
+
 # Doc Events that will be triggered on specific actions in the specified DocTypes
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
-        "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
+        "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department"
     },
     "Item": {
         "autoname": "customized_forcommon.Item.custom_item_autoname",
@@ -268,6 +279,7 @@ override_doctype_class = {
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
 }
 
+#Include JS only for specific doctypes
 app_include_js = [
     # "/assets/customized_forcommon/js/material_request.js",
     "/assets/customized_forcommon/js/purchase_invoice.js",
@@ -293,7 +305,8 @@ website_redirects = [
 
 # js files to be included in the doctype views
 doctype_js = {
-    # "BOM Creator": "public/js/bom_creator_extended.js",
+    "Material Request": "public/js/material_request.js",
+    "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
     "Purchase Invoice": "public/js/sales_invoice.js",
@@ -330,11 +343,7 @@ doctype_list_js = {
 # this is used to customize the leave balance calculation logic when half day leaves are used
 import hrms.hr.doctype.leave_application.leave_application as leave_application_module
 import customized_forcommon.overrides.leave_balance as custom_module
-from customized_forcommon.overrides.custom_add_advance_gl_for_reference import custom_add_advance_gl_for_reference
-from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
-from customized_forcommon.overrides import custom_gl_entry
-# Monkey patch the original PaymentEntry method
-PaymentEntry.add_advance_gl_for_reference = custom_add_advance_gl_for_reference
+
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
 # Monkey Patching Recruitment Analytics
@@ -375,11 +384,11 @@ override_doctype_dashboards = {
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
 # 	{
-# 		"name": "customization_manager",
-# 		"logo": "/assets/customization_manager/logo.png",
-# 		"title": "Customization Manager",
-# 		"route": "/customization_manager",
-# 		"has_permission": "customization_manager.api.permission.has_app_permission"
+# 		"name": "customized_forcommon",
+# 		"logo": "/assets/customized_forcommon/logo.png",
+# 		"title": "Blood Bank Customization",
+# 		"route": "/customized_forcommon",
+# 		"has_permission": "customized_forcommon.api.permission.has_app_permission"
 # 	}
 # ]
 
@@ -387,15 +396,15 @@ override_doctype_dashboards = {
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/customization_manager/css/customization_manager.css"
-# app_include_js = "/assets/customization_manager/js/customization_manager.js"
+# app_include_css = "/assets/customized_forcommon/css/customized_forcommon.css"
+# app_include_js = "/assets/customized_forcommon/js/customized_forcommon.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/customization_manager/css/customization_manager.css"
-# web_include_js = "/assets/customization_manager/js/customization_manager.js"
+# web_include_css = "/assets/customized_forcommon/css/customized_forcommon.css"
+# web_include_js = "/assets/customized_forcommon/js/customized_forcommon.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "customization_manager/public/scss/website"
+# website_theme_scss = "customized_forcommon/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -406,8 +415,6 @@ override_doctype_dashboards = {
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-
-
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -415,7 +422,7 @@ override_doctype_dashboards = {
 # Svg Icons
 # ------------------
 # include app icons in desk
-# app_include_icons = "customization_manager/public/icons.svg"
+# app_include_icons = "customized_forcommon/public/icons.svg"
 
 # Home Pages
 # ----------
@@ -439,43 +446,43 @@ override_doctype_dashboards = {
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "customization_manager.utils.jinja_methods",
-# 	"filters": "customization_manager.utils.jinja_filters"
+# 	"methods": "customized_forcommon.utils.jinja_methods",
+# 	"filters": "customized_forcommon.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "customization_manager.install.before_install"
-# after_install = "customization_manager.install.after_install"
+# before_install = "customized_forcommon.install.before_install"
+# after_install = "customized_forcommon.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "customization_manager.uninstall.before_uninstall"
-# after_uninstall = "customization_manager.uninstall.after_uninstall"
+# before_uninstall = "customized_forcommon.uninstall.before_uninstall"
+# after_uninstall = "customized_forcommon.uninstall.after_uninstall"
 
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
 # Name of the app being installed is passed as an argument
 
-# before_app_install = "customization_manager.utils.before_app_install"
-# after_app_install = "customization_manager.utils.after_app_install"
+# before_app_install = "customized_forcommon.utils.before_app_install"
+# after_app_install = "customized_forcommon.utils.after_app_install"
 
 # Integration Cleanup
 # -------------------
 # To clean up dependencies/integrations with other apps
 # Name of the app being uninstalled is passed as an argument
 
-# before_app_uninstall = "customization_manager.utils.before_app_uninstall"
-# after_app_uninstall = "customization_manager.utils.after_app_uninstall"
+# before_app_uninstall = "customized_forcommon.utils.before_app_uninstall"
+# after_app_uninstall = "customized_forcommon.utils.after_app_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "customization_manager.notifications.get_notification_config"
+# notification_config = "customized_forcommon.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -514,26 +521,26 @@ override_doctype_dashboards = {
 
 # scheduler_events = {
 # 	"all": [
-# 		"customization_manager.tasks.all"
+# 		"customized_forcommon.tasks.all"
 # 	],
 # 	"daily": [
-# 		"customization_manager.tasks.daily"
+# 		"customized_forcommon.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"customization_manager.tasks.hourly"
+# 		"customized_forcommon.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"customization_manager.tasks.weekly"
+# 		"customized_forcommon.tasks.weekly"
 # 	],
 # 	"monthly": [
-# 		"customization_manager.tasks.monthly"
+# 		"customized_forcommon.tasks.monthly"
 # 	],
 # }
 
 # Testing
 # -------
 
-# before_tests = "customization_manager.install.before_tests"
+# before_tests = "customized_forcommon.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
@@ -544,14 +551,14 @@ override_doctype_dashboards = {
 # }
 
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "customization_manager.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "customized_forcommon.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "customization_manager.task.get_dashboard_data"
+# 	"Task": "customized_forcommon.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -565,13 +572,13 @@ override_doctype_dashboards = {
 
 # Request Events
 # ----------------
-# before_request = ["customization_manager.utils.before_request"]
-# after_request = ["customization_manager.utils.after_request"]
+# before_request = ["customized_forcommon.utils.before_request"]
+# after_request = ["customized_forcommon.utils.after_request"]
 
 # Job Events
 # ----------
-# before_job = ["customization_manager.utils.before_job"]
-# after_job = ["customization_manager.utils.after_job"]
+# before_job = ["customized_forcommon.utils.before_job"]
+# after_job = ["customized_forcommon.utils.after_job"]
 
 # User Data Protection
 # --------------------
@@ -601,7 +608,7 @@ override_doctype_dashboards = {
 # --------------------------------
 
 # auth_hooks = [
-# 	"customization_manager.auth.validate"
+# 	"customized_forcommon.auth.validate"
 # ]
 
 # Automatically update python controller files with type annotations for this app.
@@ -610,4 +617,3 @@ override_doctype_dashboards = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
