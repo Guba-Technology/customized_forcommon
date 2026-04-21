@@ -51,7 +51,8 @@ fixtures = [
                           "Stock Entry", "BOM Item", "Quality Inspection", "Employee Internal Work History",
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
-                          "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings"
+                          "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings",
+                          "Employee Referral","Employee Grievace"
                           ]],
 
         ]
@@ -180,6 +181,10 @@ doc_events = {
         ]
 
     },
+     "Employee Referral": {
+        "before_validate": "customized_forcommon.doc_events.employee_referal.handle_referral_fields",
+        "onload": "customized_forcommon.doc_events.employee_referal.handle_referral_fields"
+    }
 }
 
 scheduler_events = {
@@ -218,6 +223,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
+    "/assets/customized_forcommon/js/recruitment_analytics_patch.js",
+    "/assets/customized_forcommon/js/employee_analytics_patch.js",
 ]
 
 # js files to be included in the doctype views
@@ -228,6 +235,9 @@ doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Payment Entry": "public/js/payment_entry.js",
     "Employee Advance": "public/js/employee_advance.js",
+    "Employee Referral":"public/js/employee_referral_custom.js",
+    "Training Program":"public/js/training_program_custom.js",
+    "Training Event":"public/js/training_program_custom.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
@@ -238,6 +248,14 @@ import customized_forcommon.overrides.leave_balance as custom_module
 
 leave_application_module.get_leaves_for_period = custom_module.get_leaves_for_period
 
+# Monkey Patching Recruitment Analytics
+from hrms.hr.report.recruitment_analytics import recruitment_analytics
+from hrms.hr.report.employee_analytics import employee_analytics
+from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
+recruitment_analytics.execute = custom_recruitment_analytics_execute
+#monkey Patching Employee Analytics
+from customized_forcommon.utils.employee_analytics_patch import custom_employee_analytics_execute
+employee_analytics.execute = custom_employee_analytics_execute
 
 # Apps
 # ------------------
