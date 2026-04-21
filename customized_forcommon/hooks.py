@@ -52,7 +52,7 @@ fixtures = [
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
                           "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings",
-                          "Employee Referral","Employee Grievace"
+                          "Employee Referral","Employee Grievance"
                           ]],
 
         ]
