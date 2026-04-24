@@ -3,43 +3,58 @@
 
 frappe.ui.form.on("LC Master", {
     refresh(frm) {
-        setup_lc_tables(frm);
+        toggle_empty_messages(frm);
     }
 });
 
-function setup_lc_tables(frm) {
+function toggle_empty_messages(frm) {
 
-    // PURCHASE ORDERS TABLE
-    frm.fields_dict.linked_purchase_orders.grid.get_field("doc_name").get_query = function () {
-        return {
-            filters: {
-                docstatus: 1
-            }
-        };
-    };
-
-    frappe.ui.form.on("LC Linked Document", {
-        linked_purchase_orders_add(frm, cdt, cdn) {
-            let row = locals[cdt][cdn];
-            row.doc_type = "Purchase Order";
-            frm.refresh_field("linked_purchase_orders");
+    const configs = [
+        {
+            table: "linked_purchase_orders",
+            html: "no_po_msg",
+            label: "Purchase Orders"
+        },
+        {
+            table: "linked_purchase_invoices",
+            html: "no_pi_msg",
+            label: "Purchase Invoices"
+        },
+        {
+            table: "linked_purchase_receipts",
+            html: "no_pr_msg",
+            label: "Purchase Receipts"
+        },
+        {
+            table: "linked_payment_entries",
+            html: "no_pe_msg",
+            label: "Payment Entries"
+        },
+        {
+            table: "linked_journal_entries",
+            html: "no_je_msg",
+            label: "Journal Entries"
         }
-    });
+    ];
 
-    // PURCHASE INVOICE TABLE
-    frm.fields_dict.linked_purchase_invoices.grid.get_field("doc_name").get_query = function () {
-        return {
-            filters: {
-                docstatus: 1
-            }
-        };
-    };
+    configs.forEach(cfg => {
+        let has_data = (frm.doc[cfg.table] || []).length > 0;
 
-    frappe.ui.form.on("LC Linked Document", {
-        linked_purchase_invoices_add(frm, cdt, cdn) {
-            let row = locals[cdt][cdn];
-            row.doc_type = "Purchase Invoice";
-            frm.refresh_field("linked_purchase_invoices");
+        if (!has_data) {
+            frm.fields_dict[cfg.html].$wrapper.html(`
+                <div style="
+                    padding: 10px;
+                    border: 1px dashed #ccc;
+                    border-radius: 6px;
+                    background: #fafafa;
+                    color: #777;
+                    text-align: center;
+                ">
+                    No Linked ${cfg.label} Found
+                </div>
+            `);
+        } else {
+            frm.fields_dict[cfg.html].$wrapper.empty();
         }
     });
 }

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class LCLinkedDocument(Document):
+class LCPurchaseInvoiceTable(Document):
 	pass

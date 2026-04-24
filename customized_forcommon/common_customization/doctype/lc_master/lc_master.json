@@ -15,8 +15,16 @@
   "bank",
   "status",
   "section_break_links",
+  "no_po_msg",
   "linked_purchase_orders",
+  "no_pi_msg",
   "linked_purchase_invoices",
+  "no_pr_msg",
+  "linked_purchase_receipts",
+  "no_pe_msg",
+  "linked_payment_entries",
+  "no_je_msg",
+  "linked_journal_entries",
   "section_break_1",
   "total_purchase_amount",
   "total_lc_charges",
@@ -121,16 +129,20 @@
    "label": "Linked Transactions"
   },
   {
+   "columns": 10,
    "fieldname": "linked_purchase_orders",
    "fieldtype": "Table",
    "label": "Linked Purchase Orders",
-   "options": "LC Linked Document"
+   "options": "LC Purchase Order Table",
+   "read_only": 1
   },
   {
+   "columns": 10,
    "fieldname": "linked_purchase_invoices",
    "fieldtype": "Table",
    "label": "Linked Purchase Invoices",
-   "options": "LC Linked Document"
+   "options": "LC Purchase Invoice Table",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -139,14 +151,59 @@
    "no_copy": 1,
    "options": "LC Master",
    "read_only": 1
+  },
+  {
+   "columns": 10,
+   "fieldname": "linked_payment_entries",
+   "fieldtype": "Table",
+   "label": "Linked Payment Entries",
+   "options": "LC Payment Entry Table",
+   "read_only": 1
+  },
+  {
+   "columns": 10,
+   "fieldname": "linked_journal_entries",
+   "fieldtype": "Table",
+   "label": "Linked Journal Entries",
+   "options": "LC Journal Entry Table",
+   "read_only": 1
+  },
+  {
+   "columns": 10,
+   "fieldname": "linked_purchase_receipts",
+   "fieldtype": "Table",
+   "label": "Linked Purchase Receipts",
+   "options": "LC Purchase Receipt Table",
+   "read_only": 1
+  },
+  {
+   "fieldname": "no_po_msg",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "no_pi_msg",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "no_pr_msg",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "no_pe_msg",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "no_je_msg",
+   "fieldtype": "HTML"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-17 11:23:10.639888",
+ "modified": "2026-04-24 15:59:01.207551",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "LC Master",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

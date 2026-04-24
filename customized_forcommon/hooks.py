@@ -131,7 +131,14 @@ after_migrate = [
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
-        "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
+        "on_submit": [
+            "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
+            "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_receipts",
+        ],
+        "on_cancel": [
+              "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_receipts"
+        ]
+
     },
     "Item": {
         "autoname": "customized_forcommon.Item.custom_item_autoname",
@@ -165,7 +172,13 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
     },
     "Journal Entry": {
-        "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
+        "on_submit": [
+            "customized_forcommon.doc_events.journal_entry.make_reversed",
+            "customized_forcommon.doc_events.update_lc_master.update_linked_journal_entries",
+
+        ],
+        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_journal_entries"
+
     },
     "Company": {
         "on_update": "customized_forcommon.doc_events.company.update_employee_fuel_price"
@@ -185,8 +198,14 @@ doc_events = {
       "Payment Entry": {
         "on_submit": [
             "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
+            "customized_forcommon.doc_events.update_lc_master.update_linked_payment_entries",
+            "customized_forcommon.doc_events.update_lc_master.update_allocated_amount"
         ],
-        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation"
+        "on_cancel": [
+            "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation",
+            "customized_forcommon.doc_events.update_lc_master.remove_linked_payment_entries",
+            "customized_forcommon.doc_events.update_lc_master.reverse_allocated_amount"
+        ]
     },
 
     "Additional Salary": {
@@ -222,8 +241,15 @@ doc_events = {
         "validate": [
             "customized_forcommon.doc_events.tax_logic.block_factory_share_and_sidf"
         ]
-    }
-
+    },
+    "Purchase Order": {
+        "on_submit":  "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_orders",
+        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_orders"
+    },
+     "Purchase Invoice": {
+        "on_submit":  "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
+        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices"
+    },
 }
 
 permission_query_conditions = {
