@@ -5,6 +5,9 @@ def update_linked_purchase_orders(doc, method):
         return
 
     lc_name = doc.custom_lc_number
+    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
+    if doc.supplier != lc_supplier:
+        return
 
     # prevent duplicates
     if frappe.db.exists(
@@ -51,6 +54,9 @@ def update_linked_purchase_invoices(doc, method):
 
     lc_name = doc.custom_lc_number
 
+    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
+    if doc.supplier != lc_supplier:
+        return
     # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Invoice Table",
@@ -97,6 +103,9 @@ def update_linked_purchase_receipts(doc, method):
 
     lc_name = doc.custom_lc_number
 
+    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
+    if doc.supplier != lc_supplier:
+        return
     # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Receipt Table",
@@ -140,6 +149,10 @@ def update_linked_payment_entries(doc, method):
         return
 
     lc_name = doc.custom_lc_number
+
+    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
+    if doc.party != lc_supplier:
+        return
 
     # prevent duplicates
     if frappe.db.exists(
@@ -185,7 +198,6 @@ def update_linked_journal_entries(doc, method):
         return
 
     lc_name = doc.custom_lc_number
-
     # prevent duplicates
     if frappe.db.exists(
         "LC Journal Entry Table",
