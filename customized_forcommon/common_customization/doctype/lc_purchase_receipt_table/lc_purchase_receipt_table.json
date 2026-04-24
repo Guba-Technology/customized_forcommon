@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "creation": "2026-04-21 16:09:44.542522",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "receipt_number",
+  "supplier",
+  "grand_total",
+  "accepted_warehouse",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "receipt_number",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "receipt_number.supplier",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "receipt_number.grand_total",
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Grand Total",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "receipt_number.set_warehouse",
+   "fieldname": "accepted_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Accepted Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "receipt_number.status",
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-24 11:59:16.792694",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "LC Purchase Receipt Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

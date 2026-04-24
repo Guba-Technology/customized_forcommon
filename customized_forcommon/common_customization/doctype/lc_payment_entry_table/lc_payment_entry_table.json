@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "creation": "2026-04-21 16:09:42.933163",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "payment_entry",
+  "supplier",
+  "payment_type",
+  "payment_reference",
+  "paid_amount",
+  "status"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Payment Entry",
+   "options": "Payment Entry",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fetch_from": "payment_entry.party",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "payment_entry.payment_type",
+   "fieldname": "payment_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Payment Type",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "payment_entry.reference_no",
+   "fieldname": "payment_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Payment Reference",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fetch_from": "payment_entry.paid_amount",
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Paid Amount",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fetch_from": "payment_entry.status",
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-24 14:43:01.272932",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "LC Payment Entry Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
