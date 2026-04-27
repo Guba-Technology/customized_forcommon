@@ -168,9 +168,8 @@ doc_events = {
         "before_insert": "customized_forcommon.doc_events.batch_events.before_insert_batch",
     },
     "User": {
-        # "before_load": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
-        # "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
-        "permission_query_conditions": "customized_forcommon.doc_events.user_access_restriction.user_query_condition"
+        "before_load": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
+        "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
     },
     "Journal Entry": {
         "on_submit": [
