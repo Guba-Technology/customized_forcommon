@@ -30,6 +30,9 @@ def validate_user_access(doc, method=None):
         
     my_company = get_company_from_employee(frappe.session.user)
     target_company = get_company_from_employee(doc.name)
+
+    if not my_company or not target_company:
+        return
     
     if my_company and target_company and my_company != target_company:
         frappe.throw(_("Access Denied: This user is an employee of {0}").format(target_company), frappe.PermissionError)
