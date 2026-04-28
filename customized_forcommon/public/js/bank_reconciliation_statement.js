@@ -1,5 +1,3 @@
-console.log("Custom Bank Reconciliation JS loaded!");
-
 frappe.query_reports["Bank Reconciliation Statement"] = {
     filters: [
         {
