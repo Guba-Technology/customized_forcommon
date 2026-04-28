@@ -169,7 +169,8 @@ doc_events = {
     },
     "User": {
         # "before_load": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
-        "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access"
+        "validate": "customized_forcommon.doc_events.user_access_restriction.validate_user_access",
+        "has_permission": "customized_forcommon.doc_events.user_access_restriction.has_permission"
     },
     "Journal Entry": {
         "on_submit": [
