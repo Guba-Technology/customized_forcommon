@@ -63,6 +63,8 @@ fixtures = [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
                             "Employee-custom_leave_increment_period-Label","Employee-reports_to-hidden",
+                            "Employee Grievance-description-fieldtype",
+                            
             ]]
         ]
     },
