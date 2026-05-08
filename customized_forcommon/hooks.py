@@ -58,6 +58,15 @@ fixtures = [
         ]
     },
     {
+        "dt": "Property Setter",
+        "filters": [
+            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
+                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
+                            "Employee-custom_leave_increment_period-Label","Employee-reports_to-hidden",
+            ]]
+        ]
+    },
+    {
         "dt": "Server Script",
         "filters": [
             ["reference_doctype", "in", [
@@ -104,15 +113,7 @@ fixtures = [
             ["name", "in", ["Job Card Status Report", "Stock Ledger Report"]]
         ]
     },
-    {
-        "dt": "Property Setter",
-        "filters": [
-            ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
-                            "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",
-            ]]
-        ]
-    }
+    
 ]
 
 
