@@ -48,3 +48,11 @@ poa.update_received_amount = cpoa.update_received_amount
 poa.get_received_amount_data = cpoa.get_received_amount_data
 poa.prepare_chart_data = cpoa.prepare_chart_data
 poa.validate_filters = cpoa.validate_filters
+
+
+# Monkey patch Fixed Asset Register chart
+import erpnext.assets.report.fixed_asset_register.fixed_asset_register as far
+from customized_forcommon.overrides.reports import fixed_asset_register as cfar
+
+# Only override the unsafe chart function
+far.prepare_chart_data = cfar.prepare_chart_data
