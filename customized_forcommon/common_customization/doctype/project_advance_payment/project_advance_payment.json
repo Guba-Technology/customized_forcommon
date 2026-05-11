@@ -1,0 +1,182 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "PAP-.YYYY.-.####",
+ "creation": "2026-05-04 08:55:39.076169",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "contractor",
+  "contract_value",
+  "advance_percent",
+  "advance_amount",
+  "advance_paid",
+  "column_break_axeg",
+  "advance_payment_entry",
+  "advance_balance",
+  "total_recovered",
+  "status",
+  "section_break_glur",
+  "recovery_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "Project",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contractor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Contractor",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Contract Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "advance_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Advance Percent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "advance_amount",
+   "fieldtype": "Currency",
+   "label": "Advance Amount",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "advance_paid",
+   "fieldtype": "Check",
+   "label": "Advance Paid"
+  },
+  {
+   "fieldname": "advance_payment_entry",
+   "fieldtype": "Link",
+   "label": "Advance Payment Entry",
+   "options": "Payment Entry"
+  },
+  {
+   "fieldname": "advance_balance",
+   "fieldtype": "Currency",
+   "label": "Advance Receivable Balance",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_recovered",
+   "fieldtype": "Currency",
+   "label": "Total Recovered",
+   "read_only": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nFully Recovered\nClosed"
+  },
+  {
+   "fieldname": "recovery_details",
+   "fieldtype": "Table",
+   "label": "Recovery Details",
+   "options": "Advance Recovery Detail"
+  },
+  {
+   "fieldname": "column_break_axeg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_glur",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Project Advance Payment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-05-04 09:35:06.706730",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Project Advance Payment",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
