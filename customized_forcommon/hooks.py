@@ -348,6 +348,7 @@ doctype_js = {
     "Interview Feedback":"public/js/interview_feedback.js",
     "Interview":"public/js/interview.js",
     "Sales Order": "public/js/sales_order.js",
+    "User": "public/js/user.js",
 
 }
 doctype_list_js = {
