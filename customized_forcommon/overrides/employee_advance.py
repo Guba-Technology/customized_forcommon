@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.query_builder import custom
 from hrms.hr.doctype.employee_advance.employee_advance import EmployeeAdvance
 
 
@@ -16,6 +17,7 @@ class CustomEmployeeAdvance(EmployeeAdvance):
                 "custom_default_account_for_purchaser_advance",
                 "custom_default_petty_cash_account",
                 "custom_default_account_for_service_advance",
+                "custom_default_account_for_other_advance",
             ],
             as_dict=True,
         )
@@ -36,6 +38,9 @@ class CustomEmployeeAdvance(EmployeeAdvance):
         elif self.custom_advance_type == "For Service":
             advance_account = company_defaults.custom_default_account_for_service_advance
             missing_account_label = "Service"
+        elif self.custom_advance_type == "For Other":
+            advance_account = company_defaults.custom_default_account_for_other_advance
+            missing_account_label = "Other"
 
         # --- If not found, raise a clear error message ---
         if not advance_account:
