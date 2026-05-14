@@ -394,6 +394,10 @@ override_doctype_dashboards = {
     "Stock Entry": "customized_forcommon.overrides.stock_entry_dashboard.get_data",
 }
 
+# Template Overriding
+override_template_map = {
+    "templates/includes/footer/footer_powered.html": "blood_bank_customization/templates/includes/footer/footer_powered.html"
+}
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
 # ]
