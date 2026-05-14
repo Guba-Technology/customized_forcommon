@@ -111,6 +111,7 @@ fixtures = [
                             "Interview-expected_average_rating-hidden",
                             "Interview-average_rating-hidden",
                             "Sales Taxes and Charges-charge_type-options",
+                
             ]]
         ]
     }
@@ -349,6 +350,7 @@ doctype_js = {
     "Interview":"public/js/interview.js",
     "Sales Order": "public/js/sales_order.js",
     "User": "public/js/user.js",
+    "System Settings": "public/js/system_settings.js",
 
 }
 doctype_list_js = {
