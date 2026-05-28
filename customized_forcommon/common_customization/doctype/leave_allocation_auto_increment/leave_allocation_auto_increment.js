@@ -6,11 +6,11 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
         // frm.trigger("get_employees");
         // Disable adding rows programmatically to the employees table when the form loads
         frm.fields_dict.employees.grid.cannot_add_rows = true;
-   },
-   refresh(frm){
-    // Disable adding rows programmatically to the employees table when the form loads
+    },
+    refresh(frm) {
+        // Disable adding rows programmatically to the employees table when the form loads
         frm.fields_dict.employees.grid.cannot_add_rows = true;
-   },
+    },
 
     setup(frm) {
         frm.set_query("leave_period", function () {
@@ -81,6 +81,10 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
             frm.refresh_field("leaves_to_be_allocated");
         }
     },
+    employee_group(frm) {
+        frm.set_value("employees", []);  // Clear previous selection
+        frm.trigger("get_employees");
+    },
 
     get_employees(frm) {
         const increment_filter = frm.doc.filter_by_increment;
@@ -90,9 +94,7 @@ frappe.ui.form.on("Leave Allocation Auto Increment", {
 
         frappe.call({
             method: "customized_forcommon.common_customization.doctype.leave_allocation_auto_increment.leave_allocation_auto_increment.get_filtered_employees",
-            args: {
-                increment_filter: increment_filter
-            },
+            args: { increment_filter, employee_group: frm.doc.employee_group },
             callback(r) {
                 if (r.message) {
                     frappe.model.with_doc(frm.doc.doctype, frm.doc.name, function () {
