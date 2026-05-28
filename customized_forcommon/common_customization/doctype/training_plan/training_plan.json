@@ -12,6 +12,7 @@
   "trainer",
   "training_cost",
   "type",
+  "training_department",
   "column_break_lnww",
   "training_location",
   "no_of_female_trainee",
@@ -280,12 +281,18 @@
    "fieldtype": "Int",
    "label": "Total Trainee",
    "read_only": 1
+  },
+  {
+   "fieldname": "training_department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-08 16:16:57.269442",
+ "modified": "2026-05-20 10:43:51.129553",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Plan",
@@ -333,6 +340,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "show_preview_popup": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

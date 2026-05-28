@@ -306,6 +306,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
     "/assets/customized_forcommon/js/purchase_analytics.js",
     "/assets/customized_forcommon/js/custom_purchase_order_analysis.js",
+    "/assets/customized_forcommon/js/employee.js",
 
 ]
 
