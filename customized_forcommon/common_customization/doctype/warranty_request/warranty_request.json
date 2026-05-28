@@ -18,6 +18,7 @@
   "warrantee_holder",
   "beneficiary_company",
   "address",
+  "request_date",
   "status"
  ],
  "fields": [
@@ -105,12 +106,17 @@
    "fieldtype": "Data",
    "label": "Company",
    "read_only": 1
+  },
+  {
+   "fieldname": "request_date",
+   "fieldtype": "Date",
+   "label": "Request Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-04 14:18:57.343807",
+ "modified": "2026-05-28 15:57:41.125226",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Warranty Request",
