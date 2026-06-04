@@ -39,3 +39,32 @@ def calculate_severance_amount(doc, method):
 
     doc.custom_severance_pay_amount = severance
 
+def update_base_in_salary_structure_assignment(doc, method):
+    if not doc.has_value_changed("ctc"):
+        return
+
+    ctc = doc.ctc or 0
+    grade = doc.grade
+
+    if ctc <= 0:
+        return
+
+    salary_structure_assignments = frappe.get_all(
+        "Salary Structure Assignment",
+        filters={
+            "employee": doc.name,
+            "docstatus": 1
+        },
+        pluck="name"
+    )
+
+    for assignment in salary_structure_assignments:
+        frappe.db.set_value(
+            "Salary Structure Assignment",
+            assignment,
+            {
+                "base": ctc,
+                "grade": grade
+            },
+            update_modified=False
+        )
