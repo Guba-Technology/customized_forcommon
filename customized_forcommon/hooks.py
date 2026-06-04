@@ -187,7 +187,8 @@ doc_events = {
     },
     "Employee": {
         "validate": ["customized_forcommon.doc_events.employee.update_fuel_payment",
-                     "customized_forcommon.doc_events.employee.calculate_severance_amount"
+                     "customized_forcommon.doc_events.employee.calculate_severance_amount",
+                      "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
         ]
 
     },
