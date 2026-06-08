@@ -198,6 +198,7 @@ doctype_js = {
     # "Purchase Receipt":"public/js/purchase_reciept_itemfilter.js",
     "Module Profile": "public/js/module_profile.js",
     "User": "public/js/user.js",
+    "System Settings": "public/js/system_settings.js",
 }
 
 
