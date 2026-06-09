@@ -244,6 +244,8 @@ doctype_js = {
     "Employee Referral":"public/js/employee_referral_custom.js",
     "Training Program":"public/js/training_program_custom.js",
     "Training Event":"public/js/training_program_custom.js",
+    "User": "public/js/user.js",
+    "System Settings": "public/js/system_settings.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
