@@ -18,6 +18,7 @@ frappe.ui.form.on('User', {
         frm.set_value('time_zone', 'Africa/Addis_Ababa');
         frm.set_df_property('time_zone', 'read_only', 1);
         frm.set_df_property("app_section", "hidden", 1);
+        frm.set_df_property("third_party_authentication", "hidden", 1);
 
         // List of modules you want to KEEP visible
         const allowed_modules = [
