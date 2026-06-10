@@ -85,24 +85,7 @@ fixtures = [
             ]]
         ]
     },
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["dt", "in", [
-                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry", "Sales Invoice", "Employee",
-                "BOM", "Quality Inspection", "Sales Order", "Material Request"
-            ]]
-        ]
-    },
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["name", "in", [
-                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                "Quotation Print Format"
-            ]]
-        ]
-    },
+
     {
         "dt": "Workflow",
         "filters": [["name", "in", ["Material Request workflow"]]]
