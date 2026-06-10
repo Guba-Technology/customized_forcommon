@@ -24,6 +24,10 @@ website_context = {
 	"splash_image": "/assets/customized_forcommon/images/gift.png",
 }
 
+website_redirects = [
+    {"source": "/apps", "target": "/app/home"}
+]
+
 # Fixtures
 fixtures = [
     {
