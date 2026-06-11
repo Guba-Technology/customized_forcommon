@@ -45,16 +45,25 @@ class CustomLeaveApplication(LeaveApplication):
             )
             holidays = [getdate(h["holiday_date"]) for h in rows]
 
-        # count only non-holidays
+        # count leave days
         days_in_range = 0
         current_date = from_date
+
         while current_date <= to_date:
-            if current_date not in holidays:
-                days_in_range += 1
+            # Skip holidays completely
+            if current_date in holidays:
+                current_date += timedelta(days=1)
+                continue
+
+            # Saturday (weekday() == 5), if not in the half day then take it as a half day
+            if not self.half_day and current_date.weekday() == 5:
+                days_in_range += 0.5
+            else:
+                days_in_range += 0.5 if self.half_day else 1
+
             current_date += timedelta(days=1)
 
-        # keep your half-day rule
-        self.total_leave_days = days_in_range * 0.5 if self.half_day else days_in_range
+        self.total_leave_days = days_in_range
 
     def create_or_update_attendance(self, attendance_name, date):
         status = "Half Day" if self.half_day else "On Leave"
@@ -114,12 +123,39 @@ class CustomLeaveApplication(LeaveApplication):
                     current_date += timedelta(days=1)
                     continue
 
+                # Saturday = Half Day (unless leave application itself is half-day)
+                if not self.half_day and current_date.weekday() == 5:
+                    status = "Half Day"
+                else:
+                    status = "Half Day" if self.half_day else "On Leave"
+
                 existing_attendance_name = frappe.db.get_value(
                     "Attendance",
                     {"employee": self.employee, "attendance_date": current_date},
                     "name"
                 )
-                self.create_or_update_attendance(existing_attendance_name, current_date)
+
+                if existing_attendance_name:
+                    doc = frappe.get_doc("Attendance", existing_attendance_name)
+                    doc.db_set({
+                        "status": status,
+                        "leave_type": self.leave_type,
+                        "leave_application": self.name
+                    })
+                else:
+                    doc = frappe.new_doc("Attendance")
+                    doc.employee = self.employee
+                    doc.employee_name = self.employee_name
+                    doc.attendance_date = current_date
+                    doc.company = self.company
+                    doc.leave_type = self.leave_type
+                    doc.leave_application = self.name
+                    doc.status = status
+                    doc.flags.ignore_validate = True
+                    doc.insert(ignore_permissions=True)
+                    doc.submit()
+
+                current_date += timedelta(days=1)
 
             except Exception as e:
                 frappe.log_error(
@@ -127,5 +163,3 @@ class CustomLeaveApplication(LeaveApplication):
                     "Custom Leave App Attendance Error"
                 )
                 frappe.throw(_(f"Error processing attendance for {current_date}: {e}"))
-
-            current_date += timedelta(days=1)
