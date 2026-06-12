@@ -233,6 +233,7 @@ doctype_js = {
     "Training Event":"public/js/training_program_custom.js",
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
+    "Leave Application": "public/js/leave_application.js"
 }
 page_js = {
 	"print": "public/js/print_override.js"
