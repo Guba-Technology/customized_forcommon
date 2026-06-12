@@ -352,6 +352,7 @@ doctype_js = {
     "Sales Order": "public/js/sales_order.js",
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
+    "Leave Application": "public/js/leave_application.js"
 
 }
 doctype_list_js = {

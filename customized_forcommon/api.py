@@ -217,3 +217,76 @@ def calculate_severance_amount(doc):
         severance = (daily_wage * 30) + ((full_years - 1) * 10 * daily_wage)
 
     return severance
+
+# As of Today Leave Balance (Fiscal Year Based)
+@frappe.whitelist()
+def calculate_as_of_today_balance(employee, leave_type):
+    today = getdate()
+
+    # -----------------------------
+    # 1. Get Fiscal Year
+    # -----------------------------
+    fy = frappe.db.sql("""
+        SELECT name, year_start_date, year_end_date
+        FROM `tabFiscal Year`
+        WHERE %s BETWEEN year_start_date AND year_end_date
+        LIMIT 1
+    """, (today,), as_dict=True)
+
+    if not fy:
+        return 0
+
+    fy = fy[0]
+
+    # -----------------------------
+    # 2. Check Leave Type
+    # -----------------------------
+    leave_type_doc = frappe.get_doc("Leave Type", leave_type)
+
+    if not leave_type_doc.is_carry_forward:
+        return 0
+
+    # -----------------------------
+    # 3. Get Annual Allocation
+    # -----------------------------
+    allocation = frappe.db.get_value(
+        "Leave Allocation",
+        {
+            "employee": employee,
+            "leave_type": leave_type,
+            "docstatus": 1
+        },
+        "total_leaves_allocated"
+    ) or 0
+
+    # -----------------------------
+    # 4. Total Used Leave
+    # -----------------------------
+    used = frappe.db.sql("""
+        SELECT COALESCE(SUM(total_leave_days), 0)
+        FROM `tabLeave Application`
+        WHERE employee = %s
+            AND leave_type = %s
+            AND status = 'Approved'
+            AND docstatus = 1
+            AND from_date <= %s
+    """, (employee, leave_type, today))[0][0]
+
+    # -----------------------------
+    # 5. Fiscal Month Index (based on FY start date)
+    # -----------------------------
+    start = fy.year_start_date
+
+    fiscal_month = ((today.year - start.year) * 12 +
+                    (today.month - start.month)) + 1
+
+    # clamp between 1 and 12
+    fiscal_month = max(1, min(fiscal_month, 12))
+
+    # -----------------------------
+    # 6. Simple Monthly Accrual Logic
+    # -----------------------------
+    earned = (allocation / 12.0) * fiscal_month
+    balance = earned - used
+
+    return round(balance, 2)
