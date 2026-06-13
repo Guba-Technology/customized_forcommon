@@ -24,6 +24,10 @@ website_context = {
 	"splash_image": "/assets/customized_forcommon/images/gift.png",
 }
 
+website_redirects = [
+    {"source": "/apps", "target": "/app/home"}
+]
+
 # Fixtures
 fixtures = [
     {
@@ -85,24 +89,7 @@ fixtures = [
             ]]
         ]
     },
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["dt", "in", [
-                "Interview", "Purchase Invoice", "Employee Advance", "Payment Entry", "Sales Invoice", "Employee",
-                "BOM", "Quality Inspection", "Sales Order", "Material Request"
-            ]]
-        ]
-    },
-    {
-        "dt": "Print Format",
-        "filters": [
-            ["name", "in", [
-                "Stock Entry Print Format", "Purchase Order Print Format", "Purchase Receipt Print Format",
-                "Quotation Print Format"
-            ]]
-        ]
-    },
+
     {
         "dt": "Workflow",
         "filters": [["name", "in", ["Material Request workflow"]]]
@@ -180,7 +167,10 @@ doc_events = {
     },
       "Employee": {
         "validate": [
-            "customized_forcommon.doc_events.employee.calculate_severance_amount"
+            "customized_forcommon.doc_events.employee.calculate_severance_amount",
+            "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
+
+
         ]
 
     },
@@ -241,6 +231,8 @@ doctype_js = {
     "Employee Referral":"public/js/employee_referral_custom.js",
     "Training Program":"public/js/training_program_custom.js",
     "Training Event":"public/js/training_program_custom.js",
+    "User": "public/js/user.js",
+    "System Settings": "public/js/system_settings.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
