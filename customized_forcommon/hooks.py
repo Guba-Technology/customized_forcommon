@@ -162,8 +162,10 @@ doc_events = {
         "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
     },
     "HR Settings": {
-        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
-        "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
+        "validate": [
+            "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
+            "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
+        ]
     },
       "Employee": {
         "validate": [
