@@ -7,9 +7,7 @@ def validate_severance_starting_year(doc, method):
         frappe.throw("Severenace Pay Starting Year cannot be less than 1")
 
 def update_employee_severance_pay_amount(doc, method):
-    if not doc.has_value_changed("custom_severenace_pay_starting_year"):
-        return
-
+   
     employees = frappe.get_all(
         "Employee",
         filters={

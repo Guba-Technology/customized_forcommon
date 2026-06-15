@@ -169,15 +169,16 @@ doc_events = {
         "validate": [
             "customized_forcommon.doc_events.employee.calculate_severance_amount",
             "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
-
-
         ]
 
     },
      "Employee Referral": {
         "before_validate": "customized_forcommon.doc_events.employee_referal.handle_referral_fields",
         "onload": "customized_forcommon.doc_events.employee_referal.handle_referral_fields"
-    }
+    },
+     "Company": {
+        "validate": "customized_forcommon.doc_events.company.update_employee_fuel_price"
+    },
 }
 
 scheduler_events = {
