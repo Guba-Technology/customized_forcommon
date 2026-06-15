@@ -67,7 +67,7 @@ fixtures = [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
                             "Employee-custom_leave_increment_period-Label","Employee-reports_to-hidden",
-                            "Employee Grievance-description-fieldtype",
+                            "Employee Grievance-description-fieldtype",  "Salary Structure Assignment-base-fetch_from"
                             
             ]]
         ]
@@ -169,6 +169,7 @@ doc_events = {
     },
       "Employee": {
         "validate": [
+            "customized_forcommon.doc_events.employee.update_fuel_payment",
             "customized_forcommon.doc_events.employee.calculate_severance_amount",
             "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
         ]
