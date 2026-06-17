@@ -4,6 +4,8 @@ def update_fuel_payment(doc, method):
     fuel_price = frappe.db.get_value("Company", doc.company, "custom_fuel_price")
     if doc.custom_allowed_fuel and doc.custom_allowed_fuel > 0 and fuel_price > 0:
         doc.custom_fuel_payment = doc.custom_allowed_fuel * fuel_price
+    else:
+        doc.custom_fuel_payment = 0
 
 def calculate_severance_amount(doc, method):
     if not doc.relieving_date or not doc.date_of_joining or not doc.custom_apply_severance_pay:
@@ -39,3 +41,32 @@ def calculate_severance_amount(doc, method):
 
     doc.custom_severance_pay_amount = severance
 
+def update_base_in_salary_structure_assignment(doc, method):
+    if not doc.has_value_changed("ctc"):
+        return
+
+    ctc = doc.ctc or 0
+    grade = doc.grade
+
+    if ctc <= 0:
+        return
+
+    salary_structure_assignments = frappe.get_all(
+        "Salary Structure Assignment",
+        filters={
+            "employee": doc.name,
+            "docstatus": 1
+        },
+        pluck="name"
+    )
+
+    for assignment in salary_structure_assignments:
+        frappe.db.set_value(
+            "Salary Structure Assignment",
+            assignment,
+            {
+                "base": ctc,
+                "grade": grade
+            },
+            update_modified=False
+        )

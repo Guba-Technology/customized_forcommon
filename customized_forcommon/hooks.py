@@ -183,11 +183,12 @@ doc_events = {
 
     },
     "Company": {
-        "on_update": "customized_forcommon.doc_events.company.update_employee_fuel_price"
+        "validate": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
     "Employee": {
         "validate": ["customized_forcommon.doc_events.employee.update_fuel_payment",
-                     "customized_forcommon.doc_events.employee.calculate_severance_amount"
+                     "customized_forcommon.doc_events.employee.calculate_severance_amount",
+                      "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
         ]
 
     },
@@ -220,9 +221,10 @@ doc_events = {
         "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
     },
     "HR Settings": {
-        "validate": "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
-        "on_update": "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
-
+        "validate": [
+            "customized_forcommon.doc_events.hr_settings.validate_severance_starting_year",
+            "customized_forcommon.doc_events.hr_settings.update_employee_severance_pay_amount"
+        ]
     },
     "Sales Invoice": {
         "validate": [
@@ -352,6 +354,7 @@ doctype_js = {
     "Sales Order": "public/js/sales_order.js",
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
+    "Leave Application": "public/js/leave_application.js"
 
 }
 doctype_list_js = {
