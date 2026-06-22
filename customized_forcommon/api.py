@@ -1,8 +1,10 @@
+import frappe
 from erpnext.accounts.general_ledger import make_gl_entries
 from frappe.utils.nestedset import get_descendants_of
-import frappe
 from frappe import _
-from frappe.utils import today, flt, getdate, date_diff
+from frappe.utils import today, flt, getdate, date_diff, nowtime
+from frappe.model.mapper import get_mapped_doc
+
 
 # updating the status of the purchase invoice 
 @frappe.whitelist()
@@ -290,3 +292,57 @@ def calculate_as_of_today_balance(employee, leave_type):
     balance = earned - used
 
     return round(balance, 2)
+
+
+def ensure_material_return_type():
+    if not frappe.db.exists("Stock Entry Type", "Material Return"):
+
+        doc = frappe.get_doc({
+            "doctype": "Stock Entry Type",
+            "name": "Material Return",
+            "purpose": "Material Receipt",
+            "is_standard": 0
+        })
+
+        doc.insert(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def create_stock_return(source_name):
+
+    # ensure type exists
+    ensure_material_return_type()
+
+    source = frappe.get_doc("Stock Entry", source_name)
+
+    # create NEW DOC (NOT SAVED)
+    new_doc = frappe.new_doc("Stock Entry")
+
+    new_doc.stock_entry_type = "Material Return"
+    new_doc.custom_return_against = source.name
+    new_doc.company = source.company
+
+    new_doc.posting_date = today()
+    new_doc.posting_time = nowtime()
+    new_doc.from_bom = source.get("from_bom")
+    new_doc.bom_no = source.get("bom_no")
+
+    # copy + reverse items
+    for row in source.items:
+
+        item = new_doc.append("items")
+
+        item.item_code = row.item_code
+        item.qty = row.qty
+        item.uom = row.uom
+        item.stock_uom = row.stock_uom
+
+        # 🔁 reverse warehouse direction
+        item.s_warehouse = row.t_warehouse
+        item.t_warehouse = row.s_warehouse
+
+        item.basic_rate = row.basic_rate
+        item.transfer_qty = row.transfer_qty
+
+ 
+    return new_doc

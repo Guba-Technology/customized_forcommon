@@ -182,6 +182,9 @@ doc_events = {
      "Company": {
         "validate": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
+    "Stock Entry": {
+        "validate": "customized_forcommon.doc_events.stock_entry.validate_overreturn"
+    }
 }
 
 scheduler_events = {
@@ -209,7 +212,7 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
+    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
 
 }
 
@@ -237,7 +240,8 @@ doctype_js = {
     "Training Event":"public/js/training_program_custom.js",
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
-    "Leave Application": "public/js/leave_application.js"
+    "Leave Application": "public/js/leave_application.js",
+    "Stock Entry": "public/js/stock_entry.js"
 }
 page_js = {
 	"print": "public/js/print_override.js"
