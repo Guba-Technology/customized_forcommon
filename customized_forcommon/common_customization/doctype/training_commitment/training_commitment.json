@@ -9,15 +9,41 @@
   "employee",
   "company",
   "education_program",
+  "education_start_date",
+  "education_end_date",
+  "total_education_cost",
   "department",
   "column_break_mmnm",
   "institution",
   "qualification",
   "year_taken",
+  "required_services",
   "witness",
   "level",
+  "attachment",
+  "status",
   "section_break_mlda",
-  "details"
+  "details",
+  "obligation_tab",
+  "employee_obligation",
+  "column_break_gyfh",
+  "company_obligation",
+  "collateral_detail_tab",
+  "guarantee_detail_column",
+  "collateral",
+  "collateral_amount",
+  "collateral_address",
+  "guaranter_detail_column",
+  "guarantor_full_name",
+  "guarantor_date_of_birth",
+  "sub_city",
+  "woreda",
+  "kebele",
+  "place_of_work",
+  "house_number",
+  "monthly_salary",
+  "daily_income",
+  "annual_income"
  ],
  "fields": [
   {
@@ -91,12 +117,143 @@
    "fieldtype": "Link",
    "label": "Level",
    "options": "Level"
+  },
+  {
+   "fieldname": "education_start_date",
+   "fieldtype": "Date",
+   "label": "Education Start Date"
+  },
+  {
+   "fieldname": "education_end_date",
+   "fieldtype": "Date",
+   "label": "Education End Date"
+  },
+  {
+   "fieldname": "total_education_cost",
+   "fieldtype": "Currency",
+   "label": "Total Education Cost"
+  },
+  {
+   "fieldname": "required_services",
+   "fieldtype": "Float",
+   "label": "Required Services"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "obligation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Obligation"
+  },
+  {
+   "fieldname": "employee_obligation",
+   "fieldtype": "Small Text",
+   "label": "Employee Obligation"
+  },
+  {
+   "fieldname": "column_break_gyfh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_obligation",
+   "fieldtype": "Small Text",
+   "label": "Company Obligation"
+  },
+  {
+   "fieldname": "collateral",
+   "fieldtype": "Data",
+   "label": "Collateral"
+  },
+  {
+   "fieldname": "collateral_amount",
+   "fieldtype": "Currency",
+   "label": "Collateral Amount"
+  },
+  {
+   "fieldname": "collateral_address",
+   "fieldtype": "Link",
+   "label": "Collateral Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "collateral_detail_tab",
+   "fieldtype": "Tab Break",
+   "label": "Collateral Detail"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nApproved\nRejected"
+  },
+  {
+   "fieldname": "guarantee_detail_column",
+   "fieldtype": "Column Break",
+   "label": "Guarantee Detail"
+  },
+  {
+   "fieldname": "guaranter_detail_column",
+   "fieldtype": "Column Break",
+   "label": "Guaranter Detail"
+  },
+  {
+   "fieldname": "guarantor_full_name",
+   "fieldtype": "Data",
+   "label": "Guarantor Full Name"
+  },
+  {
+   "fieldname": "guarantor_date_of_birth",
+   "fieldtype": "Date",
+   "label": "Guarantor Date of Birth"
+  },
+  {
+   "fieldname": "sub_city",
+   "fieldtype": "Data",
+   "label": "Sub City"
+  },
+  {
+   "fieldname": "woreda",
+   "fieldtype": "Data",
+   "label": "Woreda"
+  },
+  {
+   "fieldname": "kebele",
+   "fieldtype": "Data",
+   "label": "Kebele"
+  },
+  {
+   "fieldname": "place_of_work",
+   "fieldtype": "Data",
+   "label": "Place of Work"
+  },
+  {
+   "fieldname": "house_number",
+   "fieldtype": "Data",
+   "label": "House Number"
+  },
+  {
+   "fieldname": "monthly_salary",
+   "fieldtype": "Currency",
+   "label": "Monthly Salary"
+  },
+  {
+   "fieldname": "daily_income",
+   "fieldtype": "Currency",
+   "label": "Daily Income"
+  },
+  {
+   "fieldname": "annual_income",
+   "fieldtype": "Currency",
+   "label": "Annual Income"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-25 09:21:36.211283",
+ "modified": "2026-06-23 11:50:13.306398",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Training Commitment",

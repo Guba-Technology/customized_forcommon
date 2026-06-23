@@ -111,6 +111,7 @@ fixtures = [
                             "Interview-expected_average_rating-hidden",
                             "Interview-average_rating-hidden",
                             "Sales Taxes and Charges-charge_type-options",
+                            "Attendance-status-options",
                 
             ]]
         ]
@@ -254,6 +255,9 @@ doc_events = {
         "on_submit":  "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
         "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices"
     },
+    "Shift Schedule Assignment": {
+        "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
+    }
 }
 
 permission_query_conditions = {
@@ -264,6 +268,8 @@ scheduler_events = {
     "hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+        "customized_forcommon.overrides.shift_utils.generate_three_shift_rotation_for_all_assignments",
+
     ],
 
      "daily":
@@ -271,8 +277,11 @@ scheduler_events = {
         "customized_forcommon.scheduler.customer_license_checker.execute",
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
         "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
-        "customized_forcommon.scheduler.employee_advance.process_repayments"
+        "customized_forcommon.scheduler.employee_advance.process_repayments",
     ],
+    "monthly": [
+    "customized_forcommon.scheduler.employe_experiance.calculate_experience",
+    ]
 
 }
 
@@ -359,7 +368,8 @@ doctype_js = {
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
-    "Asset Borrowing": "public/js/assetborrow_list.js"
+    "Asset Borrowing": "public/js/assetborrow_list.js",
+    "Attendance": "public/js/attendance_list_override.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
@@ -388,7 +398,6 @@ ea.create_return_through_additional_salary = create_return_through_additional_sa
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
 }
-
 
 website_redirects = [
     {"source": "/apps", "target": "/app/home"}

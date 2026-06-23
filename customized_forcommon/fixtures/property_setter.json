@@ -334,5 +334,21 @@
   "property_type": "Text",
   "row_name": null,
   "value": "\nActual\nOn Net Total\nOn Previous Row Amount\nOn Previous Row Total\nOn Item Quantity\nOn Factory Share\nSIDF"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Attendance",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "status",
+  "is_system_generated": 0,
+  "modified": "2026-06-18 13:52:35.206387",
+  "module": "Common Customization",
+  "name": "Attendance-status-options",
+  "property": "options",
+  "property_type": "data",
+  "row_name": null,
+  "value": "\nPresent\nAbsent\nOn Leave\nHalf Day\nWork From Home\nOn Education"
  }
 ]
