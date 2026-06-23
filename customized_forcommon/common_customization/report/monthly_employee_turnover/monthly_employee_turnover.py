@@ -15,19 +15,18 @@ def execute(filters=None):
 
     fy = frappe.get_doc("Fiscal Year", filters["fiscal_year"])
 
-    start_date = getdate(fy.year_start_date)
-    end_date = getdate(fy.year_end_date)
+    # IMPORTANT: normalize start month only (ignore FY end to avoid July duplication)
+    start_date = fy.year_start_date.replace(day=1)
 
-    months = build_months(start_date, end_date)
+    months = build_months(start_date)
 
     columns = get_columns()
     data, totals = get_data(months)
 
     # ---------------- ANNUAL ROW ----------------
-    # data.append({})  # blank separator row
-
     data.append({
-        "month": "",
+        "idx": "",
+        "month": "Annual",
         "beginning": "Annual",
         "hires": totals["hires"],
         "separation": totals["separation"],
@@ -44,12 +43,18 @@ def execute(filters=None):
 # ---------------- COLUMNS ----------------
 def get_columns():
     return [
-        {"label": _("No"), "fieldname": "idx", "fieldtype": "Data", "width": 80},
+        {"label": _("No"), "fieldname": "idx", "fieldtype": "Int", "width": 60},
         {"label": _("Month"), "fieldname": "month", "fieldtype": "Data", "width": 140},
-        {"label": _("Beginning Employees"), "fieldname": "beginning", "fieldtype": "Data", "width": 260},
+        {"label": _("Beginning Employees"), "fieldname": "beginning", "fieldtype": "Data", "width": 200},
         {"label": _("New Hires"), "fieldname": "hires", "fieldtype": "Int", "width": 120},
         {"label": _("Separation"), "fieldname": "separation", "fieldtype": "Int", "width": 120},
-        {"label": _("Average or End Employees"), "fieldname": "end", "fieldtype": "Int", "width": 340},
+        {
+            "label": _("Average Employees"),
+            "fieldname": "end",
+            "fieldtype": "Float",
+            "precision": 2,
+            "width": 200
+        },
         {"label": _("Turnover"), "fieldname": "turnover", "fieldtype": "Percent", "width": 130},
     ]
 
@@ -63,9 +68,8 @@ def get_data(months):
         "separation": 0,
         "end_list": []
     }
-    idx = 1
 
-    for i, m in enumerate(months):
+    for idx, m in enumerate(months, start=1):
 
         start = m["start"]
         end = m["end"]
@@ -96,14 +100,13 @@ def get_data(months):
         totals["hires"] += hires
         totals["separation"] += separation
         totals["end_list"].append(end_emp)
-        idx += 1
 
     totals["avg_end"] = sum(totals["end_list"]) / len(totals["end_list"])
 
     return data, totals
 
 
-# ---------------- SNAPSHOT ----------------
+# ---------------- SNAPSHOT EMPLOYEE COUNT ----------------
 def get_active(date_value):
     joined = frappe.db.count("Employee", {
         "date_of_joining": ["<=", date_value]
@@ -116,33 +119,28 @@ def get_active(date_value):
     return joined - left
 
 
-# ---------------- MONTHS ----------------
-def build_months(start_date, end_date):
+# ---------------- FIXED MONTH GENERATOR (NO DUPLICATES) ----------------
+def build_months(start_date):
     months = []
 
     current = start_date.replace(day=1)
 
-    seen = set() 
+    # ALWAYS exactly 12 months → prevents July duplication forever
+    for _ in range(12):
+        month_start = current
 
-    while current <= end_date:
-        key = current.strftime("%Y-%m")
-
-        if key in seen:
-            break
-        seen.add(key)
-
-        next_month = current + relativedelta(months=1)
-        month_end = next_month - relativedelta(days=1)
-
-        if month_end > end_date:
-            month_end = end_date
+        month_end = (
+            month_start
+            + relativedelta(months=1)
+            - relativedelta(days=1)
+        )
 
         months.append({
-            "name": current.strftime("%B"),
-            "start": current,
-            "end": month_end
+            "name": month_start.strftime("%B"),
+            "start": month_start,
+            "end": month_end,
         })
 
-        current = next_month
+        current += relativedelta(months=1)
 
     return months
