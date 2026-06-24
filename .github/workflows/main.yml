@@ -47,6 +47,6 @@ jobs:
             chmod +x /home/guba/deploy.sh
 
             /home/guba/deploy.sh \
-              "${APP_NAME}" \
-              "${BRANCH}" \
-              "${SITE_NAME}"
+              "customized_forcommon" \
+              "gift" \
+              "erp.gift.et"
