@@ -1,0 +1,63 @@
+name: Deploy Gift ERP
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: "ERP App Name"
+        required: true
+        default: "customized_forcommon"
+        type: string
+
+      branch:
+        description: "Git Branch"
+        required: false
+        default: "gift"
+        type: string
+
+      site_name:
+        description: "Site Name"
+        required: true
+        default: "erp.gift.et"
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy ERP Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate Secrets
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.SERVER_HOST }}" ]; then
+            echo "ERROR: SERVER_HOST secret is missing."
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.SERVER_USER }}" ]; then
+            echo "ERROR: SERVER_USER secret is missing."
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "ERROR: SSH_PRIVATE_KEY secret is missing."
+            exit 1
+          fi
+
+          echo "All required secrets are available."
+
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            chmod +x /home/guba/deploy.sh
+
+            /home/guba/deploy.sh \
+              "${{ github.event.inputs.app_name }}" \
+              "${{ github.event.inputs.branch }}" \
+              "${{ github.event.inputs.site_name }}"
