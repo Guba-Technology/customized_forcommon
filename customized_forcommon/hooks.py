@@ -114,7 +114,7 @@ after_migrate = [
 ]
 
 
-# Doc Events that will be triggered on specific actions in the specified DocTypes
+# Doc Events that will be triggered on specific actions in the specified DocTypes test
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
