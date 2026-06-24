@@ -1,106 +1,55 @@
-
-name: CI
+name: Deploy Gift ERP
 
 on:
   push:
     branches:
-      - master
+      - gift
   pull_request:
 
-concurrency:
-  group: develop-customized_forcommon-${{ github.event.number }}
-  cancel-in-progress: true
-
 jobs:
-  tests:
+  deploy:
+    name: Deploy ERP Application
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    name: Server
 
-    services:
-      redis-cache:
-        image: redis:alpine
-        ports:
-          - 13000:6379
-      redis-queue:
-        image: redis:alpine
-        ports:
-          - 11000:6379
-      mariadb:
-        image: mariadb:11.4
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+    env:
+      APP_NAME: customized_forcommon
+      BRANCH: gift
+      SITE_NAME: erp.gift.et
 
     steps:
-      - name: Clone
-        uses: actions/checkout@v3
-
-      - name: Find tests
+      - name: Validate Secrets
+        shell: bash
         run: |
-          echo "Finding tests"
-          grep -rn "def test" > /dev/null
+          if [ -z "${{ secrets.SERVER_HOST }}" ]; then
+            echo "ERROR: SERVER_HOST secret is missing."
+            exit 1
+          fi
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+          if [ -z "${{ secrets.SERVER_USER }}" ]; then
+            echo "ERROR: SERVER_USER secret is missing."
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "ERROR: SSH_PRIVATE_KEY secret is missing."
+            exit 1
+          fi
+
+          echo "All required secrets are available."
+
+      - name: Deploy to Gift Production Server
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          python-version: '3.10'
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            chmod +x /home/guba/deploy.sh
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          check-latest: true
+            /home/guba/deploy.sh \
+              "customized_forcommon" \
+              "gift" \
+              "erp.gift.et"
+            
 
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: 'echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT'
-
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client
-
-      - name: Setup
-        run: |
-          pip install frappe-bench
-          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ~/frappe-bench
-          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
-          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
-
-      - name: Install
-        working-directory: /home/runner/frappe-bench
-        run: |
-          bench get-app customized_forcommon $GITHUB_WORKSPACE
-          bench setup requirements --dev
-          bench new-site --db-root-password root --admin-password admin test_site
-          bench --site test_site install-app customized_forcommon
-          bench build
-        env:
-          CI: 'Yes'
-
-      - name: Run Tests
-        working-directory: /home/runner/frappe-bench
-        run: |
-          bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app customized_forcommon
-        env:
-          TYPE: server
