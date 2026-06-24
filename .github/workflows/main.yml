@@ -1,30 +1,19 @@
 name: Deploy Gift ERP
 
 on:
-  workflow_dispatch:
-    inputs:
-      app_name:
-        description: "ERP App Name"
-        required: true
-        default: "customized_forcommon"
-        type: string
-
-      branch:
-        description: "Git Branch"
-        required: false
-        default: "gift"
-        type: string
-
-      site_name:
-        description: "Site Name"
-        required: true
-        default: "erp.gift.et"
-        type: string
+  push:
+    branches:
+      - gift
 
 jobs:
   deploy:
     name: Deploy ERP Application
     runs-on: ubuntu-latest
+
+    env:
+      APP_NAME: customized_forcommon
+      BRANCH: gift
+      SITE_NAME: erp.gift.et
 
     steps:
       - name: Validate Secrets
@@ -58,6 +47,6 @@ jobs:
             chmod +x /home/guba/deploy.sh
 
             /home/guba/deploy.sh \
-              "${{ github.event.inputs.app_name }}" \
-              "${{ github.event.inputs.branch }}" \
-              "${{ github.event.inputs.site_name }}"
+              "${APP_NAME}" \
+              "${BRANCH}" \
+              "${SITE_NAME}"
