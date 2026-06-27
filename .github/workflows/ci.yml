@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy ERP Application
+    name: Deploy ERP Applications
     runs-on: ubuntu-latest
 
     env:
