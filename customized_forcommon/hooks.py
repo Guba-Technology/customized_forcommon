@@ -241,7 +241,8 @@ doctype_js = {
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
     "Leave Application": "public/js/leave_application.js",
-    "Stock Entry": "public/js/stock_entry.js"
+    "Stock Entry": "public/js/stock_entry.js",
+    "Lead": "public/js/lead.js"
 }
 page_js = {
 	"print": "public/js/print_override.js"
