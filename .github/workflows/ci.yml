@@ -36,6 +36,13 @@ jobs:
           fi
 
           echo "All required secrets are available."
+      - name: Debug Host Connection
+        run: |
+          if [ -z "${{ secrets.SERVER_HOST }}" ]; then
+            echo "Host secret is completely empty!"
+          else
+            echo "Host secret is populated."
+          fi
 
       - name: Deploy to Gift Production Server
         uses: appleboy/ssh-action@v1.2.0
