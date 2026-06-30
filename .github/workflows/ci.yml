@@ -51,5 +51,8 @@ jobs:
               "customized_forcommon" \
               "gift" \
               "erp.gift.et"
+            # Explicitly exit the SSH session
+            exit 0
+              
             
 
