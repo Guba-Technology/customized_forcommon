@@ -35,12 +35,10 @@ fixtures = [
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
-                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
-                          "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry",  "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade",
-                          "Routing", 
-                          "Training Event", "Leave Application"
+                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
+                          "Training Program", "Purchase Reciept", "Stock Entry",  "Employee Internal Work History", 
+                          "Stock Ledger Entry", "Employee Grade", "Routing", "Training Event", "Leave Application",
+                          "Shareholder"
                           ]],
         ]
     },
@@ -68,7 +66,8 @@ fixtures = [
         "filters": [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label",         
+                            "Employee-custom_leave_increment_period-Label", "Shareholder-main-autoname", "Shareholder-naming_series-hidden"
+                                
                             
             ]]
         ]
@@ -107,6 +106,11 @@ doc_events = {
     "Staffing Plan": {
         "validate": "customized_forcommon.doc_events.staffing_plan_custom.calculate_counts",
     },
+    "Shareholder": {
+        "validate": [
+            "customized_forcommon.doc_events.shareholder.calculate_total_farmer_members"
+        ]
+    }
 
    
 }
