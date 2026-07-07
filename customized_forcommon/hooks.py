@@ -112,6 +112,10 @@ fixtures = [
                             "Interview-average_rating-hidden",
                             "Sales Taxes and Charges-charge_type-options",
                             "Attendance-status-options",
+                            "Material Request Item-schedule_date-label",
+                            "Item Tax-minimum_net_rate-label",
+                            "Item Tax-maximum_net_rate-label",
+                            "Stock Reconciliation-main-allow_import",
                 
             ]]
         ]
@@ -306,6 +310,7 @@ override_doctype_class = {
     "Attendance": "customized_forcommon.overrides.attendance.CustomAttendance",
     "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
+    "Asset": "customized_forcommon.overrides.asset.CustomAsset",
 }
 
 app_include_js = [
@@ -588,9 +593,9 @@ override_template_map = {
 # ------------------------------
 #
 # In your custom app's hooks.py
-# override_whitelisted_methods = {
-#     "hrms.hr.doctype.appraisal.appraisal.set_kras_and_rating_criteria": "customized_forcommon.overrides.appraisal.set_kras_and_rating_criteria"
-# }
+override_whitelisted_methods = {
+    "erpnext.assets.doctype.asset.asset.split_asset": "customized_forcommon.overrides.asset.split_asset",
+}
 
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "customization_manager.event.get_events"

@@ -62,7 +62,8 @@
   "value_difference",
   "additional_costs_section",
   "additional_costs",
-  "total_additional_costs"
+  "total_additional_costs",
+  "amended_from"
  ],
  "fields": [
   {
@@ -501,12 +502,23 @@
    "fieldtype": "Int",
    "label": "Total Rejected Quantity",
    "non_negative": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Material Receipt for Transfer",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-03-10 14:15:34.079912",
+ "modified": "2026-07-03 14:45:05.013973",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Material Receipt for Transfer",
