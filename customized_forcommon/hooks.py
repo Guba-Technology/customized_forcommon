@@ -207,7 +207,8 @@ doc_events = {
         "on_submit": [
             "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
             "customized_forcommon.doc_events.update_lc_master.update_linked_payment_entries",
-            "customized_forcommon.doc_events.update_lc_master.update_allocated_amount"
+            "customized_forcommon.doc_events.update_lc_master.update_allocated_amount",
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_invoice_status_from_payment"
         ],
         "on_cancel": [
             "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation",
@@ -257,7 +258,8 @@ doc_events = {
     },
      "Purchase Invoice": {
         "on_submit":  "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
-        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices"
+        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
+
     },
     "Shift Schedule Assignment": {
         "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
@@ -342,7 +344,7 @@ doctype_js = {
     # "BOM Creator": "public/js/bom_creator_extended.js",
     "Staffing Plan": "public/js/staffing_plan.js",
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Purchase Invoice": "public/js/sales_invoice.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
     "Travel Request": "public/js/travel_request.js",
     "Employee Grievance": "public/js/travel_request.js",
     "Training Result": "public/js/training_result.js",

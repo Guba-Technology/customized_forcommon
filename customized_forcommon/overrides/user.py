@@ -25,11 +25,10 @@ class CustomUser(BaseUser):
             )
 
     def on_update(self):
+        super(CustomUser, self).on_update()
         # Exclude Administrator
         if self.name == "Administrator":
             return
-
-        super(CustomUser, self).on_update()
         # Clean-up: If the user is disabled, remove all their company assignments
         if not self.enabled:
             assignments = frappe.get_all(

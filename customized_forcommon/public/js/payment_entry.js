@@ -10,5 +10,25 @@ frappe.ui.form.on("Payment Entry", {
                 },
             };
         });
-    }
+    },
+    refresh(frm) {
+        toggle_lc_number(frm);
+    },
 });
+
+function toggle_lc_number(frm) {
+    let has_invoice_reference = false;
+
+    if (frm.doc.references) {
+        has_invoice_reference = frm.doc.references.some(row =>
+            row.reference_doctype === "Purchase Invoice"
+        );
+    }
+    if (has_invoice_reference) {
+        frm.set_value("custom_lc_number", "")
+        frm.set_df_property("custom_lc_number", "hidden", 1);
+    } else {
+        frm.set_df_property("custom_lc_number", "hidden", 0);
+
+    }
+}
