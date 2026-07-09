@@ -17,6 +17,7 @@
   "advance_balance",
   "total_recovered",
   "status",
+  "account_for_advance",
   "section_break_glur",
   "recovery_details",
   "amended_from"
@@ -27,8 +28,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Project",
-   "options": "Project",
-   "reqd": 1
+   "options": "Project"
   },
   {
    "fieldname": "contractor",
@@ -113,11 +113,17 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "account_for_advance",
+   "fieldtype": "Link",
+   "label": "Account for Advance",
+   "options": "Account"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-05-04 09:35:06.706730",
+ "modified": "2026-07-09 10:30:16.874245",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Project Advance Payment",

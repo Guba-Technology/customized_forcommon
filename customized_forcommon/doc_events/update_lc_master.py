@@ -5,11 +5,8 @@ def update_linked_purchase_orders(doc, method):
         return
 
     lc_name = doc.custom_lc_number
-    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
-    if doc.supplier != lc_supplier:
-        return
-
-    # prevent duplicates
+    
+     # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Order Table",
         {
@@ -52,11 +49,7 @@ def update_linked_purchase_invoices(doc, method):
     if not doc.custom_lc_number:
         return
 
-    lc_name = doc.custom_lc_number
-
-    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
-    if doc.supplier != lc_supplier:
-        return
+    lc_name = doc.custom_lc_number  
     # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Invoice Table",
@@ -96,16 +89,49 @@ def remove_linked_purchase_invoices(doc, method):
     frappe.msgprint(f"This document detail is removed from linked purchase invoices table of LC Master <b>{link}</b> ")
 
 
+import frappe
+
+
+def update_lc_purchase_invoice_status_from_payment(doc, method):
+    for ref in doc.references:
+
+        if ref.reference_doctype != "Purchase Invoice":
+            continue
+
+        invoice = frappe.get_doc(
+            "Purchase Invoice",
+            ref.reference_name
+        )
+
+        # Ensure latest status is loaded
+        invoice.reload()
+
+        if not invoice.custom_lc_number:
+            continue
+
+        row_name = frappe.db.get_value(
+            "LC Purchase Invoice Table",
+            {
+                "parent": invoice.custom_lc_number,
+                "purchase_invoice": invoice.name
+            },
+            "name"
+        )
+
+        if row_name:
+            frappe.db.set_value(
+                "LC Purchase Invoice Table",
+                row_name,
+                "status",
+                invoice.status
+            )
 
 def update_linked_purchase_receipts(doc, method):
     if not doc.custom_lc_number:
         return
 
     lc_name = doc.custom_lc_number
-
-    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
-    if doc.supplier != lc_supplier:
-        return
+   
     # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Receipt Table",
@@ -150,11 +176,7 @@ def update_linked_payment_entries(doc, method):
 
     lc_name = doc.custom_lc_number
 
-    lc_supplier = frappe.db.get_value("LC Master", lc_name, "supplier")
-    if doc.party != lc_supplier:
-        return
-
-    # prevent duplicates
+       # prevent duplicates
     if frappe.db.exists(
         "LC Payment Entry Table",
         {
