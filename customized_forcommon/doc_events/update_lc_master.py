@@ -14,7 +14,14 @@ def update_linked_purchase_orders(doc, method):
             "purchase_order": doc.name
         }
     ):
+        frappe.msgprint(f"Purchase Order {doc.name} is already added in LC Master: {link}")
         return
+    lc_master = frappe.get_doc("LC Master", lc_name)
+    link = f"<a href='/app/lc-master/{lc_name}'>{lc_name}</a>"
+    if lc_master.linked_purchase_orders:
+        if len(lc_master.linked_purchase_orders) == 1:
+            frappe.msgprint(f"Another Purchase Order is already added in  LC Master: {link}, this will not be added")
+            return
 
     # Insert into the child table
     child = frappe.get_doc({
@@ -27,7 +34,6 @@ def update_linked_purchase_orders(doc, method):
     })
 
     child.insert(ignore_permissions=True)
-    link = f"<a href='/app/lc-master/{lc_name}'>{lc_name}</a>"
     frappe.msgprint(f"This document detail is added to linked purchase orders table of LC Master <b>{link}</b>")
 
 def remove_linked_purchase_orders(doc, method):
@@ -87,9 +93,6 @@ def remove_linked_purchase_invoices(doc, method):
     )
     link = f"<a href='/app/lc-master/{doc.custom_lc_number}'>{doc.custom_lc_number}</a>"
     frappe.msgprint(f"This document detail is removed from linked purchase invoices table of LC Master <b>{link}</b> ")
-
-
-import frappe
 
 
 def update_lc_purchase_invoice_status_from_payment(doc, method):
@@ -404,4 +407,86 @@ def reverse_allocated_amount(doc, method):
                 row.name,
                 "allocated",
                 (row.allocated or 0) - allocated
+            )
+
+
+def update_lc_purchase_order_status_from_invoice(doc, method):
+    for item in doc.items:
+        if not item.purchase_order:
+            continue
+
+        purchase_order = frappe.get_doc("Purchase Order", item.purchase_order)
+
+        if not purchase_order.custom_lc_number:
+            continue
+
+        row_name = frappe.db.get_value(
+            "LC Purchase Order Table",
+            {
+                "parent": purchase_order.custom_lc_number,
+                "purchase_order": purchase_order.name
+            },
+            "name"
+        )
+
+        if row_name:
+            frappe.db.set_value(
+                "LC Purchase Order Table",
+                row_name,
+                "status",
+                purchase_order.status
+            )
+
+def update_lc_purchase_order_status_from_receipt(doc, method):
+    if not doc.custom_purchase_order:
+        return
+
+    purchase_order = frappe.get_doc("Purchase Order", doc.custom_purchase_order)
+
+    if not purchase_order.custom_lc_number:
+        return
+
+    row_name = frappe.db.get_value(
+        "LC Purchase Order Table",
+        {
+            "parent": purchase_order.custom_lc_number,
+            "purchase_order": purchase_order.name
+        },
+        "name"
+    )
+
+    if row_name:
+        frappe.db.set_value(
+            "LC Purchase Order Table",
+            row_name,
+            "status",
+            purchase_order.status
+        )
+
+
+def update_lc_purchase_receipt_status_from_invoice(doc, method):
+    for item in doc.items:
+        if not item.purchase_receipt:
+            continue
+
+        purchase_receipt = frappe.get_doc("Purchase Receipt", item.purchase_receipt)
+
+        if not purchase_receipt.custom_lc_number:
+            continue
+
+        row_name = frappe.db.get_value(
+            "LC Purchase Receipt Table",
+            {
+                "parent": purchase_receipt.custom_lc_number,
+                "receipt_number": purchase_receipt.name
+            },
+            "name"
+        )
+
+        if row_name:
+            frappe.db.set_value(
+                "LC Purchase Receipt Table",
+                row_name,
+                "status",
+                purchase_receipt.status
             )

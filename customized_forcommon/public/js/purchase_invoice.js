@@ -24,8 +24,6 @@ frappe.ui.form.on("Purchase Invoice", {
     }
 });
 
-
-
 function toggle_lc_number(frm) {
     const has_linked_order = (frm.doc.items || []).some(
         row => !!row.purchase_order

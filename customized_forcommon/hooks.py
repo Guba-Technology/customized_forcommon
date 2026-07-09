@@ -140,6 +140,7 @@ doc_events = {
         "on_submit": [
             "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
             "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_receipts",
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_order_status_from_receipt"
         ],
         "on_cancel": [
               "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_receipts"
@@ -257,7 +258,11 @@ doc_events = {
         "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_orders"
     },
      "Purchase Invoice": {
-        "on_submit":  "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
+        "on_submit":  [
+            "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_order_status_from_invoice",
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_receipt_status_from_invoice"
+        ],
         "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
 
     },
