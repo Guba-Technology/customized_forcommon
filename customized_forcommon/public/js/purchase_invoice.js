@@ -20,6 +20,22 @@ frappe.ui.form.on("Purchase Invoice", {
                 }, "Create");
             }
         }
-
+        toggle_lc_number(frm);
     }
 });
+
+function toggle_lc_number(frm) {
+    const has_linked_order = (frm.doc.items || []).some(
+        row => !!row.purchase_order
+    );
+
+    frm.set_df_property(
+        "custom_lc_number",
+        "hidden",
+        has_linked_order ? 1 : 0
+    );
+
+    if (has_linked_order && frm.doc.custom_lc_number) {
+        frm.set_value("custom_lc_number", "");
+    }
+}

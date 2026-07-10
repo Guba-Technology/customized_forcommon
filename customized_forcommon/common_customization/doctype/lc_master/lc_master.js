@@ -4,6 +4,45 @@
 frappe.ui.form.on("LC Master", {
     refresh(frm) {
         toggle_empty_messages(frm);
+
+        if (frm.doc.docstatus === 1) {
+            frm.add_custom_button(__("Purchase Order"), () => {
+                frappe.new_doc("Purchase Order", {
+                    custom_lc_number: frm.doc.lc_number
+                });
+            },
+                __("Create")
+            );
+
+            frm.add_custom_button(__("Purchase Invoice"), () => {
+                frappe.new_doc("Purchase Invoice", {
+                    custom_lc_number: frm.doc.lc_number
+                });
+            },
+                __("Create")
+            );
+            frm.add_custom_button(__("Payment Entry"), () => {
+                frappe.new_doc("Payment Entry", {
+                    custom_lc_number: frm.doc.lc_number
+                });
+            },
+                __("Create")
+            );
+            frm.add_custom_button(__("Purchase Receipt"), () => {
+                frappe.new_doc("Purchase Receipt", {
+                    custom_lc_number: frm.doc.lc_number
+                });
+            },
+                __("Create")
+            );
+            frm.add_custom_button(__("Journal Entry"), () => {
+                frappe.new_doc("Journal Entry", {
+                    custom_lc_number: frm.doc.lc_number
+                });
+            },
+                __("Create")
+            );
+        }
     }
 });
 

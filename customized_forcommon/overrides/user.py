@@ -6,12 +6,13 @@ class CustomUser(BaseUser):
         # Exclude in setup wizard
         if frappe.flags.in_setup_wizard:
             return
+        super(CustomUser, self).validate()
+
         # Exclude Administrator
         if self.name == "Administrator":
             return
 
-        super(CustomUser, self).validate()
-
+       
         # Only show warning if user has no assignment; don't forcibly disable here
         if not frappe.db.exists("User Company Assignment", {"user": self.name}):
             link = " ".join([
@@ -25,11 +26,10 @@ class CustomUser(BaseUser):
             )
 
     def on_update(self):
+        super(CustomUser, self).on_update()
         # Exclude Administrator
         if self.name == "Administrator":
             return
-
-        super(CustomUser, self).on_update()
         # Clean-up: If the user is disabled, remove all their company assignments
         if not self.enabled:
             assignments = frappe.get_all(
