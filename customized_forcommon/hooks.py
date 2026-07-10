@@ -42,7 +42,7 @@ fixtures = [
                           "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
-                          "Journal Entry",  "Additional Salary", "HR Settings",
+                          "Journal Entry",  "Additional Salary", "HR Settings", "Item Default"
                         ]
             ],
         ]
@@ -77,14 +77,7 @@ fixtures = [
             ]]
         ]
     },
-    {
-        "dt": "Workflow",
-
-        "filters": [["name", "in", ["Stock Material Transfer"]]]
-
-    },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
+  
     {
         "dt": "Report",
         "filters": [
@@ -259,8 +252,11 @@ doc_events = {
             "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_receipt_status_from_invoice"
         ],
         "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
-
     },
+     "Stock Entry": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+
 }
 
 permission_query_conditions = {
