@@ -7,6 +7,12 @@ class CustomJobCard(JobCard):
         super().on_submit()
         self.set_accepted_rejected_rework_qty_in_work_order()
         self.check_total_qty_of_job_card_is_not_less_than_accepted_rejected_rework_qty()
+        self.check_if_quality_inspection_required()
+    def check_if_quality_inspection_required(self):
+        if self.custom_inspection_required_before_submit:
+            quality_inspection = frappe.db.get_value("Quality Inspection", {"reference_name": self.name, "docstatus": 1,"inspection_type": "In Process", "reference_type": "Job Card", "status": "Accepted"}, "name")
+            if not quality_inspection:
+                frappe.throw(_("Submission blocked. A valid, 'Accepted' Quality Inspection must be linked and submitted for this Job Card."))
 
     def set_accepted_rejected_rework_qty_in_work_order(self):
         work_order = frappe.get_doc("Work Order", self.work_order)

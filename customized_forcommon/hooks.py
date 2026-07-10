@@ -318,6 +318,7 @@ override_doctype_class = {
     "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
     "Asset": "customized_forcommon.overrides.asset.CustomAsset",
+    "Work Order": "customized_forcommon.overrides.workorder.CustomWorkOrder",
 }
 
 app_include_js = [
