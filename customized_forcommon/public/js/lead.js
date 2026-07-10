@@ -6,7 +6,11 @@ frappe.ui.form.on('Lead', {
             "last_name",
             "job_title",
             "gender",
-            "source"
+            "source",
+            "email_id",
+            "mobile_no",
+            "phone",
+            "phone_ext"
         ];
 
         fields.forEach(field => {
