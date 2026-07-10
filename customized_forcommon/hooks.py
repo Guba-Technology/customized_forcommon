@@ -309,7 +309,8 @@ override_doctype_class = {
     "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
     "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
-    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote"
+    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
 
 
 }
