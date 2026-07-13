@@ -35,12 +35,10 @@ fixtures = [
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
                           "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
-                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry",
-                          "Purchase Receipt", "Training Program", "Purchase Reciept",
-                          "Stock Entry", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "BOM Operation",
-                           "Routing",
-                          "Training Event", "Leave Application", "Dunning", "Journal Entry", "Customer"
+                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
+                          "Training Program", "Purchase Reciept","Stock Entry", "Employee Internal Work History",
+                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Routing", "Training Event",
+                            "Leave Application", "Dunning", "Journal Entry", "Customer", "Item Default"
                           ]],
         ]
     },
@@ -113,6 +111,7 @@ after_migrate = [
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account",
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
     },
     "Item": {
@@ -139,7 +138,17 @@ doc_events = {
     },
      "Journal Entry": {
         "on_submit": "customized_forcommon.doc_events.journal_entry.make_reversed"
-    }
+    },
+    "Stock Entry": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Stock Reconcilation": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Delivery Note": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+
 
    
 }
@@ -170,6 +179,9 @@ override_doctype_class = {
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom", 
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+    "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
+    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
 
     
 }
