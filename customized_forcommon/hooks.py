@@ -60,7 +60,7 @@ fixtures = [
         "filters":[
             ["dt", "in", ["Interview", "Purchase Invoice", "Employee Advance", "Payment Entry",
                           "Sales Invoice", "Employee",
-                          "Sales Order", "Material Request", "Leave Application",
+                          "Sales Order", "Material Request", "Leave Application","Asset","Asset Movement","Item",
 
                           ]]
         ]
