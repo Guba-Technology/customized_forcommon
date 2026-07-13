@@ -41,10 +41,7 @@ class CustomStockReconciliation(StockReconciliation):
     def get_gl_entries(self, warehouse_account=None):
 
         if not self.cost_center:
-            frappe.throw(
-                _("Please enter Cost Center")
-            )
-
+            frappe.msgprint(_("Please enter Cost Center"), raise_exception=1)
 
         enabled = frappe.db.get_value(
             "Company",
@@ -52,47 +49,24 @@ class CustomStockReconciliation(StockReconciliation):
             "custom_enable_item_group_based_inventory"
         )
 
-
-        # Default ERPNext behavior
         if not enabled:
             return super().get_gl_entries(
                 warehouse_account
             )
 
+        if warehouse_account:
+            for item in self.items:
+                if not item.warehouse:
+                    continue
 
-        if not warehouse_account:
-            return super().get_gl_entries(
-                warehouse_account
-            )
-
-
-        # Replace warehouse inventory accounts with Item Group inventory accounts
-        for item in self.items:
-
-            if not item.warehouse:
-                continue
-
-
-            item_group_account = self.get_item_group_inventory_account(
-                item.item_code
-            )
-
-
-            if item.warehouse in warehouse_account:
-
-                warehouse_account[item.warehouse]["account"] = (
-                    item_group_account
+                item_group_account = self.get_item_group_inventory_account(
+                    item.item_code
                 )
+                if item.warehouse in warehouse_account:
+                    warehouse_account[item.warehouse]["account"] = (
+                        item_group_account
+                    )
 
-
-        """
-        Let ERPNext create the GL entries
-        This preserves:
-        - Opening Stock logic
-        - Stock Adjustment account
-        - Cost Center
-        - Difference calculation
-        """
         return super().get_gl_entries(
             warehouse_account
         )
