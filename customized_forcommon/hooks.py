@@ -325,7 +325,7 @@ override_doctype_class = {
     "Work Order": "customized_forcommon.overrides.workorder.CustomWorkOrder",
     "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
     "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
-    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
+    # "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
 }
 
 app_include_js = [
