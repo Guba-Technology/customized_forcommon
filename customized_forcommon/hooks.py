@@ -42,7 +42,7 @@ fixtures = [
                           "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
-                          "Journal Entry",  "Additional Salary", "HR Settings", "Item Default"
+                          "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default"
                         ]
             ],
         ]
@@ -104,6 +104,11 @@ fixtures = [
                             "Interview-expected_average_rating-hidden",
                             "Interview-average_rating-hidden",
                             "Sales Taxes and Charges-charge_type-options",
+                            "Attendance-status-options",
+                            "Material Request Item-schedule_date-label",
+                            "Item Tax-minimum_net_rate-label",
+                            "Item Tax-maximum_net_rate-label",
+                            "Stock Reconciliation-main-allow_import",
                 
             ]]
         ]
@@ -265,6 +270,9 @@ doc_events = {
     },
 
 
+    "Shift Schedule Assignment": {
+        "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
+    }
 }
 
 permission_query_conditions = {
@@ -275,6 +283,8 @@ scheduler_events = {
     "hourly":
     [
         "customized_forcommon.scheduler.custom_next_leave_increment_year.execute",
+        "customized_forcommon.overrides.shift_utils.generate_three_shift_rotation_for_all_assignments",
+
     ],
 
      "daily":
@@ -282,8 +292,11 @@ scheduler_events = {
         "customized_forcommon.scheduler.customer_license_checker.execute",
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
         "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
-        "customized_forcommon.scheduler.employee_advance.process_repayments"
+        "customized_forcommon.scheduler.employee_advance.process_repayments",
     ],
+    "monthly": [
+    "customized_forcommon.scheduler.employe_experiance.calculate_experience",
+    ]
 
 }
 
@@ -308,6 +321,8 @@ override_doctype_class = {
     "Attendance": "customized_forcommon.overrides.attendance.CustomAttendance",
     "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
+    "Asset": "customized_forcommon.overrides.asset.CustomAsset",
+    "Work Order": "customized_forcommon.overrides.workorder.CustomWorkOrder",
     "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
     "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
     "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
@@ -324,6 +339,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
     "/assets/customized_forcommon/js/purchase_analytics.js",
     "/assets/customized_forcommon/js/custom_purchase_order_analysis.js",
+    "/assets/customized_forcommon/js/employee.js",
 
 ]
 
@@ -374,7 +390,8 @@ doctype_js = {
 }
 doctype_list_js = {
     "Asset": "public/js/asset_list.js",
-    "Asset Borrowing": "public/js/assetborrow_list.js"
+    "Asset Borrowing": "public/js/assetborrow_list.js",
+    "Attendance": "public/js/attendance_list_override.js"
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
@@ -403,7 +420,6 @@ ea.create_return_through_additional_salary = create_return_through_additional_sa
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
 }
-
 
 website_redirects = [
     {"source": "/apps", "target": "/app/home"}
@@ -594,9 +610,9 @@ override_template_map = {
 # ------------------------------
 #
 # In your custom app's hooks.py
-# override_whitelisted_methods = {
-#     "hrms.hr.doctype.appraisal.appraisal.set_kras_and_rating_criteria": "customized_forcommon.overrides.appraisal.set_kras_and_rating_criteria"
-# }
+override_whitelisted_methods = {
+    "erpnext.assets.doctype.asset.asset.split_asset": "customized_forcommon.overrides.asset.split_asset",
+}
 
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "customization_manager.event.get_events"

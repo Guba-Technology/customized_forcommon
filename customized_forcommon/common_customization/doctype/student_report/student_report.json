@@ -16,7 +16,12 @@
   "date_goes_to_school_education",
   "return_date",
   "status",
-  "note"
+  "note",
+  "research_details_tab",
+  "research_title",
+  "column_break_idyw",
+  "training_department_head_comment",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -91,13 +96,38 @@
    "fieldname": "note",
    "fieldtype": "Small Text",
    "label": "Note"
+  },
+  {
+   "fieldname": "research_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Research Details"
+  },
+  {
+   "fieldname": "research_title",
+   "fieldtype": "Data",
+   "label": "Research Title"
+  },
+  {
+   "fieldname": "column_break_idyw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "training_department_head_comment",
+   "fieldtype": "Small Text",
+   "label": "Training Department Head Comment"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-22 12:05:08.724969",
+ "modified": "2026-06-23 11:14:51.387353",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Student Report",
@@ -118,6 +148,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

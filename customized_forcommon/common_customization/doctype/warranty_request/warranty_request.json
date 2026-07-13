@@ -7,43 +7,19 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
-  "warranty_request_for",
   "employee",
   "full_name",
-  "designation",
-  "date_of_birth",
-  "column_break_dode",
   "department",
-  "ctc",
+  "designation",
   "salutation",
+  "ctc",
   "company",
-  "date",
-  "status",
-  "warrantee_detail_section",
-  "beneficiary_company",
+  "column_break_exja",
   "warrantee_holder",
-  "column_break_mvap",
+  "beneficiary_company",
   "address",
-  "guaratee_detail_section",
-  "type_of_collateral",
-  "collateral_value",
-  "collateral_address",
-  "employee_declaration",
-  "guarantor_full_name",
-  "guarantor_date_of_birth",
-  "sub_city",
-  "woreda",
-  "kebele",
-  "column_break_xsum",
-  "house_number",
-  "place_of_work",
-  "monthly_salary",
-  "daily_income",
-  "annual_income",
-  "guarantor_declaration",
-  "witnesses",
-  "guarantee_status",
-  "amended_from"
+  "request_date",
+  "status"
  ],
  "fields": [
   {
@@ -80,8 +56,7 @@
    "fieldname": "designation",
    "fieldtype": "Data",
    "label": "Designation",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "beneficiary_company",
@@ -92,21 +67,20 @@
    "fieldname": "address",
    "fieldtype": "Data",
    "label": "Address",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\""
+   "reqd": 1
   },
   {
-   "depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
+   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
-   "options": "\nDraft\nActive\nReleased"
+   "options": "Draft\nActive\nReleased"
   },
   {
    "fieldname": "warrantee_holder",
    "fieldtype": "Data",
    "label": "Warrantee Holder",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Other Employee\""
+   "reqd": 1
   },
   {
    "fetch_from": "employee.salutation",
@@ -130,158 +104,19 @@
    "read_only": 1
   },
   {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "warranty_request_for",
-   "fieldtype": "Select",
-   "label": "Warranty Request For",
-   "options": "Other Employee\nSelf"
-  },
-  {
-   "fieldname": "column_break_mvap",
+   "fieldname": "column_break_exja",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "employee.date_of_birth",
-   "fieldname": "date_of_birth",
+   "fieldname": "request_date",
    "fieldtype": "Date",
-   "label": "Date of Birth",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_dode",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.warranty_request_for == \"Other Employee\"",
-   "fieldname": "warrantee_detail_section",
-   "fieldtype": "Section Break",
-   "label": "Warrantee Detail"
-  },
-  {
-   "fieldname": "type_of_collateral",
-   "fieldtype": "Link",
-   "label": "Type of Collateral",
-   "options": "Collateral Type"
-  },
-  {
-   "fieldname": "column_break_xsum",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.warranty_request_for == \"Self\"",
-   "fieldname": "guaratee_detail_section",
-   "fieldtype": "Section Break",
-   "label": "Collateral/Guaratee Detail"
-  },
-  {
-   "fieldname": "collateral_value",
-   "fieldtype": "Currency",
-   "label": "Collateral Value/Amount"
-  },
-  {
-   "fieldname": "collateral_address",
-   "fieldtype": "Data",
-   "label": "Collateral Address"
-  },
-  {
-   "fieldname": "employee_declaration",
-   "fieldtype": "Small Text",
-   "label": "Employee Declaration"
-  },
-  {
-   "fieldname": "guarantor_full_name",
-   "fieldtype": "Data",
-   "label": "Guarantor Full Name",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\""
-  },
-  {
-   "fieldname": "guarantor_date_of_birth",
-   "fieldtype": "Date",
-   "label": "Guarantor Date of Birth",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\""
-  },
-  {
-   "fieldname": "sub_city",
-   "fieldtype": "Data",
-   "label": "Sub City"
-  },
-  {
-   "fieldname": "woreda",
-   "fieldtype": "Data",
-   "label": "Woreda"
-  },
-  {
-   "fieldname": "kebele",
-   "fieldtype": "Data",
-   "label": "Kebele"
-  },
-  {
-   "fieldname": "house_number",
-   "fieldtype": "Data",
-   "label": "House Number"
-  },
-  {
-   "fieldname": "place_of_work",
-   "fieldtype": "Data",
-   "label": "Place of Work"
-  },
-  {
-   "fieldname": "monthly_salary",
-   "fieldtype": "Currency",
-   "label": "Monthly Salary"
-  },
-  {
-   "fieldname": "daily_income",
-   "fieldtype": "Currency",
-   "label": "Daily Income"
-  },
-  {
-   "fieldname": "annual_income",
-   "fieldtype": "Currency",
-   "label": "Annual Income"
-  },
-  {
-   "fieldname": "guarantor_declaration",
-   "fieldtype": "Small Text",
-   "label": "Guarantor Declaration"
-  },
-  {
-   "fieldname": "witnesses",
-   "fieldtype": "Table",
-   "label": "Witnesses",
-   "options": "Warranty Wintess"
-  },
-  {
-   "depends_on": "eval:doc.warranty_request_for == \"Self\"",
-   "fieldname": "guarantee_status",
-   "fieldtype": "Select",
-   "label": "Guarantee Status",
-   "mandatory_depends_on": "eval:doc.warranty_request_for == \"Self\"",
-   "options": "\nDraft\nAccepted\nReleased"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Warranty Request",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "label": "Request Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 10:16:52.320921",
+ "modified": "2026-05-28 14:05:48.512971",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Warranty Request",
@@ -297,33 +132,6 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR Manager",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR User",
-   "select": 1,
    "share": 1,
    "write": 1
   }
