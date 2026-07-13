@@ -42,7 +42,7 @@ fixtures = [
                           "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
-                          "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment",
+                          "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default"
                         ]
             ],
         ]
@@ -77,14 +77,7 @@ fixtures = [
             ]]
         ]
     },
-    {
-        "dt": "Workflow",
-
-        "filters": [["name", "in", ["Stock Material Transfer"]]]
-
-    },
-    {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"},
+  
     {
         "dt": "Report",
         "filters": [
@@ -137,6 +130,7 @@ after_migrate = [
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account",
         "on_submit": [
             "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
             "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_receipts",
@@ -264,8 +258,18 @@ doc_events = {
             "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_receipt_status_from_invoice"
         ],
         "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
-
     },
+     "Stock Entry": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Stock Reconcilation": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Delivery Note": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+
+
     "Shift Schedule Assignment": {
         "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
     }
@@ -319,6 +323,11 @@ override_doctype_class = {
     "Employee Performance Feedback": "customized_forcommon.overrides.employee_performance_feedback.CustomEmployeePerformanceFeedback",
     "Asset": "customized_forcommon.overrides.asset.CustomAsset",
     "Work Order": "customized_forcommon.overrides.workorder.CustomWorkOrder",
+    "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
+    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
+
+
 }
 
 app_include_js = [
