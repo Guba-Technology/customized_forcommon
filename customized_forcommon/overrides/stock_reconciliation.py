@@ -8,7 +8,6 @@ from erpnext.stock.doctype.stock_reconciliation.stock_reconciliation import (
 
 class CustomStockReconciliation(StockReconciliation):
 
-
     def get_item_group_inventory_account(self, item_code):
 
         item_group = frappe.db.get_value(
@@ -42,9 +41,8 @@ class CustomStockReconciliation(StockReconciliation):
     def get_gl_entries(self, warehouse_account=None):
 
         if not self.cost_center:
-            frappe.msgprint(
-                _("Please enter Cost Center"),
-                raise_exception=1
+            frappe.throw(
+                _("Please enter Cost Center")
             )
 
 
@@ -55,6 +53,7 @@ class CustomStockReconciliation(StockReconciliation):
         )
 
 
+        # Default ERPNext behavior
         if not enabled:
             return super().get_gl_entries(
                 warehouse_account
@@ -62,34 +61,38 @@ class CustomStockReconciliation(StockReconciliation):
 
 
         if not warehouse_account:
-
-            from erpnext.stock.doctype.stock_entry.stock_entry import (
-                get_warehouse_account_map
-            )
-
-            warehouse_account = get_warehouse_account_map(
-                self.company
+            return super().get_gl_entries(
+                warehouse_account
             )
 
 
-        # Replace warehouse account by Item Group account
+        # Replace warehouse inventory accounts with Item Group inventory accounts
         for item in self.items:
 
-            if item.warehouse:
+            if not item.warehouse:
+                continue
 
-                item_group_account = (
-                    self.get_item_group_inventory_account(
-                        item.item_code
-                    )
+
+            item_group_account = self.get_item_group_inventory_account(
+                item.item_code
+            )
+
+
+            if item.warehouse in warehouse_account:
+
+                warehouse_account[item.warehouse]["account"] = (
+                    item_group_account
                 )
 
-                if item.warehouse in warehouse_account:
 
-                    warehouse_account[item.warehouse]["account"] = (
-                        item_group_account
-                    )
-
-
+        """
+        Let ERPNext create the GL entries
+        This preserves:
+        - Opening Stock logic
+        - Stock Adjustment account
+        - Cost Center
+        - Difference calculation
+        """
         return super().get_gl_entries(
             warehouse_account
         )
