@@ -66,7 +66,15 @@ class CustomStockReconciliation(StockReconciliation):
                     warehouse_account[item.warehouse]["account"] = (
                         item_group_account
                     )
-
-        return super().get_gl_entries(
-            warehouse_account
+        
+        gl_entries = super().get_gl_entries(
+    warehouse_account
+)
+        frappe.log_error(
+            "Stock Reconciliation GL",
+            str(gl_entries)
         )
+        return gl_entries
+        # return super().get_gl_entries(
+        #     warehouse_account
+        # )
