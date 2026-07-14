@@ -38,7 +38,7 @@ fixtures = [
                           "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
                           "Training Program", "Purchase Reciept", "Stock Entry",  "Employee Internal Work History", 
                           "Stock Ledger Entry", "Employee Grade", "Routing", "Training Event", "Leave Application",
-                          "Shareholder"
+                          "Shareholder", "Item Default"
                           ]],
         ]
     },
@@ -88,6 +88,7 @@ after_migrate = [
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account",
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
     },
     "Item": {
@@ -110,7 +111,16 @@ doc_events = {
         "validate": [
             "customized_forcommon.doc_events.shareholder.calculate_total_farmer_members"
         ]
-    }
+    },
+     "Stock Entry": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Stock Reconcilation": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Delivery Note": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
 
    
 }
@@ -138,9 +148,12 @@ override_doctype_class = {
     "Sales Order": "customized_forcommon.overrides.sales_order.CustomSalesOrder",
     # "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
-    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance"
+    "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
+    "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
+    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
 
-    
 }
 
 app_include_js = [
