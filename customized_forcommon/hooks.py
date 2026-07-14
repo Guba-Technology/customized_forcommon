@@ -185,6 +185,7 @@ doctype_js = {
     "User": "public/js/user.js",
     # "Module Profile": "public/js/module_profile.js",
     "System Settings": "public/js/system_settings.js",
+    "Item Group": "public/js/item_group.js",
 }
 
 # this is used to override the get_leaves_for_period method in leave_application
