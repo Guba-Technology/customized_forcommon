@@ -213,6 +213,7 @@ override_doctype_class = {
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
+    "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment"
 
 }
 
