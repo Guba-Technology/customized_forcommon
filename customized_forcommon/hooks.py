@@ -211,6 +211,8 @@ doctype_js = {
     "Module Profile": "public/js/module_profile.js",
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
+    "Item Group": "public/js/item_group.js",
+
 }
 
 
