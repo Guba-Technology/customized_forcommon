@@ -56,7 +56,7 @@ fixtures = [
                           "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Workstation Type",
                           "Workstation", "Routing", "Quality Inspection Reading", "Job Card", "Work Order",
                           "Training Event", "Leave Application", "Journal Entry", "Additional Salary", "HR Settings",
-                          "Employee Referral","Employee Grievance"
+                          "Employee Referral","Employee Grievance", "Item Default"
                           ]],
 
         ]
@@ -118,6 +118,7 @@ after_migrate = [
 # For example, on_submit of Purchase Receipt will call the function update_stock_ledger_with_department
 doc_events = {
     "Purchase Receipt": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account",
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department"
     },
     "Item": {
@@ -183,8 +184,17 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
     "Stock Entry": {
-        "validate": "customized_forcommon.doc_events.stock_entry.validate_overreturn"
-    }
+        "validate": [
+            "customized_forcommon.doc_events.stock_entry.validate_overreturn",
+            "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+        ]
+    },
+    "Stock Reconcilation": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
+    "Delivery Note": {
+        "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
+    },
 }
 
 scheduler_events = {
@@ -213,7 +223,12 @@ override_doctype_class = {
     "Quality Inspection": "customized_forcommon.overrides.quality_inspection.CustomQualityInspection",
     "BOM Creator": "customized_forcommon.overrides.bom_creator.CustomBom",
     "Employee Advance": "customized_forcommon.overrides.employee_advance.CustomEmployeeAdvance",
-    "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment"
+    "Leave Encashment": "customized_forcommon.overrides.leave_encashment.CustomLeaveEncashment",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
+    "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
+    "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
+
 
 }
 
@@ -243,7 +258,8 @@ doctype_js = {
     "System Settings": "public/js/system_settings.js",
     "Leave Application": "public/js/leave_application.js",
     "Stock Entry": "public/js/stock_entry.js",
-    "Lead": "public/js/lead.js"
+    "Lead": "public/js/lead.js",
+    "Item Group": "public/js/item_group.js",
 }
 page_js = {
 	"print": "public/js/print_override.js"
