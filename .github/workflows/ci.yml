@@ -9,20 +9,34 @@ on:
 jobs:
   deploy:
     name: Deploy ERP Applications
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    
+    # This job will only execute if the event is on the 'gift' branch
+    if: github.ref == 'refs/heads/gift'
 
     env:
       APP_NAME: customized_forcommon
       BRANCH: gift
       SITE_NAME: erp.gift.et
+      DEPLOY_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      PRODUCTION_HOST: ${{ secrets.SERVER_HOST }}
 
     steps:
-      # No secrets validation needed since we run locally as the host user
-      
-      # Step runs natively on the host filesystem
-      - name: Deploy Locally to Gift Production
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Gift Production
         shell: bash
         run: |
-          chmod +x /home/guba/deploy.sh
+          # 1. Set up the SSH private key securely on the GitHub runner
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           
-          /home/guba/deploy.sh "${{ env.APP_NAME }}" "${{ env.BRANCH }}" "${{ env.SITE_NAME }}"
+          # 2. Add the production host to known_hosts to prevent MITM prompts,
+          # or use StrictHostKeyChecking=no
+          ssh-keyscan -t rsa "$PRODUCTION_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          
+          # 3. Connect to the remote server and trigger the deployment script
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "$PRODUCTION_HOST" \
+            "set -e; bash /home/guba/deploy.sh '$APP_NAME' '$BRANCH' '$SITE_NAME'"
