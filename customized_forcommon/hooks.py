@@ -272,6 +272,9 @@ doc_events = {
 
     "Shift Schedule Assignment": {
         "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
+    },
+    "Landed Cost Voucher": {
+        "on_submit": "customized_forcommon.doc_events.land_cost_voucher.land_cost_creation_checker_for_purchase_order",
     }
 }
 

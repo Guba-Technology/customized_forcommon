@@ -4,7 +4,7 @@ frappe.ui.form.on("Item", {
     },
     custom_qr_code: function(frm) {
         render_qr_image_in_html_field(frm);
-    }
+    },
 });
 
 function render_qr_image_in_html_field(frm) {
@@ -19,7 +19,11 @@ function render_qr_image_in_html_field(frm) {
         frm.set_df_property("custom_qr_image", "options", html_content);
         frm.refresh_field("custom_qr_image");
     } else {
-        frm.set_df_property("custom_qr_image", "options", "<p style='text-align:center;'>No QR Code attached yet.</p>");
+            frm.set_df_property(
+            "custom_qr_image",
+            "options",
+            `<p style="text-align:center;">No QR Code attached yet.</p>`
+        );    
     }
 }
 
