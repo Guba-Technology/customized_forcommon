@@ -1,123 +1,123 @@
 [
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Item",
-        "enabled": 1,
-        "modified": "2026-07-03 16:51:37.130922",
-        "module": "Common Customization",
-        "name": "Fixed Asset",
-        "script": "frappe.ui.form.on('Item', {\r\n    refresh: function(frm) {\r\n        // Trigger the logic on form load\r\n        frm.trigger('is_fixed_asset');\r\n    },\r\n    is_fixed_asset: function(frm) {\r\n        // Check if 'Is Fixed Asset' is checked\r\n        if (frm.doc.is_fixed_asset) {\r\n            // Hide 'Item Group' and make it optional\r\n            frm.set_df_property('item_group', 'reqd', 0);\r\n            frm.set_df_property('item_group', 'hidden', 1);\r\n        } else {\r\n            // Revert to default (Visible and Required) when unchecked\r\n            frm.set_df_property('item_group', 'reqd', 1);\r\n            frm.set_df_property('item_group', 'hidden', 0);\r\n        }\r\n        \r\n        // Refresh the field to apply UI changes\r\n        frm.refresh_field('item_group');\r\n    }\r\n});",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Asset Movement",
-        "enabled": 1,
-        "modified": "2026-07-07 16:32:28.391762",
-        "module": "Common Customization",
-        "name": "Asset Movement",
-        "script": "// Copyright (c) 2016, Frappe Technologies Pvt. Ltd. and contributors\r\n// For license information, please see license.txt\r\n\r\nfrappe.ui.form.on(\"Asset Movement\", {\r\n    setup: (frm) => {\r\n        frm.set_query(\"to_employee\", \"assets\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"from_employee\", \"assets\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"reference_name\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                    docstatus: 1,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"reference_doctype\", () => {\r\n            return {\r\n                filters: {\r\n                    name: [\"in\", [\"Purchase Receipt\", \"Purchase Invoice\"]],\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"asset\", \"assets\", () => {\r\n            return {\r\n                filters: {\r\n                    status: [\"not in\", [\"Draft\"]],\r\n                },\r\n            };\r\n        });\r\n    },\r\n\r\n    onload: (frm) => {\r\n        frm.trigger(\"set_required_fields\");\r\n    },\r\n\r\n    purpose: (frm) => {\r\n        // Clear child table 'to_employee' fields immediately if switching to Return\r\n        if (frm.doc.purpose === \"Return\" && frm.doc.assets) {\r\n            frm.doc.assets.forEach(row => {\r\n                frappe.model.set_value(row.doctype, row.name, \"to_employee\", \"\");\r\n            });\r\n        }\r\n        frm.trigger(\"set_required_fields\");\r\n    },\r\n\r\n    set_required_fields: (frm, cdt, cdn) => {\r\n        let fieldnames_to_be_altered;\r\n        if (frm.doc.purpose === \"Transfer\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 1, reqd: 1 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 1, reqd: 0 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Receipt\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 0, reqd: 0 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Issue\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 1, reqd: 0 },\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 0, reqd: 1 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Transfer and Issue\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 0, reqd: 1 },\r\n                from_employee: { read_only: 0, reqd: 1 },\r\n                to_employee: { read_only: 0, reqd: 1 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Return\") {\r\n            // New injection matching your requirements\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 }, // Asset comes back to a storage unit/location\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 0, reqd: 1 },   // Mandatory\r\n                to_employee: { read_only: 1, reqd: 0 },     // Null / Not Mandatory\r\n            };\r\n        }\r\n        \r\n        if (fieldnames_to_be_altered) {\r\n            Object.keys(fieldnames_to_be_altered).forEach((fieldname) => {\r\n                let property_to_be_altered = fieldnames_to_be_altered[fieldname];\r\n                Object.keys(property_to_be_altered).forEach((property) => {\r\n                    let value = property_to_be_altered[property];\r\n                    frm.fields_dict[\"assets\"].grid.update_docfield_property(fieldname, property, value);\r\n                });\r\n            });\r\n            frm.refresh_field(\"assets\");\r\n        }\r\n    },\r\n});\r\n\r\nfrappe.ui.form.on(\"Asset Movement Item\", {\r\n    asset: function (frm, cdt, cdn) {\r\n        // on manual entry of an asset auto sets their source location / employee\r\n        const asset_name = locals[cdt][cdn].asset;\r\n        if (asset_name) {\r\n            frappe.db\r\n                .get_doc(\"Asset\", asset_name)\r\n                .then((asset_doc) => {\r\n                    if (asset_doc.location)\r\n                        frappe.model.set_value(cdt, cdn, \"source_location\", asset_doc.location);\r\n                    if (asset_doc.custodian)\r\n                        frappe.model.set_value(cdt, cdn, \"from_employee\", asset_doc.custodian);\r\n                })\r\n                .catch((err) => {\r\n                    console.log(err); // eslint-disable-line\r\n                });\r\n        }\r\n    },\r\n});",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Asset",
-        "enabled": 1,
-        "modified": "2026-07-07 16:26:14.855527",
-        "module": "Common Customization",
-        "name": "Asset split",
-        "script": "frappe.ui.form.on('Asset', {\r\n    refresh: function(frm) {\r\n        // Only allow splitting if the asset is submitted and has a quantity greater than 1\r\n        if (frm.doc.docstatus === 1 && frm.doc.asset_quantity > 1) {\r\n            \r\n            // Remove the native core split asset option under 'Manage'\r\n            frm.page.remove_inner_button(__('Split Asset'), __('Manage'));\r\n            \r\n            // Add our customized option with the extra strategy field\r\n            frm.page.add_inner_button(__('Split Asset'), function() {\r\n                let dialog = new frappe.ui.Dialog({\r\n                    title: __('Split Asset'),\r\n                    fields: [\r\n                        {\r\n                            label: __('Current Quantity'),\r\n                            fieldname: 'current_qty',\r\n                            fieldtype: 'Float',\r\n                            read_only: 1,\r\n                            default: frm.doc.asset_quantity\r\n                        },\r\n                        {\r\n                            label: __('Split Quantity'),\r\n                            fieldname: 'split_qty',\r\n                            fieldtype: 'Int',\r\n                            reqd: 1,\r\n                            description: __('The quantity you want to extract from this asset.')\r\n                        },\r\n                        {\r\n                            label: __('Split Strategy'),\r\n                            fieldname: 'split_type',\r\n                            fieldtype: 'Select',\r\n                            options: ['Individual', 'Grouped'],\r\n                            default: 'Individual',\r\n                            description: __('\"Individual\" creates distinct records for every item count. \"Grouped\" bundles the split quantity into one new draft record.')\r\n                        }\r\n                    ],\r\n                    primary_action_label: __('Split'),\r\n                    primary_action(values) {\r\n                        if (values.split_qty >= frm.doc.asset_quantity) {\r\n                            frappe.msgprint(__('Split quantity must be strictly less than the current asset quantity.'));\r\n                            return;\r\n                        }\r\n                        if (values.split_qty <= 0) {\r\n                            frappe.msgprint(__('Split quantity must be greater than 0.'));\r\n                            return;\r\n                        }\r\n                        \r\n                        dialog.hide();\r\n                        \r\n                        frappe.call({\r\n                            // Pointing to the remapped whitelisted path handled in your hooks.py\r\n                            method: \"erpnext.assets.doctype.asset.asset.split_asset\", \r\n                            args: {\r\n                                asset_name: frm.doc.name,\r\n                                split_qty: values.split_qty,\r\n                                split_type: values.split_type\r\n                            },\r\n                            freeze: true,\r\n                            freeze_message: __(\"Processing Asset Split...\"),\r\n                            callback: function(r) {\r\n                                if (!r.exc) {\r\n                                    frm.reload_doc();\r\n                                }\r\n                            }\r\n                        });\r\n                    }\r\n                });\r\n                dialog.show();\r\n            }, __('Manage'));\r\n        }\r\n    }\r\n});",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Material Request",
-        "enabled": 0,
-        "modified": "2026-07-09 09:26:15.081348",
-        "module": null,
-        "name": "Cane Receipt",
-        "script": "frappe.ui.form.on('Material Request', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.purpose === \"Cane Receipt\") {\r\n            frm.set_df_property('source_warehouse', 'reqd', 0);\r\n        }\r\n    }\r\n});",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Payment Entry",
-        "enabled": 1,
-        "modified": "2025-04-28 10:29:53.214269",
-        "module": "Common Customization",
-        "name": "Fetching Purchase Invoice Name",
-        "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Payment Entry",
-        "enabled": 1,
-        "modified": "2025-04-28 10:44:55.936764",
-        "module": "Common Customization",
-        "name": "Fetching Sale Invoice Name",
-        "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Employee Advance",
-        "enabled": 1,
-        "modified": "2025-06-17 15:57:49.492464",
-        "module": "Common Customization",
-        "name": "Change Advance Account With Advance Type",
-        "script": "frappe.ui.form.on('Employee Advance', {\r\n    custom_advance_type: function(frm) {\r\n        if (!frm.doc.company) {\r\n            frappe.msgprint(__('Please select a Company first.'));\r\n            return;\r\n        }\r\n\r\n        frappe.db.get_doc('Company', frm.doc.company)\r\n            .then(company => {\r\n                 if (frm.doc.custom_advance_type === 'For Employee Advance') {\r\n                    frm.set_value('advance_account', company.default_employee_advance_account);\r\n                }\r\n                else if (frm.doc.custom_advance_type === 'For Purchase') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_purchaser_advance);\r\n                } else if (frm.doc.custom_advance_type === 'For Petty Cash') {\r\n                    frm.set_value('advance_account', company.custom_default_petty_cash_account);\r\n                } else if (frm.doc.custom_advance_type === 'For Service') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_service_advance);\r\n                }\r\n            })\r\n            .catch(err => {\r\n                console.error(err);\r\n                frappe.msgprint(__('Failed to fetch company data'));\r\n            });\r\n    }\r\n});\r\n",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Interview",
-        "enabled": 1,
-        "modified": "2025-04-24 10:41:40.538139",
-        "module": "Common Customization",
-        "name": "Fetching Written and Practical Test Scores",
-        "script": "frappe.ui.form.on('Interview', {\r\n    job_applicant: function(frm) {\r\n        if (frm.doc.job_applicant) {\r\n            frappe.call({\r\n                method: \"customized_forcommon.common_customization.doctype.applicant_test_result.applicant_test_result.get_applicant_test_scores\",\r\n                args: {\r\n                    job_applicant: frm.doc.job_applicant\r\n                },\r\n                callback: function(r) {\r\n                    if (r.message && r.message.length > 0) {\r\n                        let result = r.message[0];\r\n                        frm.set_value('custom_written_test_score', result.written_test_score);\r\n                        frm.set_value('custom_practical_test_score', result.practical_test_score);\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n});\r\n",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Sales Order",
-        "enabled": 1,
-        "modified": "2025-06-04 16:06:42.686440",
-        "module": "Common Customization",
-        "name": "Adding \"Manufactured Sale\" option in order type",
-        "script": "frappe.ui.form.on('Sales Order', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.order_type;\n        const new_option = 'Manufactured Sale';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Material Request",
-        "enabled": 1,
-        "modified": "2025-06-04 16:11:27.537199",
-        "module": "Common Customization",
-        "name": "Adding \"Material Cost\" option in Purpose",
-        "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
-        "view": "Form"
-    },
-    {
-        "docstatus": 0,
-        "doctype": "Client Script",
-        "dt": "Leave Application",
-        "enabled": 1,
-        "modified": "2025-07-02 15:19:56.821320",
-        "module": "Common Customization",
-        "name": "Hiding Half Day Date and Calculate Total Leave Days",
-        "script": "frappe.ui.form.on('Leave Application', {\n\trefresh(frm) {\n    \t toggleHalfDayDateMandatory(frm);\n\t},\n\thalf_day: function(frm){\n\t   toggleHalfDayDateMandatory(frm);\n\t}\n});\n\nfunction toggleHalfDayDateMandatory(frm) {\n    if (frm.doc.half_day) {\n        frm.toggle_display('half_day_date', false); // Show it, but not mandatory\n        // Optionally clear the value if half_day is checked and it's no longer needed\n        // frm.set_value('half_day_date', null);\n    }\n    // Refresh the field to apply the mandatory status change visually\n    frm.refresh_field('half_day_date');\n}\n",
-        "view": "Form"
-    }
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Item",
+  "enabled": 1,
+  "modified": "2026-07-20 14:29:41.249624",
+  "module": "Common Customization",
+  "name": "Fixed Asset",
+  "script": "frappe.ui.form.on('Item', {\r\n    refresh(frm) {\r\n        toggle_item_group_for_fixed_asset(frm);\r\n    },\r\n\r\n    is_fixed_asset(frm) {\r\n        toggle_item_group_for_fixed_asset(frm);\r\n    }\r\n});\r\n\r\nfunction toggle_item_group_for_fixed_asset(frm) {\r\n    if (frm.doc.is_fixed_asset) {\r\n        frm.set_df_property('item_group', 'reqd', 0);\r\n        frm.set_df_property('item_group', 'hidden', 1);\r\n    } else {\r\n        frm.set_df_property('item_group', 'reqd', 1);\r\n        frm.set_df_property('item_group', 'hidden', 0);\r\n    }\r\n\r\n    frm.refresh_field('item_group');\r\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Asset Movement",
+  "enabled": 1,
+  "modified": "2026-07-07 16:32:28.391762",
+  "module": "Common Customization",
+  "name": "Asset Movement",
+  "script": "// Copyright (c) 2016, Frappe Technologies Pvt. Ltd. and contributors\r\n// For license information, please see license.txt\r\n\r\nfrappe.ui.form.on(\"Asset Movement\", {\r\n    setup: (frm) => {\r\n        frm.set_query(\"to_employee\", \"assets\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"from_employee\", \"assets\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"reference_name\", (doc) => {\r\n            return {\r\n                filters: {\r\n                    company: doc.company,\r\n                    docstatus: 1,\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"reference_doctype\", () => {\r\n            return {\r\n                filters: {\r\n                    name: [\"in\", [\"Purchase Receipt\", \"Purchase Invoice\"]],\r\n                },\r\n            };\r\n        });\r\n        frm.set_query(\"asset\", \"assets\", () => {\r\n            return {\r\n                filters: {\r\n                    status: [\"not in\", [\"Draft\"]],\r\n                },\r\n            };\r\n        });\r\n    },\r\n\r\n    onload: (frm) => {\r\n        frm.trigger(\"set_required_fields\");\r\n    },\r\n\r\n    purpose: (frm) => {\r\n        // Clear child table 'to_employee' fields immediately if switching to Return\r\n        if (frm.doc.purpose === \"Return\" && frm.doc.assets) {\r\n            frm.doc.assets.forEach(row => {\r\n                frappe.model.set_value(row.doctype, row.name, \"to_employee\", \"\");\r\n            });\r\n        }\r\n        frm.trigger(\"set_required_fields\");\r\n    },\r\n\r\n    set_required_fields: (frm, cdt, cdn) => {\r\n        let fieldnames_to_be_altered;\r\n        if (frm.doc.purpose === \"Transfer\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 1, reqd: 1 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 1, reqd: 0 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Receipt\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 0, reqd: 0 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Issue\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 1, reqd: 0 },\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 1, reqd: 0 },\r\n                to_employee: { read_only: 0, reqd: 1 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Transfer and Issue\") {\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 },\r\n                source_location: { read_only: 0, reqd: 1 },\r\n                from_employee: { read_only: 0, reqd: 1 },\r\n                to_employee: { read_only: 0, reqd: 1 },\r\n            };\r\n        } else if (frm.doc.purpose === \"Return\") {\r\n            // New injection matching your requirements\r\n            fieldnames_to_be_altered = {\r\n                target_location: { read_only: 0, reqd: 1 }, // Asset comes back to a storage unit/location\r\n                source_location: { read_only: 1, reqd: 0 },\r\n                from_employee: { read_only: 0, reqd: 1 },   // Mandatory\r\n                to_employee: { read_only: 1, reqd: 0 },     // Null / Not Mandatory\r\n            };\r\n        }\r\n        \r\n        if (fieldnames_to_be_altered) {\r\n            Object.keys(fieldnames_to_be_altered).forEach((fieldname) => {\r\n                let property_to_be_altered = fieldnames_to_be_altered[fieldname];\r\n                Object.keys(property_to_be_altered).forEach((property) => {\r\n                    let value = property_to_be_altered[property];\r\n                    frm.fields_dict[\"assets\"].grid.update_docfield_property(fieldname, property, value);\r\n                });\r\n            });\r\n            frm.refresh_field(\"assets\");\r\n        }\r\n    },\r\n});\r\n\r\nfrappe.ui.form.on(\"Asset Movement Item\", {\r\n    asset: function (frm, cdt, cdn) {\r\n        // on manual entry of an asset auto sets their source location / employee\r\n        const asset_name = locals[cdt][cdn].asset;\r\n        if (asset_name) {\r\n            frappe.db\r\n                .get_doc(\"Asset\", asset_name)\r\n                .then((asset_doc) => {\r\n                    if (asset_doc.location)\r\n                        frappe.model.set_value(cdt, cdn, \"source_location\", asset_doc.location);\r\n                    if (asset_doc.custodian)\r\n                        frappe.model.set_value(cdt, cdn, \"from_employee\", asset_doc.custodian);\r\n                })\r\n                .catch((err) => {\r\n                    console.log(err); // eslint-disable-line\r\n                });\r\n        }\r\n    },\r\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Asset",
+  "enabled": 1,
+  "modified": "2026-07-07 16:26:14.855527",
+  "module": "Common Customization",
+  "name": "Asset split",
+  "script": "frappe.ui.form.on('Asset', {\r\n    refresh: function(frm) {\r\n        // Only allow splitting if the asset is submitted and has a quantity greater than 1\r\n        if (frm.doc.docstatus === 1 && frm.doc.asset_quantity > 1) {\r\n            \r\n            // Remove the native core split asset option under 'Manage'\r\n            frm.page.remove_inner_button(__('Split Asset'), __('Manage'));\r\n            \r\n            // Add our customized option with the extra strategy field\r\n            frm.page.add_inner_button(__('Split Asset'), function() {\r\n                let dialog = new frappe.ui.Dialog({\r\n                    title: __('Split Asset'),\r\n                    fields: [\r\n                        {\r\n                            label: __('Current Quantity'),\r\n                            fieldname: 'current_qty',\r\n                            fieldtype: 'Float',\r\n                            read_only: 1,\r\n                            default: frm.doc.asset_quantity\r\n                        },\r\n                        {\r\n                            label: __('Split Quantity'),\r\n                            fieldname: 'split_qty',\r\n                            fieldtype: 'Int',\r\n                            reqd: 1,\r\n                            description: __('The quantity you want to extract from this asset.')\r\n                        },\r\n                        {\r\n                            label: __('Split Strategy'),\r\n                            fieldname: 'split_type',\r\n                            fieldtype: 'Select',\r\n                            options: ['Individual', 'Grouped'],\r\n                            default: 'Individual',\r\n                            description: __('\"Individual\" creates distinct records for every item count. \"Grouped\" bundles the split quantity into one new draft record.')\r\n                        }\r\n                    ],\r\n                    primary_action_label: __('Split'),\r\n                    primary_action(values) {\r\n                        if (values.split_qty >= frm.doc.asset_quantity) {\r\n                            frappe.msgprint(__('Split quantity must be strictly less than the current asset quantity.'));\r\n                            return;\r\n                        }\r\n                        if (values.split_qty <= 0) {\r\n                            frappe.msgprint(__('Split quantity must be greater than 0.'));\r\n                            return;\r\n                        }\r\n                        \r\n                        dialog.hide();\r\n                        \r\n                        frappe.call({\r\n                            // Pointing to the remapped whitelisted path handled in your hooks.py\r\n                            method: \"erpnext.assets.doctype.asset.asset.split_asset\", \r\n                            args: {\r\n                                asset_name: frm.doc.name,\r\n                                split_qty: values.split_qty,\r\n                                split_type: values.split_type\r\n                            },\r\n                            freeze: true,\r\n                            freeze_message: __(\"Processing Asset Split...\"),\r\n                            callback: function(r) {\r\n                                if (!r.exc) {\r\n                                    frm.reload_doc();\r\n                                }\r\n                            }\r\n                        });\r\n                    }\r\n                });\r\n                dialog.show();\r\n            }, __('Manage'));\r\n        }\r\n    }\r\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Material Request",
+  "enabled": 0,
+  "modified": "2026-07-09 09:26:15.081348",
+  "module": null,
+  "name": "Cane Receipt",
+  "script": "frappe.ui.form.on('Material Request', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.purpose === \"Cane Receipt\") {\r\n            frm.set_df_property('source_warehouse', 'reqd', 0);\r\n        }\r\n    }\r\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Entry",
+  "enabled": 1,
+  "modified": "2025-04-28 10:29:53.214269",
+  "module": "Common Customization",
+  "name": "Fetching Purchase Invoice Name",
+  "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let purchase_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Purchase Invoice');\r\n            if (purchase_invoice_ref) {\r\n                frm.set_value('custom_purchase_invoice', purchase_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Entry",
+  "enabled": 1,
+  "modified": "2025-04-28 10:44:55.936764",
+  "module": "Common Customization",
+  "name": "Fetching Sale Invoice Name",
+  "script": "frappe.ui.form.on('Payment Entry', {\r\n    refresh: function(frm) {\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    },\r\n    references_on_form_rendered: function(frm) {\r\n        // Also handle dynamically when references are changed\r\n        if (frm.doc.references && frm.doc.references.length > 0) {\r\n            let sales_invoice_ref = frm.doc.references.find(d => d.reference_doctype === 'Sales Invoice');\r\n            if (sales_invoice_ref) {\r\n                frm.set_value('custom_sales_invoice', sales_invoice_ref.reference_name);\r\n            }\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Employee Advance",
+  "enabled": 1,
+  "modified": "2025-06-17 15:57:49.492464",
+  "module": "Common Customization",
+  "name": "Change Advance Account With Advance Type",
+  "script": "frappe.ui.form.on('Employee Advance', {\r\n    custom_advance_type: function(frm) {\r\n        if (!frm.doc.company) {\r\n            frappe.msgprint(__('Please select a Company first.'));\r\n            return;\r\n        }\r\n\r\n        frappe.db.get_doc('Company', frm.doc.company)\r\n            .then(company => {\r\n                 if (frm.doc.custom_advance_type === 'For Employee Advance') {\r\n                    frm.set_value('advance_account', company.default_employee_advance_account);\r\n                }\r\n                else if (frm.doc.custom_advance_type === 'For Purchase') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_purchaser_advance);\r\n                } else if (frm.doc.custom_advance_type === 'For Petty Cash') {\r\n                    frm.set_value('advance_account', company.custom_default_petty_cash_account);\r\n                } else if (frm.doc.custom_advance_type === 'For Service') {\r\n                    frm.set_value('advance_account', company.custom_default_account_for_service_advance);\r\n                }\r\n            })\r\n            .catch(err => {\r\n                console.error(err);\r\n                frappe.msgprint(__('Failed to fetch company data'));\r\n            });\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Interview",
+  "enabled": 1,
+  "modified": "2025-04-24 10:41:40.538139",
+  "module": "Common Customization",
+  "name": "Fetching Written and Practical Test Scores",
+  "script": "frappe.ui.form.on('Interview', {\r\n    job_applicant: function(frm) {\r\n        if (frm.doc.job_applicant) {\r\n            frappe.call({\r\n                method: \"customized_forcommon.common_customization.doctype.applicant_test_result.applicant_test_result.get_applicant_test_scores\",\r\n                args: {\r\n                    job_applicant: frm.doc.job_applicant\r\n                },\r\n                callback: function(r) {\r\n                    if (r.message && r.message.length > 0) {\r\n                        let result = r.message[0];\r\n                        frm.set_value('custom_written_test_score', result.written_test_score);\r\n                        frm.set_value('custom_practical_test_score', result.practical_test_score);\r\n                    }\r\n                }\r\n            });\r\n        }\r\n    }\r\n});\r\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Order",
+  "enabled": 1,
+  "modified": "2025-06-04 16:06:42.686440",
+  "module": "Common Customization",
+  "name": "Adding \"Manufactured Sale\" option in order type",
+  "script": "frappe.ui.form.on('Sales Order', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.order_type;\n        const new_option = 'Manufactured Sale';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Material Request",
+  "enabled": 1,
+  "modified": "2025-06-04 16:11:27.537199",
+  "module": "Common Customization",
+  "name": "Adding \"Material Cost\" option in Purpose",
+  "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Leave Application",
+  "enabled": 1,
+  "modified": "2025-07-02 15:19:56.821320",
+  "module": "Common Customization",
+  "name": "Hiding Half Day Date and Calculate Total Leave Days",
+  "script": "frappe.ui.form.on('Leave Application', {\n\trefresh(frm) {\n    \t toggleHalfDayDateMandatory(frm);\n\t},\n\thalf_day: function(frm){\n\t   toggleHalfDayDateMandatory(frm);\n\t}\n});\n\nfunction toggleHalfDayDateMandatory(frm) {\n    if (frm.doc.half_day) {\n        frm.toggle_display('half_day_date', false); // Show it, but not mandatory\n        // Optionally clear the value if half_day is checked and it's no longer needed\n        // frm.set_value('half_day_date', null);\n    }\n    // Refresh the field to apply the mandatory status change visually\n    frm.refresh_field('half_day_date');\n}\n",
+  "view": "Form"
+ }
 ]
