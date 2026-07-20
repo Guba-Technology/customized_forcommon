@@ -388,6 +388,7 @@ doctype_js = {
     "System Settings": "public/js/system_settings.js",
     "Leave Application": "public/js/leave_application.js",
     "Item Group": "public/js/item_group.js",
+    "Landed Cost Voucher": "public/js/land_cost_voucher.js"
 
 
 }

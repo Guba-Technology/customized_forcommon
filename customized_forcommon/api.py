@@ -290,3 +290,101 @@ def calculate_as_of_today_balance(employee, leave_type):
     balance = earned - used
 
     return round(balance, 2)
+
+
+
+
+@frappe.whitelist()
+def get_lc_invoice_and_payment_entry_costs(
+    receipt_document_type,
+    receipt_document
+):
+
+    if receipt_document_type != "Purchase Receipt":
+        return []
+
+
+    pr = frappe.get_doc(
+        "Purchase Receipt",
+        receipt_document
+    )
+
+
+    if not pr.custom_purchase_order:
+        return []
+
+
+    po = frappe.get_doc(
+        "Purchase Order",
+        pr.custom_purchase_order
+    )
+
+
+    if not po.custom_lc_number:
+        return []
+
+
+    lc = frappe.get_doc(
+        "LC Master",
+        po.custom_lc_number
+    )
+
+
+    taxes = []
+    processed_invoices = set()
+    processed_payments = set()
+
+
+    # Purchase Invoice Costs
+    for invoice_row in lc.linked_purchase_invoices:
+
+        if invoice_row.purchase_invoice in processed_invoices:
+            continue
+
+
+        pi = frappe.get_doc(
+            "Purchase Invoice",
+            invoice_row.purchase_invoice
+        )
+
+
+        for item in pi.items:
+
+            taxes.append({
+                "description": f"{pi.name} - {item.item_name}",
+                "amount": item.amount,
+                "expense_account": item.expense_account
+            })
+
+
+        processed_invoices.add(
+            invoice_row.purchase_invoice
+        )
+
+
+    # Payment Entry Costs
+    for payment_row in lc.linked_payment_entries:
+
+        if payment_row.payment_entry in processed_payments:
+            continue
+
+
+        pe = frappe.get_doc(
+            "Payment Entry",
+            payment_row.payment_entry
+        )
+
+
+        taxes.append({
+            "description": f"{pe.name} - {pe.paid_to}",
+            "amount": pe.paid_amount,
+            "expense_account": pe.paid_to
+        })
+
+
+        processed_payments.add(
+            payment_row.payment_entry
+        )
+
+
+    return taxes
