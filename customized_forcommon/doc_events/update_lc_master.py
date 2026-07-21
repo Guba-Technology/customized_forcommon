@@ -36,13 +36,13 @@ def update_linked_purchase_orders(doc, method):
             "purchase_order": doc.name
         }
     ):
-        frappe.msgprint(f"Purchase Order {doc.name} is already added in LC Master: {link}")
+        frappe.msgprint(f"Purchase Order {doc.name} is already added in LC Master:{link}")
         return
     lc_master = frappe.get_doc("LC Master", lc_name)
     link = f"<a href='/app/lc-master/{lc_name}'>{lc_name}</a>"
     if lc_master.linked_purchase_orders:
         if len(lc_master.linked_purchase_orders) == 1:
-            frappe.msgprint(f"Another Purchase Order is already added in  LC Master: {link}, this will not be added")
+            frappe.msgprint(f"Another Purchase Order is already added in  LC Master:{link}, this will not be added")
             return
 
     # Insert into the child table
