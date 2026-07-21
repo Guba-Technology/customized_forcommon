@@ -88,11 +88,11 @@
    "options": "Bank"
   },
   {
-   "default": "Draft",
+   "default": "Active",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nOpen\nClosed",
+   "options": "Active\nClosed",
    "read_only": 1
   },
   {
@@ -199,7 +199,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-09 12:09:57.497923",
+ "modified": "2026-07-21 10:51:10.364742",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "LC Master",
