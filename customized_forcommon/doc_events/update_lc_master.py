@@ -1,8 +1,30 @@
 import frappe
 
+def validate_lc_is_editable(lc_number):
+    if not lc_number:
+        return
+
+    lc = frappe.db.get_value(
+        "LC Master",
+        lc_number,
+        ["name", "status"],
+        as_dict=True
+    )
+
+    if not lc:
+        return
+
+    if lc.status == "Closed":
+        frappe.throw(
+            f"LC Master <b>{lc.name}</b> is Closed. "
+            "You cannot modify linked documents."
+        )
+
 def update_linked_purchase_orders(doc, method):
     if not doc.custom_lc_number:
         return
+    
+    validate_lc_is_editable(doc.custom_lc_number)
 
     lc_name = doc.custom_lc_number
     
@@ -39,6 +61,7 @@ def update_linked_purchase_orders(doc, method):
 def remove_linked_purchase_orders(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     frappe.db.delete(
         "LC Purchase Order Table",
@@ -54,6 +77,7 @@ def remove_linked_purchase_orders(doc, method):
 def update_linked_purchase_invoices(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     lc_name = doc.custom_lc_number  
     # prevent duplicates
@@ -83,6 +107,7 @@ def update_linked_purchase_invoices(doc, method):
 def remove_linked_purchase_invoices(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     frappe.db.delete(
         "LC Purchase Invoice Table",
@@ -111,6 +136,7 @@ def update_lc_purchase_invoice_status_from_payment(doc, method):
 
         if not invoice.custom_lc_number:
             continue
+        validate_lc_is_editable(invoice.custom_lc_number)
 
         row_name = frappe.db.get_value(
             "LC Purchase Invoice Table",
@@ -132,6 +158,7 @@ def update_lc_purchase_invoice_status_from_payment(doc, method):
 def update_linked_purchase_receipts(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     lc_name = doc.custom_lc_number
    
@@ -162,6 +189,7 @@ def update_linked_purchase_receipts(doc, method):
 def remove_linked_purchase_receipts(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     frappe.db.delete(
         "LC Purchase Receipt Table",
@@ -176,7 +204,7 @@ def remove_linked_purchase_receipts(doc, method):
 def update_linked_payment_entries(doc, method):
     if not doc.custom_lc_number or not doc.party_type == "Supplier":
         return
-
+    validate_lc_is_editable(doc.custom_lc_number)
     lc_name = doc.custom_lc_number
 
        # prevent duplicates
@@ -206,6 +234,7 @@ def update_linked_payment_entries(doc, method):
 def remove_linked_payment_entries(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     frappe.db.delete(
         "LC Payment Entry Table",
@@ -221,6 +250,7 @@ def remove_linked_payment_entries(doc, method):
 def update_linked_journal_entries(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     lc_name = doc.custom_lc_number
     # prevent duplicates
@@ -250,6 +280,7 @@ def update_linked_journal_entries(doc, method):
 def remove_linked_journal_entries(doc, method):
     if not doc.custom_lc_number:
         return
+    validate_lc_is_editable(doc.custom_lc_number)
 
     frappe.db.delete(
         "LC Journal Entry Table",
@@ -282,6 +313,7 @@ def update_allocated_amount(doc, method):
             )
             if not lc_name:
                 continue
+            validate_lc_is_editable(lc_name)
 
             row = frappe.db.get_value(
                 "LC Purchase Order Table",
@@ -315,6 +347,7 @@ def update_allocated_amount(doc, method):
             )
             if not lc_name:
                 continue
+            validate_lc_is_editable(lc_name)
 
             row = frappe.db.get_value(
                 "LC Purchase Invoice Table",
@@ -358,6 +391,7 @@ def reverse_allocated_amount(doc, method):
             )
             if not lc_name:
                 continue
+            validate_lc_is_editable(lc_name)
 
             row = frappe.db.get_value(
                 "LC Purchase Order Table",
@@ -419,6 +453,7 @@ def update_lc_purchase_order_status_from_invoice(doc, method):
 
         if not purchase_order.custom_lc_number:
             continue
+        validate_lc_is_editable(purchase_order.custom_lc_number)
 
         row_name = frappe.db.get_value(
             "LC Purchase Order Table",
@@ -445,6 +480,7 @@ def update_lc_purchase_order_status_from_receipt(doc, method):
 
     if not purchase_order.custom_lc_number:
         return
+    validate_lc_is_editable(purchase_order.custom_lc_number)
 
     row_name = frappe.db.get_value(
         "LC Purchase Order Table",
@@ -473,6 +509,7 @@ def update_lc_purchase_receipt_status_from_invoice(doc, method):
 
         if not purchase_receipt.custom_lc_number:
             continue
+        validate_lc_is_editable(purchase_receipt.custom_lc_number)
 
         row_name = frappe.db.get_value(
             "LC Purchase Receipt Table",

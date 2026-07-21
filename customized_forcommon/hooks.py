@@ -275,6 +275,7 @@ doc_events = {
     },
     "Landed Cost Voucher": {
         "on_submit": "customized_forcommon.doc_events.land_cost_voucher.land_cost_creation_checker_for_purchase_order",
+        "on_cancel":"customized_forcommon.doc_events.land_cost_voucher.reopen_lc_after_land_cost_cancel"
     }
 }
 
