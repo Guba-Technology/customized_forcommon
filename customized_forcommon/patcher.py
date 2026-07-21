@@ -15,7 +15,8 @@ def execute():
         "customized_forcommon.patches.v1.employee_custom_fields.execute",
         "customized_forcommon.patches.v1.sales_invoice_custom_fields.execute",
         "customized_forcommon.patches.v1.purchase_invoice_custom_fields.execute",
-        "customized_forcommon.patches.v1.company_custom_fields.execute"
+        "customized_forcommon.patches.v1.company_custom_fields.execute",
+        "customized_forcommon.patches.v1.add_material_options.execute"
         #you can add more patches here from the V2 folder also
         #you don't need to change anything else, or make new migrations. only the patches will be executed
         #no need to create new versions for every updates done in different doctypes
