@@ -333,6 +333,7 @@ def get_lc_invoice_and_payment_entry_costs(
     taxes = []
     processed_invoices = set()
     processed_payments = set()
+    processed_journal_entries = set()
 
 
     # Purchase Invoice Costs
@@ -385,6 +386,31 @@ def get_lc_invoice_and_payment_entry_costs(
         processed_payments.add(
             payment_row.payment_entry
         )
+
+    # Journal Entry Costs        
+    for journal_row in lc.linked_journal_entries:
+        if journal_row.journal_entry in processed_journal_entries:
+            continue
+        je = frappe.get_doc("Journal Entry", journal_row.journal_entry)
+
+        for row in je.accounts:
+            account_type = frappe.db.get_value(
+                "Account",
+                row.account,
+                "account_type"
+            )
+
+            if account_type != "Expense Account":
+                continue
+
+            if row.debit_in_account_currency <= 0:
+                continue
+
+            taxes.append({
+                "description": f"{je.name} - {row.account}",
+                "amount": row.debit_in_account_currency,
+                "expense_account": row.account
+            })
 
 
     return taxes
