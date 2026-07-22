@@ -2,13 +2,42 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("LC Master", {
+    onload(frm) {
+
+        if (frm.is_new() && !frm.__initialized) {
+
+            frm.__initialized = true;
+
+            frm.clear_table("linked_purchase_orders");
+            frm.clear_table("linked_purchase_receipts");
+            frm.clear_table("linked_purchase_invoices");
+            frm.clear_table("linked_payment_entries");
+            frm.clear_table("linked_journal_entries");
+
+            frm.set_value({
+                total_fob_amount: 0,
+                cif_value: 0,
+                total_overhead_cost: 0,
+                total_cost: 0,
+                status: "Open",
+                is_landed_cost_created: 0,
+                amended_from: null,
+                created_landed_cost_voucher: null
+
+            });
+
+            frm.refresh_fields();
+
+        }
+    },
     refresh(frm) {
         toggle_empty_messages(frm);
 
         if (frm.doc.docstatus === 1) {
             frm.add_custom_button(__("Purchase Order"), () => {
                 frappe.new_doc("Purchase Order", {
-                    custom_lc_number: frm.doc.lc_number
+                    custom_lc_number: frm.doc.lc_number,
+                    supplier: frm.doc.supplier
                 });
             },
                 __("Create")
@@ -16,21 +45,25 @@ frappe.ui.form.on("LC Master", {
 
             frm.add_custom_button(__("Purchase Invoice"), () => {
                 frappe.new_doc("Purchase Invoice", {
-                    custom_lc_number: frm.doc.lc_number
+                    custom_lc_number: frm.doc.lc_number,
+                    supplier: frm.doc.supplier
+
                 });
             },
                 __("Create")
             );
             frm.add_custom_button(__("Payment Entry"), () => {
                 frappe.new_doc("Payment Entry", {
-                    custom_lc_number: frm.doc.lc_number
+                    custom_lc_number: frm.doc.lc_number,
                 });
             },
                 __("Create")
             );
             frm.add_custom_button(__("Purchase Receipt"), () => {
                 frappe.new_doc("Purchase Receipt", {
-                    custom_lc_number: frm.doc.lc_number
+                    custom_lc_number: frm.doc.lc_number,
+                    supplier: frm.doc.supplier
+
                 });
             },
                 __("Create")

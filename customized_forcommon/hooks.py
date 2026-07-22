@@ -274,8 +274,11 @@ doc_events = {
         "on_update": "customized_forcommon.doc_events.shift_schedule_assignment.custom_on_update",
     },
     "Landed Cost Voucher": {
-        "on_submit": "customized_forcommon.doc_events.land_cost_voucher.land_cost_creation_checker_for_purchase_order",
-        "on_cancel":"customized_forcommon.doc_events.land_cost_voucher.reopen_lc_after_land_cost_cancel"
+        "on_submit": [
+            "customized_forcommon.doc_events.landed_cost_voucher.update_lc_master_totals",
+            "customized_forcommon.doc_events.landed_cost_voucher.land_cost_creation_checker_for_purchase_order"
+            ],
+        "on_cancel":"customized_forcommon.doc_events.landed_cost_voucher.reopen_lc_after_land_cost_cancel"
     }
 }
 
@@ -389,7 +392,7 @@ doctype_js = {
     "System Settings": "public/js/system_settings.js",
     "Leave Application": "public/js/leave_application.js",
     "Item Group": "public/js/item_group.js",
-    "Landed Cost Voucher": "public/js/land_cost_voucher.js"
+    "Landed Cost Voucher": "public/js/landed_cost_voucher.js"
 
 
 }

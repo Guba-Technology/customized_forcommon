@@ -27,7 +27,8 @@ def update_linked_purchase_orders(doc, method):
     validate_lc_is_editable(doc.custom_lc_number)
 
     lc_name = doc.custom_lc_number
-    
+    lc_master = frappe.get_doc("LC Master", lc_name)
+    link = f"<a href='/app/lc-master/{lc_name}'>{lc_name}</a>"
      # prevent duplicates
     if frappe.db.exists(
         "LC Purchase Order Table",
@@ -38,8 +39,7 @@ def update_linked_purchase_orders(doc, method):
     ):
         frappe.msgprint(f"Purchase Order {doc.name} is already added in LC Master:{link}")
         return
-    lc_master = frappe.get_doc("LC Master", lc_name)
-    link = f"<a href='/app/lc-master/{lc_name}'>{lc_name}</a>"
+    
     if lc_master.linked_purchase_orders:
         if len(lc_master.linked_purchase_orders) == 1:
             frappe.msgprint(f"Another Purchase Order is already added in  LC Master:{link}, this will not be added")
@@ -54,9 +54,23 @@ def update_linked_purchase_orders(doc, method):
 
         "purchase_order": doc.name,
     })
+    
+    total_fob_amount = doc.grand_total
+    total_cost = (
+        total_fob_amount
+        + (lc_master.cif_value or 0)
+        + (lc_master.total_overhead_cost or 0)
+    )
 
     child.insert(ignore_permissions=True)
     frappe.msgprint(f"This document detail is added to linked purchase orders table of LC Master <b>{link}</b>")
+    frappe.db.set_value("LC Master", lc_name, 
+                        {
+                            "total_fob_amount": doc.grand_total,
+                            "total_cost": total_cost
+                        }
+                        )
+    
 
 def remove_linked_purchase_orders(doc, method):
     if not doc.custom_lc_number:
