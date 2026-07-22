@@ -25,11 +25,17 @@
   "linked_payment_entries",
   "no_je_msg",
   "linked_journal_entries",
+  "cif_value_accounts_section",
+  "cif_value_accounts",
   "section_break_1",
-  "total_purchase_amount",
-  "total_lc_charges",
+  "total_fob_amount",
+  "cif_value",
   "is_landed_cost_created",
-  "amended_from"
+  "created_landed_cost_voucher",
+  "amended_from",
+  "column_break_xnks",
+  "total_overhead_cost",
+  "total_cost"
  ],
  "fields": [
   {
@@ -88,33 +94,17 @@
    "options": "Bank"
   },
   {
-   "default": "Active",
+   "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nClosed",
+   "options": "Open\nClosed",
    "read_only": 1
   },
   {
    "fieldname": "section_break_1",
    "fieldtype": "Section Break",
    "label": "Financial Summary"
-  },
-  {
-   "default": "0",
-   "fieldname": "total_purchase_amount",
-   "fieldtype": "Currency",
-   "label": "Total Purchase Amount",
-   "options": "currency",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "total_lc_charges",
-   "fieldtype": "Currency",
-   "label": "Total LC Charges",
-   "options": "currency",
-   "read_only": 1
   },
   {
    "default": "0",
@@ -195,11 +185,65 @@
   {
    "fieldname": "no_je_msg",
    "fieldtype": "HTML"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_fob_amount",
+   "fieldtype": "Currency",
+   "label": "Total FOB Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xnks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cif_value",
+   "fieldtype": "Currency",
+   "label": "CIF Value Of Goods",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_overhead_cost",
+   "fieldtype": "Currency",
+   "label": "Total Overhead Cost",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Total Cost",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_landed_cost_voucher",
+   "fieldtype": "Link",
+   "label": "Created Landed Cost Voucher",
+   "options": "Landed Cost Voucher",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "cif_value_accounts_section",
+   "fieldtype": "Section Break",
+   "label": "CIF Value Accounts"
+  },
+  {
+   "fieldname": "cif_value_accounts",
+   "fieldtype": "Table",
+   "options": "CIF Value Accounts"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-21 10:51:10.364742",
+ "modified": "2026-07-22 09:13:31.633333",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "LC Master",
