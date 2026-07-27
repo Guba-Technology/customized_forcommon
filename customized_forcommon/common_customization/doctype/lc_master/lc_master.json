@@ -58,6 +58,7 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Supplier",
    "options": "Supplier",
    "reqd": 1
@@ -97,6 +98,8 @@
    "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Open\nClosed",
    "read_only": 1
@@ -243,7 +246,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-22 09:13:31.633333",
+ "modified": "2026-07-23 14:49:52.049948",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "LC Master",

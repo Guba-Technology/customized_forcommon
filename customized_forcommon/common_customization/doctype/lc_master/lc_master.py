@@ -26,4 +26,3 @@ class LCMaster(Document):
 
 			accounts[account] = i
 
-

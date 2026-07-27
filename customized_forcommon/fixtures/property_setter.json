@@ -414,5 +414,37 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee Education",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "year_of_passing",
+  "is_system_generated": 0,
+  "modified": "2026-07-27 16:15:50.197182",
+  "module": "Common Customization",
+  "name": "Employee Education-year_of_passing-hidden",
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Employee Education",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "level",
+  "is_system_generated": 0,
+  "modified": "2026-07-27 16:16:26.976275",
+  "module": "Common Customization",
+  "name": "Employee Education-level-hidden",
+  "property": "hidden",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
