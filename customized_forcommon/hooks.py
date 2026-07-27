@@ -42,7 +42,8 @@ fixtures = [
                           "Training Result", "Travel Request", "Clearance", "Employee Grievance",  "Employee Incentive",
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
-                          "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default"
+                          "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
+                          "Employee Education"
                         ]
             ],
         ]
@@ -109,6 +110,9 @@ fixtures = [
                             "Item Tax-minimum_net_rate-label",
                             "Item Tax-maximum_net_rate-label",
                             "Stock Reconciliation-main-allow_import",
+                            "Employee Education-year_of_passing-hidden",
+                            "Employee Education-level-hidden"
+
                 
             ]]
         ]
@@ -203,12 +207,16 @@ doc_events = {
             "customized_forcommon.doc_events.employee_advance.create_first_repayment_on_payment",
             "customized_forcommon.doc_events.update_lc_master.update_linked_payment_entries",
             "customized_forcommon.doc_events.update_lc_master.update_allocated_amount",
-            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_invoice_status_from_payment"
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_invoice_status_from_payment",
+            "customized_forcommon.doc_events.payment_entry.set_advance_paid_in_project_advance_payment",
+            "customized_forcommon.doc_events.payment_entry.set_payment_entry_in_project_advance_payment"
         ],
         "on_cancel": [
             "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation",
             "customized_forcommon.doc_events.update_lc_master.remove_linked_payment_entries",
-            "customized_forcommon.doc_events.update_lc_master.reverse_allocated_amount"
+            "customized_forcommon.doc_events.update_lc_master.reverse_allocated_amount",
+            "customized_forcommon.doc_events.payment_entry.unset_advance_paid_in_project_advance_payment",
+            "customized_forcommon.doc_events.payment_entry.unset_payment_entry_in_project_advance_payment"
         ]
     },
 
@@ -255,9 +263,13 @@ doc_events = {
         "on_submit":  [
             "customized_forcommon.doc_events.update_lc_master.update_linked_purchase_invoices",
             "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_order_status_from_invoice",
-            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_receipt_status_from_invoice"
+            "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_receipt_status_from_invoice",
+            "customized_forcommon.doc_events.purchase_invoice.set_created_invoice_and_recovery_details_in_project_advance_payment_terms"
         ],
-        "on_cancel": "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
+        "on_cancel": [
+            "customized_forcommon.doc_events.update_lc_master.remove_linked_purchase_invoices",
+            "customized_forcommon.doc_events.purchase_invoice.unset_created_invoice_and_recovery_details_in_project_advance_payment_terms"
+            ],
     },
      "Stock Entry": {
         "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
@@ -333,7 +345,8 @@ override_doctype_class = {
     "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
     "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
     "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation",
-	"Job Card": "customized_forcommon.overrides.job_card.CustomJobCard"
+	"Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
+    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice"
 }
 
 app_include_js = [
@@ -393,7 +406,8 @@ doctype_js = {
     "System Settings": "public/js/system_settings.js",
     "Leave Application": "public/js/leave_application.js",
     "Item Group": "public/js/item_group.js",
-    "Landed Cost Voucher": "public/js/landed_cost_voucher.js"
+    "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
+    "Company": "public/js/company.js"
 
 
 }
@@ -437,7 +451,7 @@ website_redirects = [
 # Extend the existing dashboard
 override_doctype_dashboards = {
     "Purchase Order": "customized_forcommon.overrides.purchase_order_dashboard.get_data",
-    "Stock Entry": "customized_forcommon.overrides.stock_entry_dashboard.get_data",
+    "Stock Entry": "customized_forcommon.overrides.stock_entry_dashboard.get_data"
 }
 
 # Template Overriding

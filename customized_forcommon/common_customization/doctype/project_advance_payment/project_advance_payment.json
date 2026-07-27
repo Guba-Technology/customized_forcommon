@@ -6,34 +6,42 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "project",
+  "company",
+  "currency",
   "contractor",
+  "project",
   "contract_value",
   "advance_percent",
   "advance_amount",
   "advance_paid",
   "column_break_axeg",
-  "advance_payment_entry",
+  "created_advance_payment_entry",
   "advance_balance",
   "total_recovered",
   "status",
   "account_for_advance",
+  "purchase_item",
+  "purchase_tax_template",
   "section_break_glur",
   "recovery_details",
-  "amended_from"
+  "amended_from",
+  "terms_tab",
+  "payment_terms_section",
+  "payment_terms"
  ],
  "fields": [
   {
    "fieldname": "project",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Project",
+   "label": "Project Name",
    "options": "Project"
   },
   {
    "fieldname": "contractor",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Contractor",
    "options": "Supplier",
    "reqd": 1
@@ -50,6 +58,7 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Advance Percent",
+   "precision": "2",
    "reqd": 1
   },
   {
@@ -62,13 +71,8 @@
    "default": "0",
    "fieldname": "advance_paid",
    "fieldtype": "Check",
-   "label": "Advance Paid"
-  },
-  {
-   "fieldname": "advance_payment_entry",
-   "fieldtype": "Link",
-   "label": "Advance Payment Entry",
-   "options": "Payment Entry"
+   "label": "Advance Paid",
+   "read_only": 1
   },
   {
    "fieldname": "advance_balance",
@@ -84,17 +88,21 @@
    "read_only": 1
   },
   {
-   "default": "Draft",
+   "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Draft\nActive\nFully Recovered\nClosed"
+   "options": "Open\nClosed",
+   "read_only": 1
   },
   {
    "fieldname": "recovery_details",
    "fieldtype": "Table",
    "label": "Recovery Details",
-   "options": "Advance Recovery Detail"
+   "options": "Advance Recovery Detail",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_axeg",
@@ -115,15 +123,69 @@
    "search_index": 1
   },
   {
+   "fetch_from": "company.custom_project_advance_receivable_account",
    "fieldname": "account_for_advance",
    "fieldtype": "Link",
    "label": "Account for Advance",
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "terms_tab",
+   "fieldtype": "Tab Break",
+   "label": "Terms"
+  },
+  {
+   "fieldname": "payment_terms_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Terms"
+  },
+  {
+   "fieldname": "payment_terms",
+   "fieldtype": "Table",
+   "options": "Project Advance Payment Terms",
+   "reqd": 1
+  },
+  {
+   "fieldname": "created_advance_payment_entry",
+   "fieldtype": "Link",
+   "label": "Created Advance Payment Entry",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.default_currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purchase_item",
+   "fieldtype": "Link",
+   "label": "Purchase Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purchase_tax_template",
+   "fieldtype": "Link",
+   "label": "Purchase Tax Template",
+   "options": "Purchase Taxes and Charges Template"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-09 10:30:16.874245",
+ "modified": "2026-07-27 15:15:02.324894",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Project Advance Payment",
