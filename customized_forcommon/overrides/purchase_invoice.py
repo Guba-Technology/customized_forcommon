@@ -20,7 +20,9 @@ class CustomPurchaseInvoice(BasePurchaseInvoice):
             "Project Advance Payment", self.custom_project_advance_payment
         )
         if not pap.created_advance_payment_entry and not pap.advance_paid:
-            frappe.throw(f"Please make an advance payment first in Project Advance Payment: <b>{pap.name}</b>")
+            frappe.throw(
+                f"Please make an advance payment first in Project Advance Payment: <b>{pap.name}</b>"
+            )
 
         advance_account = pap.account_for_advance
         advance_percent = flt(pap.advance_percent)
@@ -28,31 +30,56 @@ class CustomPurchaseInvoice(BasePurchaseInvoice):
         if advance_percent <= 0 or not advance_account:
             return
 
-        total = flt(self.grand_total)
-        recovered_amount = (total * advance_percent) / 100.0
+        grand_total = flt(self.grand_total)
+        item_total = flt(self.total or 0)
+        
+        recovered_amount = (grand_total * advance_percent) / 100.0
+        item_recovered_amount = (item_total * advance_percent) / 100.0
 
         if recovered_amount <= 0:
             return
 
         creditors_account = self.credit_to
 
-        # 1. Reduce the credit_to entry by recovered_amount
+        # 1. Reduce Creditor entry by total recovered_amount (grand_total * advance_percent)
         for gle in gl_entries:
             if gle.account == creditors_account and flt(gle.credit) > 0:
-                gle.credit -= recovered_amount
-                gle.credit_in_account_currency -= recovered_amount
+                gle.credit = flt(gle.credit) - recovered_amount
+                gle.credit_in_account_currency = (
+                    flt(gle.credit_in_account_currency) - recovered_amount
+                )
                 break
 
-        # 2. Credit the advance account for recovered_amount
+        # 2. Subtract tax advance percentage ONLY from Debit side of tax accounts
+        for tax in self.get("taxes"):
+            if not tax.account_head:
+                continue
+
+            tax_amount = flt(tax.tax_amount or tax.tax_amount_after_discount_)
+            tax_recovered = (tax_amount * advance_percent) / 100.0
+
+            if tax_recovered <= 0:
+                continue
+
+            for gle in gl_entries:
+                if gle.account == tax.account_head and flt(gle.debit) > 0:
+                    gle.debit = max(0.0, flt(gle.debit) - tax_recovered)
+                    gle.debit_in_account_currency = max(
+                        0.0, flt(gle.debit_in_account_currency) - tax_recovered
+                    )
+                    break
+
+        # 3. Credit Advance Account for item_recovered_amount ONLY (item_total * advance_percent)
         gl_entries.append(
             self.get_gl_dict(
                 {
                     "account": advance_account,
                     "party_type": "Supplier",
                     "party": self.supplier,
-                    "credit": recovered_amount,
-                    "credit_in_account_currency": recovered_amount,
-                    "remarks": self.remarks or f"Project Advance Recovery ({advance_percent}%)",
+                    "credit": item_recovered_amount,
+                    "credit_in_account_currency": item_recovered_amount,
+                    "remarks": self.remarks
+                    or f"Project Advance Recovery ({advance_percent}%)",
                 },
                 self.party_account_currency,
                 item=self,
@@ -69,7 +96,7 @@ class CustomPurchaseInvoice(BasePurchaseInvoice):
             )
             advance_percent = flt(pap.advance_percent)
             recovered_amount = (flt(self.grand_total) * advance_percent) / 100.0
-            
+
             # The net amount actually payable to supplier
             net_payable = flt(self.grand_total) - recovered_amount
 
