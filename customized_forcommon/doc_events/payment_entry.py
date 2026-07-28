@@ -45,7 +45,6 @@ def set_payment_entry_in_project_advance_payment_recovery_detail(doc, method):
 
         status = frappe.db.get_value("Purchase Invoice", row.reference_name, "status")
         pap = frappe.db.get_value("Purchase Invoice", row.reference_name, "custom_project_advance_payment")
-        
         if not pap:
             continue
 
@@ -70,7 +69,7 @@ def set_payment_entry_in_project_advance_payment_recovery_detail(doc, method):
         
         frappe.publish_realtime(
                     "project_advance_payment_updated",
-                    {"name": pap.name},
+                    {"name": pap},
                     after_commit=True
                 )
 def unset_payment_entry_in_project_advance_payment_recovery_detail(doc, method):
@@ -104,7 +103,7 @@ def unset_payment_entry_in_project_advance_payment_recovery_detail(doc, method):
                 )
         frappe.publish_realtime(
                     "project_advance_payment_updated",
-                    {"name": pap.name},
+                    {"name": pap},
                     after_commit=True
                 )
         
