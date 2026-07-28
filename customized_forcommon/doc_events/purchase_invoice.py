@@ -3,6 +3,13 @@ import frappe
 def set_created_invoice_and_recovery_details_in_project_advance_payment_terms(doc, method):
     if not (doc.custom_project_advance_payment and doc.custom_project_advance_payment_term):
         return
+    pap = frappe.get_doc("Project Advance Payment", doc.custom_project_advance_payment)
+
+    for row in pap.payment_terms:
+        if row.payment_term == doc.custom_project_advance_payment_term:
+            if row.created_purchase_invoice and row.invoice_created:
+                frappe.throw(f"Purchase Invoice already created for Projec Advance Payment: {pap.name}")
+    
 
     row = frappe.get_all(
         "Project Advance Payment Terms",
@@ -40,10 +47,18 @@ def set_created_invoice_and_recovery_details_in_project_advance_payment_terms(do
     })
     child.insert()
 
+    frappe.publish_realtime(
+                "project_advance_payment_updated",
+                {"name": pap.name},
+                after_commit=True
+            )
+
 
 def unset_created_invoice_and_recovery_details_in_project_advance_payment_terms(doc, method):
     if not (doc.custom_project_advance_payment and doc.custom_project_advance_payment_term):
         return
+    pap = frappe.get_doc("Project Advance Payment", doc.custom_project_advance_payment)
+
     row = frappe.get_all(
         "Project Advance Payment Terms",
         filters={
@@ -81,4 +96,10 @@ def unset_created_invoice_and_recovery_details_in_project_advance_payment_terms(
             recovery.name
         )
     frappe.db.commit()
+
+    frappe.publish_realtime(
+                "project_advance_payment_updated",
+                {"name": pap.name},
+                after_commit=True
+            )
     

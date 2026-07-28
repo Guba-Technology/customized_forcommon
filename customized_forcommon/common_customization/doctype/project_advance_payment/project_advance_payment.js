@@ -27,6 +27,13 @@ frappe.ui.form.on("Project Advance Payment", {
 
         }
     },
+    setup(frm) {
+        frappe.realtime.on("project_advance_payment_updated", (data) => {
+            if (data.name === frm.doc.name) {
+                frm.reload_doc();
+            }
+        });
+    },
     refresh(frm) {
 
         // Inject dynamic CSS targeting only the Payment Entry and Purchase Invoice '+' button

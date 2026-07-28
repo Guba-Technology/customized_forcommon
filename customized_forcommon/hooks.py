@@ -112,7 +112,6 @@ fixtures = [
                             "Stock Reconciliation-main-allow_import",
                             "Employee Education-year_of_passing-hidden",
                             "Employee Education-level-hidden"
-
                 
             ]]
         ]
@@ -209,14 +208,14 @@ doc_events = {
             "customized_forcommon.doc_events.update_lc_master.update_allocated_amount",
             "customized_forcommon.doc_events.update_lc_master.update_lc_purchase_invoice_status_from_payment",
             "customized_forcommon.doc_events.payment_entry.set_advance_paid_in_project_advance_payment",
-            "customized_forcommon.doc_events.payment_entry.set_payment_entry_in_project_advance_payment"
+            "customized_forcommon.doc_events.payment_entry.set_payment_entry_in_project_advance_payment_recovery_detail"
         ],
         "on_cancel": [
             "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_payment_entry_cancellation",
             "customized_forcommon.doc_events.update_lc_master.remove_linked_payment_entries",
             "customized_forcommon.doc_events.update_lc_master.reverse_allocated_amount",
             "customized_forcommon.doc_events.payment_entry.unset_advance_paid_in_project_advance_payment",
-            "customized_forcommon.doc_events.payment_entry.unset_payment_entry_in_project_advance_payment"
+            "customized_forcommon.doc_events.payment_entry.unset_payment_entry_in_project_advance_payment_recovery_detail"
         ]
     },
 
