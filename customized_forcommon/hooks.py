@@ -162,7 +162,9 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
-    "/assets/customized_forcommon/js/payment_request_extend.js"    
+    "/assets/customized_forcommon/js/payment_request_extend.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_reversal.js"
+    
 ]
 page_js = {
 	"print": "public/js/print_override.js"
@@ -186,6 +188,8 @@ doctype_js = {
     # "Module Profile": "public/js/module_profile.js",
     "System Settings": "public/js/system_settings.js",
     "Item Group": "public/js/item_group.js",
+    "Journal Entry": "public/js/journal_entry.js",
+
 }
 
 # this is used to override the get_leaves_for_period method in leave_application

@@ -20,6 +20,7 @@ frappe.ui.form.on("Purchase Invoice", {
                 }, "Create");
             }
         }
+        customized_forcommon.setup_reverse_bank_reconciliation(frm);
 
     }
 });
