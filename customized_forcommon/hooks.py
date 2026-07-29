@@ -241,6 +241,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
     "/assets/customized_forcommon/js/recruitment_analytics_patch.js",
     "/assets/customized_forcommon/js/employee_analytics_patch.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_reversal.js"
+
 ]
 
 # js files to be included in the doctype views
@@ -260,6 +262,9 @@ doctype_js = {
     "Stock Entry": "public/js/stock_entry.js",
     "Lead": "public/js/lead.js",
     "Item Group": "public/js/item_group.js",
+    "Journal Entry": "public/js/journal_entry.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
+
 }
 page_js = {
 	"print": "public/js/print_override.js"
