@@ -194,6 +194,8 @@ app_include_js = [
     "/assets/customized_forcommon/js/bom_creator_extended.js",
     "/assets/customized_forcommon/js/lite_locker.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_reversal.js"
+
 ]
 page_js = {
 	"print": "public/js/print_override.js"
@@ -212,6 +214,8 @@ doctype_js = {
     "User": "public/js/user.js",
     "System Settings": "public/js/system_settings.js",
     "Item Group": "public/js/item_group.js",
+    "Journal Entry": "public/js/journal_entry.js",
+    "Bank Transaction": "public/js/bank_transaction.js",
 
 }
 
