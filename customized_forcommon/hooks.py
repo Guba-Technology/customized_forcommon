@@ -409,8 +409,6 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Company": "public/js/company.js",
     "Journal Entry": "public/js/journal_entry.js",
-    "Bank Transaction": "public/js/bank_transaction.js",
-
 
 
 }
