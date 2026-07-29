@@ -607,7 +607,7 @@ def reverse_bank_transaction(doc):
         {
             "status": "Unreconciled",
             "allocated_amount": 0,
-            "clearance_date": None
+            "date": None
         },
         update_modified=False
     )
@@ -647,7 +647,7 @@ def unlink_bank_transactions( voucher_type, voucher_no):
                 {
                     "status": "Unreconciled",
                     "allocated_amount": 0,
-                    "clearance_date": None
+                    "date": None
                 },
                 update_modified=False
             )
