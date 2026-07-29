@@ -601,17 +601,8 @@ def reverse_bank_transaction(doc):
             "parent": doc.name
         }
     )
-    frappe.db.set_value(
-        "Bank Transaction",
-        doc.name,
-        {
-            "status": "Unreconciled",
-            "unallocated_amount": 300,
-            "allocated_amount": 0,
-            "date": None
-        },
-        update_modified=False
-    )
+    update_bank_transaction_amounts(doc.name)
+    
     return doc.bank_account
 
 
@@ -635,24 +626,53 @@ def unlink_bank_transactions( voucher_type, voucher_no):
             row.name,
             ignore_permissions=True
         )
-        remaining = frappe.db.count(
-            "Bank Transaction Payments",
-            {
-                "parent": row.parent
-            }
-        )
-        if remaining == 0:
-            frappe.db.set_value(
-                "Bank Transaction",
-                row.parent,
-                {
-                    "status": "Unreconciled",
-                    "allocated_amount": 0,
-                    "date": None
-                },
-                update_modified=False
-            )
 
+        update_bank_transaction_amounts(row.parent)
+
+def update_bank_transaction_amounts(bank_transaction):
+    """
+    Recalculate Bank Transaction allocation values after reconciliation reversal.
+    """
+
+    deposit, withdrawal = frappe.db.get_value(
+        "Bank Transaction",
+        bank_transaction,
+        ["deposit", "withdrawal"]
+    )
+
+    total_amount = flt(deposit) + flt(withdrawal)
+
+    allocated_amount = frappe.db.sql("""
+        SELECT COALESCE(SUM(allocated_amount), 0)
+        FROM `tabBank Transaction Payments`
+        WHERE parent = %s
+    """, bank_transaction)[0][0]
+
+    allocated_amount = flt(allocated_amount)
+
+    unallocated_amount = total_amount - allocated_amount
+
+
+    if allocated_amount <= 0:
+        status = "Unreconciled"
+
+    elif allocated_amount < total_amount:
+        status = "Partially Reconciled"
+
+    else:
+        status = "Reconciled"
+
+
+    frappe.db.set_value(
+        "Bank Transaction",
+        bank_transaction,
+        {
+            "allocated_amount": allocated_amount,
+            "unallocated_amount": unallocated_amount,
+            "status": status
+        },
+        update_modified=False
+    )
 
 # Validation
 def validate_lock_date(doc, clearance_date):
