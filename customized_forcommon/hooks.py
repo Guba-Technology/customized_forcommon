@@ -215,7 +215,6 @@ doctype_js = {
     "System Settings": "public/js/system_settings.js",
     "Item Group": "public/js/item_group.js",
     "Journal Entry": "public/js/journal_entry.js",
-    "Bank Transaction": "public/js/bank_transaction.js",
 
 }
 
