@@ -21,6 +21,7 @@ frappe.ui.form.on("Purchase Invoice", {
             }
         }
         toggle_lc_number(frm);
+        customized_forcommon.setup_reverse_bank_reconciliation(frm);
     }
 });
 

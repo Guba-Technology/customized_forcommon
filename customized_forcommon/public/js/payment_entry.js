@@ -13,6 +13,7 @@ frappe.ui.form.on("Payment Entry", {
     },
     refresh(frm) {
         toggle_lc_number(frm);
+        customized_forcommon.setup_reverse_bank_reconciliation(frm);
     },
 });
 

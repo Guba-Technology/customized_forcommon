@@ -358,6 +358,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/purchase_analytics.js",
     "/assets/customized_forcommon/js/custom_purchase_order_analysis.js",
     "/assets/customized_forcommon/js/employee.js",
+    "/assets/customized_forcommon/js/bank_reconciliation_reversal.js"
 
 ]
 
@@ -406,7 +407,10 @@ doctype_js = {
     "Leave Application": "public/js/leave_application.js",
     "Item Group": "public/js/item_group.js",
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
-    "Company": "public/js/company.js"
+    "Company": "public/js/company.js",
+    "Journal Entry": "public/js/journal_entry.js",
+    "Bank Transaction": "public/js/bank_transaction.js",
+
 
 
 }
