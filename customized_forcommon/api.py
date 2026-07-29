@@ -606,6 +606,7 @@ def reverse_bank_transaction(doc):
         doc.name,
         {
             "status": "Unreconciled",
+            "unallocated_amount": doc.allocated_amount,
             "allocated_amount": 0,
             "date": None
         },
