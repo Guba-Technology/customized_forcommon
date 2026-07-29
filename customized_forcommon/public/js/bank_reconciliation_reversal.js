@@ -25,7 +25,7 @@ customized_forcommon.setup_reverse_bank_reconciliation = function (frm) {
                                 {
                                     fieldname: "clearance_date",
                                     label: __("Original Clearance Date"),
-                                    fieldtype: "Date",
+                                    fieldtype: "Data",
                                     read_only: 1,
                                     default: r.message.clearance_date
                                 },
