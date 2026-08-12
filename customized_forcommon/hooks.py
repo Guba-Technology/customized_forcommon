@@ -43,7 +43,7 @@ fixtures = [
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
                           "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
-                          "Employee Education"
+                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component"
                         ]
             ],
         ]
@@ -288,6 +288,13 @@ doc_events = {
             "customized_forcommon.doc_events.landed_cost_voucher.land_cost_creation_checker_for_purchase_order"
             ],
         "on_cancel":"customized_forcommon.doc_events.landed_cost_voucher.reopen_lc_after_land_cost_cancel"
+    },
+    "Salary Slip":{
+        "before_validate": "customized_forcommon.doc_events.salary_slip.calculate_cash_amount",
+    },
+    "Salary Component": {
+        "validate": "customized_forcommon.doc_events.salary_slip.validate_more_than_one_cash_component"
+
     }
 }
 
@@ -407,7 +414,7 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Company": "public/js/company.js",
     "Journal Entry": "public/js/journal_entry.js",
-
+    "Payroll Entry": "public/js/payroll_entry.js",
 
 }
 doctype_list_js = {
