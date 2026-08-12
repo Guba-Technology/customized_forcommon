@@ -708,3 +708,89 @@ def create_reversal_log(voucher_type, voucher_no, bank_account, original_clearan
     log.insert(
         ignore_permissions=True
     )
+
+
+@frappe.whitelist()
+def make_cash_journal_entry(doc_name):
+    """
+    Called via JS button. Fetches Payroll Entry by name, sums custom_cash_amount
+    from linked Salary Slips, creates a Draft Journal Entry, and sets 
+    custom_cash_entry_created to 1.
+    """
+    doc = frappe.get_doc("Payroll Entry", doc_name)
+
+    # Prevent duplicate runs
+    if doc.get("custom_cash_entry_created"):
+        frappe.throw(_("Cash Entry has already been created for this Payroll Entry."))
+
+    # 1. Validation
+    if not doc.get("custom_cash_account"):
+        frappe.throw(_("Please select a <b>Cash Account</b> on Payroll Entry before proceeding."))
+
+    # 2. Get active Cash Salary Component
+    cash_component = frappe.db.get_value(
+        "Salary Component",
+        {"custom_is_component_for_cash": 1, "disabled": 0},
+        "name"
+    )
+
+    if not cash_component:
+        frappe.throw(_("No enabled Salary Component with 'Is Component for Cash' checked was found."))
+
+    # 3. Get component GL Account
+    component_account = frappe.db.get_value(
+        "Salary Component Account",
+        {"parent": cash_component, "company": doc.company},
+        "account"
+    )
+
+    if not component_account:
+        frappe.throw(
+            _("No GL Account set for company <b>{0}</b> in Salary Component <b>{1}</b>.")
+            .format(doc.company, cash_component)
+        )
+
+    # 4. Sum custom_cash_amount from active Salary Slips
+    slips = frappe.get_all(
+        "Salary Slip",
+        filters={"payroll_entry": doc.name, "docstatus": ["!=", 2]},
+        fields=["custom_cash_amount"]
+    )
+
+    total_cash_amount = sum(flt(s.custom_cash_amount) for s in slips)
+
+    if total_cash_amount <= 0:
+        frappe.throw(_("Total cash amount is 0. No Journal Entry will be created."))
+
+    # 5. Create Draft Journal Entry
+    je = frappe.get_doc({
+        "doctype": "Journal Entry",
+        "voucher_type": "Cash Entry",
+        "company": doc.company,
+        "posting_date": doc.posting_date or frappe.utils.nowdate(),
+        "user_remark": _("Draft cash distribution for Payroll Entry {0}").format(doc.name),
+        "accounts": [
+            {
+                "account": component_account,
+                "debit_in_account_currency": total_cash_amount,
+                "credit_in_account_currency": 0,
+                "user_remark": _("Cash salary deduction allocation")
+            },
+            {
+                "account": doc.custom_cash_account,
+                "debit_in_account_currency": 0,
+                "credit_in_account_currency": total_cash_amount,
+                "user_remark": _("Cash account payment credit")
+            }
+        ]
+    })
+
+    je.insert(ignore_permissions=True)
+
+    # 6. Flag the Payroll Entry so the button disappears on reload
+    doc.db_set("custom_cash_entry_created", 1)
+
+    doc.db_set("custom_created_cash_journal_entry", je.name)
+    
+    # Return Journal Entry name to JS callback
+    return je.name
