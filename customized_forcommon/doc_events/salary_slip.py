@@ -5,19 +5,19 @@ def calculate_cash_amount(doc, method):
     if not doc.employee or not doc.start_date or not doc.end_date:
         return
 
+    # Direct query filtering for active requests within the salary slip period
     cash_amount = frappe.db.get_value(
         "Salary Payment Distribution Request",
         {
             "employee": doc.employee,
             "company": doc.company,
             "docstatus": 1,
-            "effective_from": [">=", doc.start_date],
-            "effective_to": ["<=", doc.end_date]
+            "effective_from": ["<=", doc.end_date],
+            "effective_to": [">=", doc.start_date],
         },
         "cash_amount"
     )
-    
-    # Defaults to 0.0 if no matching document is found
+
     doc.custom_cash_amount = cash_amount or 0.0
 
 def validate_more_than_one_cash_component(doc, method):
