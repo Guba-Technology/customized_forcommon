@@ -43,7 +43,7 @@ fixtures = [
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
                           "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
-                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component"
+                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation"
                         ]
             ],
         ]
@@ -295,6 +295,13 @@ doc_events = {
     "Salary Component": {
         "validate": "customized_forcommon.doc_events.salary_slip.validate_more_than_one_cash_component"
 
+    },
+    "Workstation": {
+        "before_save": "customized_forcommon.doc_events.workstation.calculate_hour_rate",
+    },
+    "Job Card": {
+        "on_submit": "customized_forcommon.doc_events.job_card.make_workstation_cost_gl_entries",
+        "on_cancel": "customized_forcommon.doc_events.job_card.cancel_workstation_cost_gl_entries",
     }
 }
 
@@ -414,7 +421,9 @@ doctype_js = {
     "Landed Cost Voucher": "public/js/landed_cost_voucher.js",
     "Company": "public/js/company.js",
     "Journal Entry": "public/js/journal_entry.js",
-    "Payroll Entry": "public/js/payroll_entry.js",
+    "Payroll Entry": "public/js/payroll_entry.js",    "Workstation": "public/js/workstation.js",
+    "Job Card": "public/js/job_card.js",
+
 
 }
 doctype_list_js = {
@@ -442,9 +451,11 @@ recruitment_analytics.execute = custom_recruitment_analytics_execute
 # Monkey Patch for employee advance
 import hrms.hr.doctype.employee_advance.employee_advance as ea
 from customized_forcommon.overrides.employee_advance import create_return_through_additional_salary
-
 ea.create_return_through_additional_salary = create_return_through_additional_salary
-
+# monkey pathching for stock entry
+from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry as ERPNextStockEntry
+from customized_forcommon.overrides.stock_entry import check_if_operations_completed
+ERPNextStockEntry.check_if_operations_completed = check_if_operations_completed
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"
