@@ -451,9 +451,11 @@ recruitment_analytics.execute = custom_recruitment_analytics_execute
 # Monkey Patch for employee advance
 import hrms.hr.doctype.employee_advance.employee_advance as ea
 from customized_forcommon.overrides.employee_advance import create_return_through_additional_salary
-
 ea.create_return_through_additional_salary = create_return_through_additional_salary
-
+# monkey pathching for stock entry
+from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry as ERPNextStockEntry
+from customized_forcommon.overrides.stock_entry import check_if_operations_completed
+ERPNextStockEntry.check_if_operations_completed = check_if_operations_completed
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"

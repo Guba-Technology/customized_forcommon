@@ -355,3 +355,8 @@ class CustomStockEntry(ERPNextStockEntry):
                     new_map[item.s_warehouse]["account"] = account
 
         return new_map
+
+
+def check_if_operations_completed(self):
+    """Override: skip Job Card / operation completion check on Stock Entry."""
+    pass
