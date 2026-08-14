@@ -213,39 +213,24 @@ def calculate_employee_severance_amount(doc, hr_settings): # accept hr_settings 
     else:
         daily_wage = 0
 
-    service = relativedelta(
-        getdate(doc.relieving_date),
-        getdate(doc.date_of_joining)
-    )
+    service = relativedelta(getdate(doc.relieving_date), getdate(doc.date_of_joining))
 
     full_years = service.years
     full_months = service.months
     remaining_days = service.days
 
+    # Not Eligible
     if full_years < starting_year:
         return 0
-
+    
     if full_years <= 1:
         severance = daily_wage * first_year_severance_days
     else:
-        severance = (
-            daily_wage * first_year_severance_days
-        ) + (
-            (full_years - 1)
-            * subsequent_year_severance_days
-            * daily_wage
-        )
+        severance = (daily_wage * first_year_severance_days) + ((full_years - 1) * subsequent_year_severance_days * daily_wage)
 
-        remaining_year_fraction = (
-            (full_months / 12)
-            + (remaining_days / 365)
-        )
-
-        severance += (
-            remaining_year_fraction
-            * subsequent_year_severance_days
-            * daily_wage
-        )
+        # Remaining Months and Days
+        remaining_year_fraction = ((full_months / 12) + (remaining_days / 365))
+        severance += (remaining_year_fraction * subsequent_year_severance_days * daily_wage)
 
     return severance
 
