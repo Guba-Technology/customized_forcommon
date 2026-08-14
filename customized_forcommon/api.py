@@ -194,29 +194,45 @@ def get_item_tax_accounts(item_code, company=None, net_amount=0, posting_date=No
 
     return tax_accounts
 
-def calculate_severance_amount(doc):
+def calculate_employee_severance_amount(doc, hr_settings): # accept hr_settings to sync the current values
+    from dateutil.relativedelta import relativedelta
+
     if not doc.relieving_date or not doc.date_of_joining or not doc.custom_apply_severance_pay:
         return 0
 
-    hr_settings = frappe.get_doc("HR Settings")
     starting_year = hr_settings.custom_severenace_pay_starting_year or 1
+    first_year_severance_days = hr_settings.custom_first_year_severance_days or 0
+    subsequent_year_severance_days = hr_settings.custom_subsequent_year_severance_days or 0
+    salary_divisor_days = hr_settings.custom_salary_divisor_days or 0
 
-    basic_salary = doc.ctc or 0  # change to base if available
+    basic_salary = doc.ctc or 0
+
     if basic_salary <= 0:
         return 0
 
-    daily_wage = basic_salary / 30
+    if salary_divisor_days > 0:
+        daily_wage = basic_salary / salary_divisor_days
+    else:
+        daily_wage = 0
 
-    total_days = date_diff(doc.relieving_date, doc.date_of_joining)
-    full_years = int(total_days / 365)
+    service = relativedelta(getdate(doc.relieving_date), getdate(doc.date_of_joining))
 
+    full_years = service.years
+    full_months = service.months
+    remaining_days = service.days
+
+    # Not Eligible
     if full_years < starting_year:
         return 0
-
+    
     if full_years <= 1:
-        severance = daily_wage * 30
+        severance = daily_wage * first_year_severance_days
     else:
-        severance = (daily_wage * 30) + ((full_years - 1) * 10 * daily_wage)
+        severance = (daily_wage * first_year_severance_days) + ((full_years - 1) * subsequent_year_severance_days * daily_wage)
+
+        # Remaining Months and Days
+        remaining_year_fraction = ((full_months / 12) + (remaining_days / 365))
+        severance += (remaining_year_fraction * subsequent_year_severance_days * daily_wage)
 
     return severance
 
