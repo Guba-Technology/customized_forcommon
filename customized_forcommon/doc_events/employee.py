@@ -1,5 +1,7 @@
 import frappe
-from frappe.utils import getdate, date_diff
+from frappe.utils import getdate
+from dateutil.relativedelta import relativedelta
+
 def update_fuel_payment(doc, method):
     fuel_price = frappe.db.get_value("Company", doc.company, "custom_fuel_price")
     if doc.custom_allowed_fuel and doc.custom_allowed_fuel > 0 and fuel_price > 0:
@@ -15,29 +17,46 @@ def calculate_severance_amount(doc, method):
     # Get HR Settings
     hr_settings = frappe.get_doc("HR Settings")
     starting_year = hr_settings.custom_severenace_pay_starting_year or 1
+    first_year_severance_days = hr_settings.custom_first_year_severance_days or 0
+    subsequent_year_severance_days = hr_settings.custom_subsequent_year_severance_days or 0
+    salary_divisor_days = hr_settings.custom_salary_divisor_days or 0
 
     # Use Basic Salary
     basic_salary = doc.ctc or 0
     if basic_salary <= 0:
-        doc.custom_severance_amount = 0
+        doc.custom_severance_pay_amount = 0
         return
 
-    daily_wage = basic_salary / 30
+    if salary_divisor_days > 0:
+        daily_wage = basic_salary / salary_divisor_days
+    else:
+        daily_wage = 0
 
     # Total service
-    total_days = date_diff(doc.relieving_date, doc.date_of_joining)
-    full_years = int(total_days / 365)
+    service = relativedelta(getdate(doc.relieving_date), getdate(doc.date_of_joining))
+
+    full_years = service.years
+    full_months = service.months
+    remaining_days = service.days
+
+    frappe.msgprint(
+        f"Service: {full_years} years, {full_months} months, {remaining_days} days"
+    )
 
     # 🚫 Not eligible yet
     if full_years < starting_year:
-        doc.custom_severance_amount = 0
+        doc.custom_severance_pay_amount = 0
         return
 
     # ✅ Full severance calculation (from year 1)
     if full_years <= 1:
-        severance = daily_wage * 30
+        severance = daily_wage * first_year_severance_days
     else:
-        severance = (daily_wage * 30) + ((full_years - 1) * 10 * daily_wage)
+        severance = ( daily_wage * first_year_severance_days) + ((full_years - 1) * subsequent_year_severance_days * daily_wage)
+
+        # Remaining months and days
+        remaining_year_fraction = ((full_months / 12) + (remaining_days / 365) )
+        severance += (remaining_year_fraction * subsequent_year_severance_days* daily_wage)
 
     doc.custom_severance_pay_amount = severance
 
