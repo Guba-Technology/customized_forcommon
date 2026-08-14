@@ -39,10 +39,6 @@ def calculate_severance_amount(doc, method):
     full_months = service.months
     remaining_days = service.days
 
-    frappe.msgprint(
-        f"Service: {full_years} years, {full_months} months, {remaining_days} days"
-    )
-
     # 🚫 Not eligible yet
     if full_years < starting_year:
         doc.custom_severance_pay_amount = 0
