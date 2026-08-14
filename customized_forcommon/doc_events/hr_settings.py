@@ -1,5 +1,5 @@
 import frappe
-from customized_forcommon.api import calculate_severance_amount
+from customized_forcommon.api import calculate_employee_severance_amount
 
 def validate_severance_starting_year(doc, method):
     severance_starting_year = doc.custom_severenace_pay_starting_year
@@ -7,9 +7,14 @@ def validate_severance_starting_year(doc, method):
         frappe.throw("Severenace Pay Starting Year cannot be less than 1")
 
 def update_employee_severance_pay_amount(doc, method):
-    if not doc.has_value_changed("custom_severenace_pay_starting_year"):
+    if (
+        not doc.has_value_changed("custom_severenace_pay_starting_year")
+        and not doc.has_value_changed("custom_first_year_severance_days")
+        and not doc.has_value_changed("custom_subsequent_year_severance_days")
+        and not doc.has_value_changed("custom_salary_divisor_days")
+    ):
         return
-
+    
     employees = frappe.get_all(
         "Employee",
         filters={
@@ -24,8 +29,9 @@ def update_employee_severance_pay_amount(doc, method):
     for emp in employees:
         emp_doc = frappe.get_doc("Employee", emp.name)
 
-        severance = calculate_severance_amount(emp_doc)
-
+        # Pass the HR Settings document itself to your calculation function.
+        severance = calculate_employee_severance_amount( emp_doc,  doc)
+        
         frappe.db.set_value(
             "Employee",
             emp_doc.name,
