@@ -23,7 +23,7 @@ fixtures = [
                 "Manufacturing", "Stock", "Fixed Assets", "Sales and Marketing",
                 "Expense Claims", "Shift & Attendance", "Performance", "Users",
                 "Payables",  "Receivables", "Financial Reports", "Expense Claim",
-                "Salary Payout", "Tax & Benefits"
+                "Salary Payout", "Tax & Benefits", "Payroll"
 
                             ]],
         ],
@@ -187,9 +187,11 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.company.update_employee_fuel_price"
     },
     "Employee": {
-        "validate": ["customized_forcommon.doc_events.employee.update_fuel_payment",
-                     "customized_forcommon.doc_events.employee.calculate_severance_amount",
-                      "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
+        "validate": [
+            "customized_forcommon.doc_events.employee.update_fuel_payment",
+            "customized_forcommon.doc_events.employee.calculate_severance_amount",
+            "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
+            "customized_forcommon.doc_events.employee.create_employee_severance_amount_record"
         ]
 
     },
@@ -357,7 +359,8 @@ override_doctype_class = {
     "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
     "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation",
 	"Job Card": "customized_forcommon.overrides.job_card.CustomJobCard",
-    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice"
+    "Purchase Invoice": "customized_forcommon.overrides.purchase_invoice.CustomPurchaseInvoice",
+    "Full and Final Statement": "customized_forcommon.overrides.full_and_final_statement.CustomFullAndFinalStatement"
 }
 
 app_include_js = [
@@ -423,6 +426,9 @@ doctype_js = {
     "Journal Entry": "public/js/journal_entry.js",
     "Payroll Entry": "public/js/payroll_entry.js",    "Workstation": "public/js/workstation.js",
     "Job Card": "public/js/job_card.js",
+    "Full and Final Statement": "public/js/full_and_final_statement.js",
+
+    
 
 
 }
@@ -456,6 +462,16 @@ ea.create_return_through_additional_salary = create_return_through_additional_sa
 from erpnext.stock.doctype.stock_entry.stock_entry import StockEntry as ERPNextStockEntry
 from customized_forcommon.overrides.stock_entry import check_if_operations_completed
 ERPNextStockEntry.check_if_operations_completed = check_if_operations_completed
+
+
+# Monkey patch for full and final statemenet
+import hrms.hr.doctype.full_and_final_statement.full_and_final_statement as fnf_module
+from customized_forcommon.overrides.full_and_final_statement import custom_get_account_and_amount
+# Store reference to original function
+original_get_account_and_amount = fnf_module.get_account_and_amount
+fnf_module.get_account_and_amount = custom_get_account_and_amount
+
+
 
 jinja = {
     "methods": "customized_forcommon.utils.amharic_currency"

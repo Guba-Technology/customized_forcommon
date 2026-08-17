@@ -234,6 +234,28 @@ def calculate_employee_severance_amount(doc, hr_settings): # accept hr_settings 
 
     return severance
 
+def create_employee_severance_amount_record(doc):
+    emp_sev_docs = frappe.get_all(
+        "Employee Severance Amount",
+        filters={"employee": doc.employee},
+        fields=["name"]
+    )
+
+    if not emp_sev_docs:
+        new_emp_sev_doc = frappe.new_doc("Employee Severance Amount")
+        new_emp_sev_doc.employee = doc.employee
+        new_emp_sev_doc.insert()
+        return
+
+    frappe.db.set_value(
+        "Employee Severance Amount",
+        emp_sev_docs[0].name,
+        {
+            "relieving_date": doc.relieving_date,
+            "severance_amount": doc.custom_severance_pay_amount
+        }
+    )
+
 # As of Today Leave Balance (Fiscal Year Based)
 @frappe.whitelist()
 def calculate_as_of_today_balance(employee, leave_type):
