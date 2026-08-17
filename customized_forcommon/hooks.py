@@ -227,8 +227,8 @@ override_doctype_class = {
     "Stock Entry": "customized_forcommon.overrides.stock_entry.CustomStockEntry",
     "Purchase Receipt": "customized_forcommon.overrides.purchase_receipt.CustomPurchaseReceipt",
     "Delivery Note": "customized_forcommon.overrides.delivery_note.CustomDeliveryNote",
-    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation"
-
+    "Stock Reconciliation": "customized_forcommon.overrides.stock_reconciliation.CustomStockReconciliation",
+    "Full and Final Statement": "customized_forcommon.overrides.full_and_final_statement.CustomFullAndFinalStatement"
 
 }
 
@@ -264,12 +264,15 @@ doctype_js = {
     "Item Group": "public/js/item_group.js",
     "Journal Entry": "public/js/journal_entry.js",
     "Purchase Invoice": "public/js/purchase_invoice.js",
+    "Full and Final Statement": "public/js/full_and_final_statement.js",
+
 
 }
 page_js = {
 	"print": "public/js/print_override.js"
 }
-# WARNING: Monkey patching HRMS method; revisit on upgrade
+
+# Monkey patching HRMS method
 import hrms.hr.doctype.leave_application.leave_application as leave_application_module
 import customized_forcommon.overrides.leave_balance as custom_module
 
@@ -280,9 +283,20 @@ from hrms.hr.report.recruitment_analytics import recruitment_analytics
 from hrms.hr.report.employee_analytics import employee_analytics
 from customized_forcommon.utils.report_patche import custom_recruitment_analytics_execute
 recruitment_analytics.execute = custom_recruitment_analytics_execute
+
 #monkey Patching Employee Analytics
 from customized_forcommon.utils.employee_analytics_patch import custom_employee_analytics_execute
 employee_analytics.execute = custom_employee_analytics_execute
+
+
+# Monkey patch for full and final statemenet
+import hrms.hr.doctype.full_and_final_statement.full_and_final_statement as fnf_module
+from customized_forcommon.overrides.full_and_final_statement import custom_get_account_and_amount
+# Store reference to original function
+original_get_account_and_amount = fnf_module.get_account_and_amount
+fnf_module.get_account_and_amount = custom_get_account_and_amount
+
+
 
 # Apps
 # ------------------

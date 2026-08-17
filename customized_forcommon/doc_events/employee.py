@@ -87,3 +87,31 @@ def update_base_in_salary_structure_assignment(doc, method):
             update_modified=False
         )
 
+def create_employee_severance_amount_record(doc, method):
+    emp_sev_docs = frappe.get_all(
+        "Employee Severance Amount",
+        filters={"employee": doc.employee},
+        fields=["name"]
+    )
+
+    if not emp_sev_docs:
+        new_emp_sev_doc = frappe.new_doc("Employee Severance Amount")
+        new_emp_sev_doc.employee = doc.employee
+        new_emp_sev_doc.insert()
+        return
+
+    # Record already exists, so check whether relevant fields changed
+    if (
+        not doc.has_value_changed("relieving_date")
+        and not doc.has_value_changed("custom_severance_pay_amount")
+    ):
+        return
+
+    frappe.db.set_value(
+        "Employee Severance Amount",
+        emp_sev_docs[0].name,
+        {
+            "relieving_date": doc.relieving_date,
+            "severance_amount": doc.custom_severance_pay_amount
+        }
+    )
