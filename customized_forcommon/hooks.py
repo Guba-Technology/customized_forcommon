@@ -304,6 +304,9 @@ doc_events = {
     "Job Card": {
         "on_submit": "customized_forcommon.doc_events.job_card.make_workstation_cost_gl_entries",
         "on_cancel": "customized_forcommon.doc_events.job_card.cancel_workstation_cost_gl_entries",
+    },
+    "Period Closing Voucher": {
+        "before_submit": "customized_forcommon.doc_events.fiscal_year_closing.process_profit_tax_provision"
     }
 }
 
