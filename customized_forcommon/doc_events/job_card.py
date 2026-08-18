@@ -28,7 +28,10 @@ def make_workstation_cost_gl_entries(doc, method=None):
 
 	company = doc.company
 	posting_date = doc.posting_date
-
+	job_card_hours = flt(doc.get("total_time_in_mins"))/60 or 0.0
+	if not job_card_hours:
+		print("No total time in minutes found for Job Card", doc.name)
+		return
 	gl_map = []
 	total_amount = 0.0
 
@@ -37,7 +40,7 @@ def make_workstation_cost_gl_entries(doc, method=None):
 			print("Missing cost component or operating cost for Workstation Operating Component", row.name)
 			continue
 
-		amount = flt(row.operating_cost) #* net_hours
+		amount = flt(row.operating_cost) * job_card_hours
 		if not amount:
 			print("No operating cost found for Workstation Operating Component", row.name)
 			continue
