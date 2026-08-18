@@ -43,7 +43,7 @@ fixtures = [
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
                           "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
-                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation"
+                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation", "Accounts Settings", "Account"
                         ]
             ],
         ]
