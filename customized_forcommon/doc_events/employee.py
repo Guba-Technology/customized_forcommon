@@ -115,3 +115,59 @@ def create_employee_severance_amount_record(doc, method):
             "severance_amount": doc.custom_severance_pay_amount
         }
     )
+
+def add_employee_details_to_internal_work_history(doc, method):
+    """
+    Add the employee's current branch, designation, department and
+    joining date to Internal Work History.
+
+    If any of branch/designation/department changes, close the previous
+    history row and create a new one.
+    """
+
+    # Required values
+    if not doc.date_of_joining:
+        return
+
+    if not doc.branch and not doc.designation and not doc.department:
+        return
+
+    # Get existing history rows
+    history = doc.get("internal_work_history") or []
+
+    # If there is no history yet, create the first record
+    if not history:
+        doc.append("internal_work_history", {
+            "branch": doc.branch,
+            "designation": doc.designation,
+            "department": doc.department,
+            "from_date": doc.date_of_joining
+        })
+        return
+
+    # Get the latest history record
+    latest = history[-1]
+
+    # Check whether the current details are different
+    details_changed = (
+        latest.branch != doc.branch
+        or latest.designation != doc.designation
+        or latest.department != doc.department
+    )
+
+    if not details_changed:
+        return
+
+    # Determine the date from which the new details become effective
+    from_date = frappe.utils.getdate(frappe.utils.nowdate())
+
+    # Close the previous history record
+    latest.to_date = frappe.utils.add_days(from_date, -1)
+
+    # Add the new history record
+    doc.append("internal_work_history", {
+        "branch": doc.branch,
+        "designation": doc.designation,
+        "department": doc.department,
+        "from_date": from_date
+    })
