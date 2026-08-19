@@ -173,6 +173,7 @@ doc_events = {
             "customized_forcommon.doc_events.employee.update_fuel_payment",
             "customized_forcommon.doc_events.employee.calculate_severance_amount",
             "customized_forcommon.doc_events.employee.update_base_in_salary_structure_assignment",
+            "customized_forcommon.doc_events.employee.add_employee_details_to_internal_work_history"
         ]
 
     },
