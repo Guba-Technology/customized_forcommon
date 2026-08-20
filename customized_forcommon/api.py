@@ -3,6 +3,7 @@ from frappe.utils.nestedset import get_descendants_of
 import frappe
 from frappe import _
 from frappe.utils import today, add_days, getdate, now_datetime, flt
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_reference_details
 
 # updating the status of the purchase invoice 
 @frappe.whitelist()
@@ -527,3 +528,25 @@ def create_reversal_log(voucher_type, voucher_no, bank_account, original_clearan
     log.insert(
         ignore_permissions=True
     )
+
+
+@frappe.whitelist()
+def get_manual_reference_details(
+    reference_doctype,
+    reference_name,
+    party_account_currency,
+    party_type,
+    party
+):
+    data = get_reference_details(
+        reference_doctype,
+        reference_name,
+        party_account_currency,
+        party_type,
+        party
+    )
+
+    if not data:
+        return {}
+
+    return data

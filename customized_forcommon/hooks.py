@@ -34,12 +34,13 @@ fixtures = [
         "dt": "Custom Field",
         "filters": [
             ["dt", "in", ["Employee", "Employee External Work History", "Employee Separation", "Interview",
-                          "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
-                          "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
-                          "Training Program", "Purchase Reciept","Stock Entry", "Employee Internal Work History",
-                          "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Routing", "Training Event",
-                            "Leave Application", "Dunning", "Journal Entry", "Customer", "Item Default"
-                          ]],
+                        "Asset", "Purchase Invoice", "Purchase Order", "Quotation", "Material Request", 
+                        "Company", "Employee Advance", "Sales Invoice", "Payment Entry", "Purchase Receipt", 
+                        "Training Program", "Purchase Reciept","Stock Entry", "Employee Internal Work History",
+                        "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Routing", "Training Event",
+                        "Leave Application", "Dunning", "Journal Entry", "Customer", "Item Default", "Accounts Settings",
+                        "Account", "Item"
+                        ]],
         ]
     },
     {
@@ -148,9 +149,9 @@ doc_events = {
     "Delivery Note": {
         "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
     },
-
-
-   
+     "Period Closing Voucher": {
+        "before_submit": "customized_forcommon.doc_events.fiscal_year_closing.process_profit_tax_provision"
+    }   
 }
 
 scheduler_events = {
