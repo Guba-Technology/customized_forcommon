@@ -121,6 +121,9 @@ doc_events = {
     "Delivery Note": {
         "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account"
     },
+     "Period Closing Voucher": {
+        "before_submit": "customized_forcommon.doc_events.fiscal_year_closing.process_profit_tax_provision"
+    }
 
    
 }
