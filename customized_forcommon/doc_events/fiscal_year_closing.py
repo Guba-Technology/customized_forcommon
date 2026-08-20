@@ -68,7 +68,7 @@ def process_profit_tax_provision(doc, method=None):
 
 def get_account_type_balance(company, root_type, from_date, to_date):
     """
-    Sum GL Entries for Income or Expense accounts where `is_not_taxable` is 0/Unchecked.
+    Sum GL Entries for Income or Expense accounts where `custom_is_not_taxable` is 0/Unchecked.
     """
     gl_entries = frappe.db.sql("""
         SELECT 
