@@ -39,7 +39,7 @@ fixtures = [
                         "Training Program", "Purchase Reciept","Stock Entry", "Employee Internal Work History",
                         "Stock Ledger Entry", "Employee Grade", "BOM Operation", "Routing", "Training Event",
                         "Leave Application", "Dunning", "Journal Entry", "Customer", "Item Default", "Accounts Settings",
-                        "Account"
+                        "Account", "Item"
                         ]],
         ]
     },
