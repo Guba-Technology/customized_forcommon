@@ -123,7 +123,9 @@ before_migrate = ["customized_forcommon.custom_report.my_utilities.module_creato
 after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute",
-    "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs"
+    "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs",
+    "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields"
+
 
 ]
 
