@@ -1,0 +1,343 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:HPR-{MM}-{YYYY}-{###}",
+ "creation": "2026-08-20 10:01:24.838320",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "basic_information_section",
+  "company",
+  "employee",
+  "column_break_fiyl",
+  "beneficiary_type",
+  "beneficiary_name",
+  "healthcare_service_section",
+  "service_date",
+  "healthcare_provider",
+  "schedule_start_date",
+  "column_break_dqhn",
+  "service_type",
+  "service_amount",
+  "service_description",
+  "payment_contribution_section",
+  "payment_by",
+  "company_contribution_amount",
+  "expense_claim_type",
+  "column_break_wmxz",
+  "company_contribution_",
+  "employee_contribution_amount",
+  "salary_deduction_section",
+  "deduction_calculation_type",
+  "fixed_amount",
+  "no_of_months",
+  "column_break_sd1",
+  "ctc_rate",
+  "monthly_deduction_amount",
+  "salary_component",
+  "deduction_schedule",
+  "recovery_section",
+  "total_recovered_amount",
+  "column_break_rec1",
+  "outstanding_amount",
+  "linked_documents_section",
+  "additional_salary",
+  "column_break_ld1",
+  "expense_claim",
+  "status_section",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "basic_information_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fiyl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "beneficiary_type",
+   "fieldtype": "Select",
+   "label": "Beneficiary Type",
+   "options": "\nEmployee\nFamily",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.beneficiary_type==\"Family\"",
+   "fieldname": "beneficiary_name",
+   "fieldtype": "Data",
+   "label": "Beneficiary Name",
+   "mandatory_depends_on": "eval:doc.beneficiary_type==\"Family\""
+  },
+  {
+   "fieldname": "healthcare_service_section",
+   "fieldtype": "Section Break",
+   "label": "Healthcare Service"
+  },
+  {
+   "fieldname": "service_date",
+   "fieldtype": "Date",
+   "label": "Service Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "healthcare_provider",
+   "fieldtype": "Data",
+   "label": "Healthcare Provider",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dqhn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_type",
+   "fieldtype": "Select",
+   "label": "Service Type",
+   "options": "\nInternal\nExternal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_amount",
+   "fieldtype": "Currency",
+   "label": "Service Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_description",
+   "fieldtype": "Small Text",
+   "label": "Service Description"
+  },
+  {
+   "fieldname": "payment_contribution_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Contribution"
+  },
+  {
+   "fieldname": "payment_by",
+   "fieldtype": "Select",
+   "label": "Payment By",
+   "options": "\nCompany\nEmployee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_contribution_amount",
+   "fieldtype": "Currency",
+   "label": "Company Contribution Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wmxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_contribution_",
+   "fieldtype": "Percent",
+   "label": "Company Contribution %",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee_contribution_amount",
+   "fieldtype": "Currency",
+   "label": "Employee Contribution Amount",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.payment_by==\"Company\"",
+   "fieldname": "salary_deduction_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Salary Deduction"
+  },
+  {
+   "fieldname": "deduction_calculation_type",
+   "fieldtype": "Select",
+   "label": "Deduction Calculation Type",
+   "options": "\nFixed Amount\nNo. of Months\nCTC Rate"
+  },
+  {
+   "depends_on": "eval:doc.deduction_calculation_type==\"Fixed Amount\"",
+   "fieldname": "fixed_amount",
+   "fieldtype": "Currency",
+   "label": "Fixed Amount"
+  },
+  {
+   "depends_on": "eval:doc.deduction_calculation_type==\"No. of Months\"",
+   "fieldname": "no_of_months",
+   "fieldtype": "Int",
+   "label": "No. of Months"
+  },
+  {
+   "fieldname": "column_break_sd1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.deduction_calculation_type==\"CTC Rate\"",
+   "fieldname": "ctc_rate",
+   "fieldtype": "Percent",
+   "label": "CTC Rate"
+  },
+  {
+   "fieldname": "monthly_deduction_amount",
+   "fieldtype": "Currency",
+   "label": "Monthly Deduction Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "salary_component",
+   "fieldtype": "Link",
+   "label": "Salary Component",
+   "options": "Salary Component"
+  },
+  {
+   "depends_on": "eval:doc.payment_by==\"Company\"",
+   "fieldname": "recovery_section",
+   "fieldtype": "Section Break",
+   "label": "Recovery Tracking"
+  },
+  {
+   "fieldname": "total_recovered_amount",
+   "fieldtype": "Currency",
+   "label": "Total Recovered Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rec1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "outstanding_amount",
+   "fieldtype": "Currency",
+   "label": "Outstanding Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_documents_section",
+   "fieldtype": "Section Break",
+   "label": "Linked Documents"
+  },
+  {
+   "depends_on": "eval:doc.payment_by==\"Company\"",
+   "fieldname": "additional_salary",
+   "fieldtype": "Link",
+   "label": "Latest Additional Salary",
+   "options": "Additional Salary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ld1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.payment_by==\"Employee\"",
+   "fieldname": "expense_claim",
+   "fieldtype": "Link",
+   "label": "Expense Claim",
+   "options": "Expense Claim",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_section",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nPartially Settled\nSettled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Healthcare Payment Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "deduction_schedule",
+   "fieldtype": "Table",
+   "label": "Deduction Schedule",
+   "options": "Healthcare Payment Deduction",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.payment_by == 'Employee';",
+   "fieldname": "expense_claim_type",
+   "fieldtype": "Link",
+   "label": "Expense Claim Type",
+   "mandatory_depends_on": "eval:doc.payment_by == 'Employee';",
+   "options": "Expense Claim Type"
+  },
+  {
+   "fieldname": "schedule_start_date",
+   "fieldtype": "Date",
+   "label": "Schedule Start Date"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-20 14:46:02.283355",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Healthcare Payment Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
