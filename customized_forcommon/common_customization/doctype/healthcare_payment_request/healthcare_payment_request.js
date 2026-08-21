@@ -13,19 +13,19 @@ frappe.ui.form.on("Healthcare Payment Request", {
 			return { filters: { company: frm.doc.company } };
 		});
 	},
-	refresh(frm) {
-		if (frm.doc.docstatus === 1 && frm.doc.payment_by === "Company") {
-			frm.add_custom_button(__("Process Due Deductions"), () => {
-				frappe.call({
-					method:
-						"customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.create_due_additional_salaries",
-					args: { healthcare_payment_request: frm.doc.name },
-					freeze: true,
-					callback: () => frm.reload_doc(),
-				});
-			});
-		}
-	},
+	// refresh(frm) {
+	// 	if (frm.doc.docstatus === 1 && frm.doc.payment_by === "Company") {
+	// 		frm.add_custom_button(__("Process Due Deductions"), () => {
+	// 			frappe.call({
+	// 				method:
+	// 					"customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.create_due_additional_salaries",
+	// 				args: { healthcare_payment_request: frm.doc.name },
+	// 				freeze: true,
+	// 				callback: () => frm.reload_doc(),
+	// 			});
+	// 		});
+	// 	}
+	// },
 });
 
 function calculate_contribution(frm) {
