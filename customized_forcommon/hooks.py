@@ -232,7 +232,7 @@ doc_events = {
 
     "Expense Claim": {
         "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
-        "on_update_after_submit": "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_hpr_from_expense_claim",
+        "on_change": "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_hpr_from_expense_claim",
         "on_cancel": [
             "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
             "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_hpr_from_expense_claim",

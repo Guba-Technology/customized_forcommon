@@ -14,7 +14,6 @@ from frappe.utils import getdate, nowdate, get_last_day, get_first_day, date_dif
 MAX_SCHEDULE_ROWS = 240 
 EXPENSE_CLAIM_STATUS_MAP = {
 	"Paid": "Settled",
-	"Partially Paid": "Partially Settled",
 	"Unpaid": "Approved",
 	"Submitted": "Approved",
 	"Rejected": "Approved",
@@ -29,7 +28,15 @@ class HealthcarePaymentRequest(Document):
 		if self.payment_by == "Company":
 			self.build_deduction_schedule()
 		self.calculate_recovery_totals()
+		self.validate_dates()
 
+
+
+	def validate_dates(self):
+		if self.service_date and self.service_date > nowdate():
+			frappe.throw(_("Service Date cannot be in the future"))
+		if self.schedule_start_date and self.schedule_start_date < self.service_date:
+			frappe.throw(_("Schedule Start Date cannot be before Service Date"))
 	def validate_beneficiary(self):
 		if self.beneficiary_type == "Family" and not self.beneficiary_name:
 			frappe.throw(_("Beneficiary Name is required when Beneficiary Type is Family"))
@@ -204,6 +211,7 @@ class HealthcarePaymentRequest(Document):
 			{
 				"expense_type": self.expense_claim_type,
 				"amount": self.company_contribution_amount,
+				"sanctioned_amount": self.company_contribution_amount,
 				"description": _("Healthcare reimbursement for {0} ({1})").format(
 					self.healthcare_provider, self.name
 				),
@@ -216,7 +224,6 @@ class HealthcarePaymentRequest(Document):
 
 # ---------- Scenario 1: Company Pays — scheduled processing ----------
 
-@frappe.whitelist()
 def create_due_additional_salaries(healthcare_payment_request=None):
     filters = {"docstatus": 1, "payment_by": "Company", "status": ["!=", "Settled"]}
     if healthcare_payment_request:
@@ -343,16 +350,14 @@ def update_deduction_on_additional_salary_cancel(doc, method=None):
 
 
 def update_hpr_from_expense_claim(doc, method=None):
-	"""hooks.py doc_event: Expense Claim.on_update_after_submit / on_cancel
-	Mirrors the Expense Claim's status (Unpaid / Partially Paid / Paid /
-	Rejected / Cancelled) back onto the linked Healthcare Payment Request,
-	for the Payment By = Employee scenario."""
 	hpr_name = frappe.db.get_value(
 		"Healthcare Payment Request", {"expense_claim": doc.name, "docstatus": 1}, "name"
 	)
 	if not hpr_name:
+		print(f"Healthcare Payment Request not found for Expense Claim {doc.name}")
 		return
 
 	new_status = EXPENSE_CLAIM_STATUS_MAP.get(doc.status)
-	if new_status:
-		frappe.db.set_value("Healthcare Payment Request", hpr_name, "status", new_status)
+	if doc.has_value_changed("status") and doc.status == "Paid":
+		print(f"Updating Healthcare Payment Request {hpr_name} status to {new_status} based on Expense Claim {doc.name} status {doc.status}")
+		frappe.db.set_value("Healthcare Payment Request", hpr_name, "status", "Settled")
