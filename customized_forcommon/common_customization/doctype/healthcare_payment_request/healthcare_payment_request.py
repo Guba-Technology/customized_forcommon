@@ -1,17 +1,17 @@
 # Copyright (c) 2026, Guba Technology and contributors
 # For license information, please see license.txt
 
+# import frappe
+# Copyright (c) 2026, Common Customization
+# License: MIT
 
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_months, flt, getdate, nowdate
+from frappe.utils import getdate, nowdate, get_last_day, get_first_day, date_diff, add_months, flt
 
-MAX_SCHEDULE_ROWS = 240  # safety cap (20 years) against runaway loops
-
-# Expense Claim -> Healthcare Payment Request status mapping.
-# Anything not in this map is left untouched (e.g. Draft, which can't happen
-# here since the claim is only linked once it has been inserted by us).
+MAX_SCHEDULE_ROWS = 240 
 EXPENSE_CLAIM_STATUS_MAP = {
 	"Paid": "Settled",
 	"Partially Paid": "Partially Settled",
@@ -80,22 +80,31 @@ class HealthcarePaymentRequest(Document):
 		self.monthly_deduction_amount = monthly
 
 		self.set("deduction_schedule", [])
-		start_date = getdate(self.service_date or nowdate())
+		
+		# Fallback to today if schedule_start_date is not set
+		start_date = getdate(self.schedule_start_date) if getattr(self, "schedule_start_date", None) else getdate(nowdate())
+		
 		remaining = flt(self.employee_contribution_amount)
 		i = 0
+		
 		while remaining > 0 and i < MAX_SCHEDULE_ROWS:
-			this_amount = monthly if monthly < remaining else remaining
-			self.append(
-				"deduction_schedule",
-				{
-					"due_date": add_months(start_date, i + 1),
-					"amount": this_amount,
-					"status": "Pending",
-				},
-			)
-			remaining = flt(remaining - this_amount, 2)
-			i += 1
+			due_date = add_months(start_date, i)
 
+			this_amount = monthly if monthly < remaining else remaining
+			
+			if this_amount > 0:
+				self.append(
+					"deduction_schedule",
+					{
+						"due_date": due_date,
+						"amount": this_amount,
+						"status": "Pending",
+					},
+				)
+				
+				remaining = flt(remaining - this_amount, 2)
+			
+			i += 1
 	def get_monthly_deduction_amount(self):
 		if self.deduction_calculation_type == "Fixed Amount":
 			if not self.fixed_amount:
@@ -113,31 +122,40 @@ class HealthcarePaymentRequest(Document):
 				frappe.throw(_("CTC is not set for Employee {0}").format(self.employee))
 			if not self.ctc_rate:
 				frappe.throw(_("Set the CTC Rate for the deduction"))
+			
 			return flt(flt(ctc) * flt(self.ctc_rate) / 100, 2)
 
 		frappe.throw(_("Select a Deduction Calculation Type"))
 
+
 	def calculate_recovery_totals(self):
 		if self.payment_by != "Company":
-			# Recovery tracking only applies to the payroll-deduction (Company
-			# Pays) scenario; the section is hidden otherwise, so leave the
-			# figures at zero to avoid showing stale data if it toggles back.
-			self.total_recovered_amount = 0
-			self.outstanding_amount = 0
-			return
-
-		recovered = flt(
-			sum(flt(d.amount) for d in self.deduction_schedule if d.status == "Recovered")
-		)
-		self.total_recovered_amount = recovered
-		if self.employee_contribution_amount:
-			self.outstanding_amount = flt(self.employee_contribution_amount - recovered, 2)
+			recovered = 0.0
+			outstanding = 0.0
 		else:
-			self.outstanding_amount = 0
+			recovered = flt(
+				sum(flt(d.amount) for d in self.deduction_schedule if d.status == "Recovered")
+			)
+			
+			if self.employee_contribution_amount:
+				outstanding = flt(self.employee_contribution_amount - recovered, 2)
+			else:
+				outstanding = 0.0
+
+		self.total_recovered_amount = recovered
+		self.outstanding_amount = outstanding
+
+		if self.docstatus == 1:
+			self.db_set(
+				{
+					"total_recovered_amount": recovered,
+					"outstanding_amount": outstanding,
+				}
+			)
+			
 
 	def refresh_status_from_schedule(self):
-		"""Re-derive Approved / Partially Settled / Settled from the current
-		deduction schedule, without disturbing Draft/cancelled states."""
+		
 		if self.status not in ("Approved", "Partially Settled", "Settled"):
 			return
 		if self.outstanding_amount and self.outstanding_amount > 0 and self.total_recovered_amount > 0:
@@ -200,57 +218,65 @@ class HealthcarePaymentRequest(Document):
 
 @frappe.whitelist()
 def create_due_additional_salaries(healthcare_payment_request=None):
-	"""Scheduler job (daily, see hooks.py) that is also invoked directly on
-	submit and from the 'Process Due Deductions' button. Creates an
-	Additional Salary for every Pending deduction row whose due_date has
-	arrived, and refreshes each request's status once done."""
-	filters = {"docstatus": 1, "payment_by": "Company", "status": ["!=", "Settled"]}
-	if healthcare_payment_request:
-		filters["name"] = healthcare_payment_request
+    filters = {"docstatus": 1, "payment_by": "Company", "status": ["!=", "Settled"]}
+    if healthcare_payment_request:
+        filters["name"] = healthcare_payment_request
 
-	for req_name in frappe.get_all("Healthcare Payment Request", filters=filters, pluck="name"):
-		doc = frappe.get_doc("Healthcare Payment Request", req_name)
-		changed = False
+    for req_name in frappe.get_all("Healthcare Payment Request", filters=filters, pluck="name"):
+        doc = frappe.get_doc("Healthcare Payment Request", req_name)
+        changed = False
 
-		for row in doc.deduction_schedule:
-			if row.status != "Pending" or getdate(row.due_date) > getdate(nowdate()):
-				continue
+        for row in doc.deduction_schedule:
+            if row.status != "Pending" or getdate(row.due_date) > getdate(nowdate()):
+                continue
 
-			# Guard against a duplicate being created if this job overlaps
-			# with a manual "Process Due Deductions" click.
-			if row.additional_salary:
-				continue
+            if row.additional_salary:
+                continue
 
-			additional_salary = frappe.new_doc("Additional Salary")
-			additional_salary.employee = doc.employee
-			additional_salary.company = doc.company
-			additional_salary.salary_component = doc.salary_component
-			additional_salary.type = "Deduction"
-			additional_salary.amount = row.amount
-			additional_salary.payroll_date = row.due_date
-			additional_salary.overwrite_salary_structure_amount = 0
-			# NB: field names on Additional Salary can vary slightly by ERPNext
-			# version — verify against your installed version before deploying.
-			additional_salary.insert(ignore_permissions=True)
-			additional_salary.submit()
+            additional_salary = frappe.new_doc("Additional Salary")
+            additional_salary.employee = doc.employee
+            additional_salary.company = doc.company
+            additional_salary.salary_component = doc.salary_component
+            additional_salary.type = "Deduction"
+            additional_salary.amount = row.amount
+            additional_salary.payroll_date = row.due_date
+            additional_salary.overwrite_salary_structure_amount = 0
+            additional_salary.insert(ignore_permissions=True)
+            additional_salary.submit()
 
-			row.additional_salary = additional_salary.name
-			row.status = "Processed"
-			changed = True
+            # Update memory state
+            row.additional_salary = additional_salary.name
+            row.status = "Processed"
 
-		if changed:
-			doc.db_set("additional_salary", doc.deduction_schedule[-1].additional_salary)
-			doc.calculate_recovery_totals()
-			doc.refresh_status_from_schedule()
-			doc.db_update()
+            # Directly update child table row in the database
+            frappe.db.set_value(
+                row.doctype,
+                row.name,
+                {
+                    "additional_salary": additional_salary.name,
+                    "status": "Processed",
+                },
+            )
+            
+            changed = True
+            
+            frappe.msgprint(
+                _("Created Additional Salary {0} for Healthcare Payment Request {1}").format(
+                    frappe.get_desk_link("Additional Salary", additional_salary.name),
+                    frappe.get_desk_link("Healthcare Payment Request", doc.name),
+                )
+            )
+
+        if changed:
+            doc.db_set("additional_salary", doc.deduction_schedule[-1].additional_salary)
+            doc.calculate_recovery_totals()
+            doc.refresh_status_from_schedule()
+            doc.db_update()
 
 
 # ---------- Linked-doctype status tracking (hooks.py doc_events) ----------
 
 def update_deduction_on_salary_slip_submit(doc, method=None):
-	"""hooks.py doc_event: Salary Slip.on_submit
-	Marks the matching Healthcare Payment Deduction row as Recovered once the
-	Additional Salary it generated has actually been paid out via payroll."""
 	for row in doc.get("deductions", []):
 		if not row.get("additional_salary"):
 			continue
@@ -270,10 +296,7 @@ def update_deduction_on_salary_slip_submit(doc, method=None):
 
 
 def update_deduction_on_salary_slip_cancel(doc, method=None):
-	"""hooks.py doc_event: Salary Slip.on_cancel
-	If a Salary Slip that had recovered a deduction is cancelled, the
-	recovery is undone: the row reverts to Processed (still owed, an
-	Additional Salary still exists for it) and totals/status recalculate."""
+
 	for row in doc.get("deductions", []):
 		if not row.get("additional_salary"):
 			continue

@@ -220,13 +220,21 @@ doc_events = {
     },
 
     "Additional Salary": {
-        "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
-        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation"
+        "on_submit": ["customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_submission",
+                     ],
+        "on_cancel": [
+            "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_additional_salary_cancellation",
+            "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_deduction_on_salary_slip_cancel",
+        ]
     },
 
     "Expense Claim": {
         "on_submit": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
-        "on_cancel": "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim"
+        "on_update_after_submit": "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_hpr_from_expense_claim",
+        "on_cancel": [
+            "customized_forcommon.doc_events.employee_advance.calculate_repayment_amount_during_expense_claim",
+            "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_hpr_from_expense_claim",
+        ]
     },
     "HR Settings": {
         "validate": [
@@ -293,6 +301,8 @@ doc_events = {
     },
     "Salary Slip":{
         "before_validate": "customized_forcommon.doc_events.salary_slip.calculate_cash_amount",
+        "on_submit": "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_deduction_on_salary_slip_submit",
+		"on_cancel": "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.update_deduction_on_salary_slip_cancel",
     },
     "Salary Component": {
         "validate": "customized_forcommon.doc_events.salary_slip.validate_more_than_one_cash_component"
@@ -328,6 +338,8 @@ scheduler_events = {
         "customized_forcommon.scheduler.expired_items.mark_expired_batches",
         "customized_forcommon.scheduler.contract_notification.notify_expiring_contracts",
         "customized_forcommon.scheduler.employee_advance.process_repayments",
+        "customized_forcommon.common_customization.doctype.healthcare_payment_request.healthcare_payment_request.create_due_additional_salaries",
+
     ],
     "monthly": [
     "customized_forcommon.scheduler.employe_experiance.calculate_experience",
