@@ -267,12 +267,7 @@ def create_due_additional_salaries(healthcare_payment_request=None):
             
             changed = True
             
-            frappe.msgprint(
-                _("Created Additional Salary {0} for Healthcare Payment Request {1}").format(
-                    frappe.get_desk_link("Additional Salary", additional_salary.name),
-                    frappe.get_desk_link("Healthcare Payment Request", doc.name),
-                )
-            )
+            
 
         if changed:
             doc.db_set("additional_salary", doc.deduction_schedule[-1].additional_salary)
