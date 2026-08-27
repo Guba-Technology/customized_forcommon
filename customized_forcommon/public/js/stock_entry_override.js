@@ -17,14 +17,22 @@ frappe.ui.form.on('Stock Entry', {
         lock_fields_based_on_status(frm);
         toggle_item_row_add(frm);
     },
-    cost_center2(frm) {
+    async cost_center2(frm) {
+        if (!frm.doc.cost_center2 || !frm.doc.stock_entry_type) {
+            return;
+        }
+
+        const { message } = await frappe.db.get_value("Stock Entry Type", frm.doc.stock_entry_type, "purpose");
+
+        const purpose = message?.purpose;
+
         if (
-            frm.doc.stock_entry_type === "Material Issue" &&
-            frm.doc.cost_center2
+            ["Material Issue", "Material Receipt", "Material Transfer"].includes(purpose)
         ) {
             (frm.doc.items || []).forEach(row => {
                 row.cost_center = frm.doc.cost_center2;
             });
+
             frm.refresh_field("items");
         }
     }
