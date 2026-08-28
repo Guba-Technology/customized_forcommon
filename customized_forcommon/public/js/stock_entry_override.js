@@ -1,6 +1,6 @@
 frappe.ui.form.on('Stock Entry', {
     onload: function (frm) {
-        set_transfer_status(frm);
+        // set_transfer_status(frm);
         toggle_item_row_add(frm);
         // set_item_filter(frm);
     },
