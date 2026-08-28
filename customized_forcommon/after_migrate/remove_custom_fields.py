@@ -22,6 +22,11 @@ def delete_custom_fields():
         "custom_project_col1",
     ]
 
+    stock_entry_custom_fields = [
+        "custom_transfer_status",
+        "custom_transit_warehouse",
+    ]
+
     # Delete Material Request custom fields
     for fieldname in material_request_custom_fields:
         custom_field = frappe.db.exists(
@@ -67,5 +72,33 @@ def delete_custom_fields():
         frappe.logger("migration").info(
             f"Deleted Custom Field {custom_field} from Company"
         )
+
+    # Delete Stock Entry custom fields
+    for fieldname in stock_entry_custom_fields:
+        custom_field = frappe.db.exists(
+            "Custom Field",
+            {
+                "dt": "Stock Entry",
+                "fieldname": fieldname,
+            },
+        )
+
+        if not custom_field:
+            continue
+
+        frappe.delete_doc(
+            "Custom Field",
+            custom_field,
+            force=True,
+        )
+
+        frappe.logger("migration").info(
+            f"Deleted Custom Field {custom_field} from Stock Entry"
+        )
+
+    # Flush DocType meta cache so changes take effect immediately
+    frappe.clear_cache(doctype="Material Request")
+    frappe.clear_cache(doctype="Company")
+    frappe.clear_cache(doctype="Stock Entry")
 
     frappe.db.commit()
