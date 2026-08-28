@@ -12,15 +12,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2025-08-29 09:41:05.011416",
-  "name": "In Transit",
-  "style": "",
-  "workflow_state_name": "In Transit"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2025-04-24 14:33:33.233880",
   "name": "Under Supervision",
   "style": "",
@@ -79,15 +70,6 @@
   "name": "Pending Approval",
   "style": "",
   "workflow_state_name": "Pending Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2025-04-03 09:53:20.530666",
-  "name": "Draft",
-  "style": "",
-  "workflow_state_name": "Draft"
  },
  {
   "docstatus": 0,
@@ -169,5 +151,23 @@
   "name": "Requested",
   "style": "",
   "workflow_state_name": "Requested"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-08-29 09:41:05.011416",
+  "name": "In Transit",
+  "style": "",
+  "workflow_state_name": "In Transit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-04-03 09:53:20.530666",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
  }
 ]
