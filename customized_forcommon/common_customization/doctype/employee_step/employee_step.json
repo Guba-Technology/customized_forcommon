@@ -15,7 +15,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Step",
-   "reqd": 1,
    "unique": 1
   },
   {
@@ -23,14 +22,13 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Salary",
-   "non_negative": 1,
-   "reqd": 1
+   "non_negative": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-13 12:37:17.482400",
+ "modified": "2026-01-23 08:20:12.623211",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Employee Step",

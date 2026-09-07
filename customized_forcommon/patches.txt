@@ -12,7 +12,8 @@ customized_forcommon.patches.v1.navbar_patch
 customized_forcommon.patches.v1.employee_name
 customized_forcommon.patches.v1.add_routing_to_bom_creator
 customized_forcommon.patches.v2.allow_payment_request_create
-# customized_forcommon.patches.v1.add_routing_fields_to_bom_creator
+customized_forcommon.patches.v2.customer_parent_code_updated
+customized_forcommon.patches.v2.customer_parent_code
 customized_forcommon.patches.v1.add_status_in_appraisal
 customized_forcommon.patches.v1.salary_structure_assignment_patch
 

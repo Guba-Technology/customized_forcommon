@@ -115,10 +115,10 @@ doc_events = {
         "validate": "customized_forcommon.doc_events.item_group_based_inventory.validate_inventory_account",
         "on_submit": "customized_forcommon.doc_events.purchase_receipt.update_stock_ledger_with_department",
     },
-    "Item": {
-        "autoname": "customized_forcommon.Item.custom_item_autoname",
-        "on_update": "customized_forcommon.Item.custom_item_autoname"
-    },
+    #"Item": {
+    #    "autoname": "customized_forcommon.Item.custom_item_autoname",
+    #    "on_update": "customized_forcommon.Item.custom_item_autoname"
+    #},
     "Interview": {
         "validate": "customized_forcommon.doc_events.interview_score.calculate_total_criteria_score",
     },

@@ -13,7 +13,7 @@ ALLOWED_WORKSPACES = [
     "Home", "Inventory", "Manufacturing",
     "Accounting & Finance", "Payables", "Receivables",
     "Financial Reports", "Users",
-    "Settings", "Welcome Workspace"
+    "ERP Settings", "Welcome Workspace"
 ]
 
 HIDDEN_BY_DEFAULT = [
