@@ -124,7 +124,8 @@ after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute",
     "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs",
-    "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields"
+    "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields",
+    "customized_forcommon.after_migrate.delete_old_client_scripts.delete_old_material_request_client_scripts"
 
 
 ]

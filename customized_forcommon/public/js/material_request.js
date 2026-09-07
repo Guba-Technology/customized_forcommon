@@ -1,4 +1,21 @@
 frappe.ui.form.on("Material Request", {
+    onload: function (frm) {
+        const field = frm.fields_dict.material_request_type;
+        const new_options = ['Material Cost', 'Transport Request'];
+
+        if (field) {
+            const current_options = field.df.options.split('\n');
+
+            new_options.forEach(option => {
+                if (!current_options.includes(option)) {
+                    current_options.push(option);
+                }
+            });
+
+            field.df.options = current_options.join('\n');
+            field.refresh();
+        }
+    },
     refresh(frm) {
         if (frm.doc.material_request_type === "Material Cost") {
             frm.add_custom_button("BOM", () => {
