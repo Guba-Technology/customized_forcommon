@@ -22,6 +22,17 @@ HIDDEN_BY_DEFAULT = [
     "Selling", "HR", "Payroll"
 ]
 
+# Explicit DocType exceptions:
+# HR is hidden in LITE mode, but Employee Advance is allowed.
+# Employee is required because Employee Advance references an Employee, Employee Advance Claim is included only if you want the claim workflow.
+
+ALLOWED_DOCTYPES = [
+    "Employee",
+    "Employee Advance",
+    "Expense Claim",
+    "Expense Claim Type"
+]
+
 MANIFEST_FILE = "lite_mode_lock_manifest.json"
 
 
@@ -191,10 +202,14 @@ def toggle_module_visibility(module_name, hide=True, manifest_ref=None):
     print(f"Module '{module_name}' is now {'Hidden/Locked' if hide else 'Visible/Unlocked'}.")
 
 def toggle_structure_lock(module_name, lock=True, manifest=None):
-    """Records EVERYTHING attached to a module into the manifest."""
+    """Records EVERYTHING attached to a module into the manifest,
+    excluding any DocTypes explicitly allowed in Lite mode
+    (e.g. Employee Advance under HR)."""
     if lock:
+        module_doctypes = frappe.get_all("DocType", filters={"module": module_name}, pluck="name")
+        module_doctypes = [d for d in module_doctypes if d not in ALLOWED_DOCTYPES]
         manifest["modules"][module_name] = {
-            "doctypes": frappe.get_all("DocType", filters={"module": module_name}, pluck="name"),
+            "doctypes": module_doctypes,
             "reports": frappe.get_all("Report", filters={"module": module_name}, pluck="name"),
             "pages": frappe.get_all("Page", filters={"module": module_name}, pluck="name"),
             "workspaces": frappe.get_all("Workspace", filters={"module": module_name}, pluck="name")
@@ -205,12 +220,41 @@ def toggle_structure_lock(module_name, lock=True, manifest=None):
 def toggle_metadata(is_lite):
     status, search = (1, 0) if is_lite else (0, 1)
     lit_modules = get_lit_modules()
-    
-    frappe.db.sql("""UPDATE `tabDocType` SET read_only = %s, show_name_in_global_search = %s 
-                     WHERE (module IN %s OR (module NOT IN %s AND %s = 1)) AND custom = 0""", 
-                  (status, search, tuple(HIDDEN_BY_DEFAULT), tuple(lit_modules), status))
-    frappe.db.sql("""UPDATE `tabDashboard` SET is_standard = %s WHERE module IN %s""", 
-                  (0 if is_lite else 1, tuple(HIDDEN_BY_DEFAULT)))
+
+    # First lock hidden modules
+    frappe.db.sql("""
+        UPDATE `tabDocType`
+        SET read_only = %s,
+            show_name_in_global_search = %s
+        WHERE module IN %s
+        AND custom = 0
+    """, (
+        status,
+        search,
+        tuple(HIDDEN_BY_DEFAULT)
+    ))
+
+    # Unlock explicitly allowed Lite DocTypes
+    if is_lite and ALLOWED_DOCTYPES:
+        frappe.db.sql("""
+            UPDATE `tabDocType`
+            SET read_only = 0,
+                show_name_in_global_search = 1
+            WHERE name IN %s
+            AND custom = 0
+        """, (
+            tuple(ALLOWED_DOCTYPES)
+        ))
+
+    frappe.db.sql("""
+        UPDATE `tabDashboard`
+        SET is_standard = %s
+        WHERE module IN %s
+    """, (
+        0 if is_lite else 1,
+        tuple(HIDDEN_BY_DEFAULT)
+    ))
+
     frappe.db.commit()
 
 @frappe.whitelist()
