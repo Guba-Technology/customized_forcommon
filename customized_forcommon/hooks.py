@@ -193,6 +193,7 @@ app_include_js = [
     "/assets/customized_forcommon/js/whitelabel.js",
     "/assets/customized_forcommon/js/list_sidebar_override.js",
     "/assets/customized_forcommon/js/bom_creator_extended.js",
+	"/assets/customized_forcommon/js/payment_request_extend.js",    
     "/assets/customized_forcommon/js/lite_locker.js",
     "/assets/customized_forcommon/js/bank_reconciliation_statement.js",
     "/assets/customized_forcommon/js/bank_reconciliation_reversal.js"
