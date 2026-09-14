@@ -20,6 +20,19 @@ frappe.ui.form.on("Purchase Invoice", {
                 }, "Create");
             }
         }
+        if (!frm.doc.__islocal) {
+            frm.add_custom_button(__('Employee Advance'), function () {
+                frappe.new_doc('Employee Advance', {
+                    advance_amount: frm.doc.grand_total,
+                    company: frm.doc.company,
+                    employee: frm.doc.custom_employee || frm.doc.employee,
+                    custom_purchase_invoice: frm.doc.name,
+                    custom_advance_type: 'For Purchase',
+                    purpose: 'For the purchase of the selected items in Purchase Invoice ' + frm.doc.name,
+                    posting_date: frappe.datetime.get_today()
+                });
+            }, __('Create'));
+        }
         customized_forcommon.setup_reverse_bank_reconciliation(frm);
     }
 });
