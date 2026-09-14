@@ -55,20 +55,27 @@ class SelfAppraisal(Document):
 			frappe.throw(f"There is an existing self appraisal for employee <b>{self.employee}</b> in this appraisal")
 
 	def on_submit(self):
-		
-		appraisal_doc = frappe.get_doc("Appraisal",self.appraisal)
+		appraisal_doc = frappe.get_doc("Appraisal", self.appraisal)
 
 		appraisal_doc.set("self_ratings", [])
-
 		for row in self.self_evaluation_result:
 			appraisal_doc.append("self_ratings", {
 				"criteria": row.criteria,
 				"per_weightage": row.per_weightage,  
 				"custom_score": row.custom_score
 			})
+		
 		appraisal_doc.reflections = self.reflection
 		appraisal_doc.self_score = self.total_score
-		appraisal_doc.save()
+		if appraisal_doc.docstatus == 1:
+			appraisal_doc.flags.ignore_validate = True
+			appraisal_doc.flags.ignore_validate_display_not_editable = True
+			appraisal_doc.save()
+		else:
+			appraisal_doc.save()
+			
+		frappe.db.commit()
+
 		link = f"<a href='/app/appraisal/{appraisal_doc.name}'>{appraisal_doc.name}</a>"
 		frappe.msgprint(
 			f"Self Appraisal Scores added to Appraisal ({link})",
@@ -76,6 +83,7 @@ class SelfAppraisal(Document):
 			indicator="green",
 			is_minimizable=True
 		)
+
 	@frappe.whitelist()
 	def set_feedback_criteria(self):
 		if not self.appraisal:
@@ -95,3 +103,10 @@ class SelfAppraisal(Document):
 			)
 
 		return self
+	@frappe.whitelist()
+	def set_self_appraisal_template(self):
+		if not self.appraisal:
+			return
+
+		template = frappe.db.get_value("Appraisal", self.appraisal, "appraisal_template")
+		self.appraisal_template = template

@@ -1,8 +1,11 @@
 frappe.ui.form.on("Appraisal", {
     onload: function(frm) {
+        calculate_all_ratings(frm);
+        refresh_all_custom_numbers(frm);
     },
 
     refresh: function(frm) {
+        calculate_all_ratings(frm);
         refresh_all_custom_numbers(frm);
     },
 
@@ -10,10 +13,9 @@ frappe.ui.form.on("Appraisal", {
         sync_custom_score_to_rating(frm);
         refresh_all_custom_numbers(frm);
     },
-
 });
 
-frappe.ui.form.on("Employee Feedback Rating", { 
+frappe.ui.form.on("Employee Feedback Rating", {
     custom_score: function(frm, cdt, cdn) {
         let row = frappe.get_doc(cdt, cdn);
         if (row.custom_score > row.per_weightage) {
@@ -33,7 +35,6 @@ frappe.ui.form.on("Employee Feedback Rating", {
     self_ratings_remove: (frm) => refresh_custom_numbers(frm, "self_ratings")
 });
 
-// Helper: Calculate single row rating (Scale 0 to 1)
 function calculate_row_rating(frm, cdt, cdn) {
     let row = frappe.get_doc(cdt, cdn);
     if (row.custom_score && row.per_weightage && parseFloat(row.per_weightage) > 0) {
@@ -41,30 +42,37 @@ function calculate_row_rating(frm, cdt, cdn) {
     } else {
         row.rating = 0;
     }
-    // Refresh only the specific grids to keep UI fast
     frm.fields_dict["rating_criteria"].grid.refresh();
     frm.fields_dict["self_ratings"].grid.refresh();
 }
 
-// Helper: Global Sync
-function sync_custom_score_to_rating(frm) {
+function calculate_all_ratings(frm) {
     ["rating_criteria", "self_ratings"].forEach(table => {
         (frm.doc[table] || []).forEach(row => {
             if (row.custom_score && row.per_weightage && parseFloat(row.per_weightage) > 0) {
                 row.rating = parseFloat(row.custom_score) / parseFloat(row.per_weightage);
+            } else {
+                row.rating = 0;
             }
-            row.custom_no = row.custom_no || "00"; 
+        });
+    });
+    frm.fields_dict["rating_criteria"] && frm.fields_dict["rating_criteria"].grid.refresh();
+    frm.fields_dict["self_ratings"] && frm.fields_dict["self_ratings"].grid.refresh();
+}
 
+function sync_custom_score_to_rating(frm) {
+    calculate_all_ratings(frm);
+    ["rating_criteria", "self_ratings"].forEach(table => {
+        (frm.doc[table] || []).forEach(row => {
+            row.custom_no = row.custom_no || "00";
         });
     });
 }
 
-
-
 function refresh_custom_numbers(frm, table_field) {
     (frm.doc[table_field] || []).forEach((row, index) => {
         row.custom_no = (index + 1).toString().padStart(2, '0');
-        frappe.model.set_value(table_field, row.name, "custom_no", row.custom_no);
+        frappe.model.set_value(row.doctype, row.name, "custom_no", row.custom_no);
     });
     frm.refresh_field(table_field);
 }
