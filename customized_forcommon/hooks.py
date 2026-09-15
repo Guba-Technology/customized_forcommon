@@ -506,7 +506,7 @@ override_doctype_dashboards = {
 
 # Template Overriding
 override_template_map = {
-    "templates/includes/footer/footer_powered.html": "blood_bank_customization/templates/includes/footer/footer_powered.html"
+    "templates/includes/footer/footer_powered.html": "customized_forcommon/templates/includes/footer/footer_powered.html"
 }
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
