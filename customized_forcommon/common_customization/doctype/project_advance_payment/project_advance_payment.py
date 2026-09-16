@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import flt, nowdate
 
 class ProjectAdvancePayment(Document):
 	def validate(self):
@@ -99,9 +99,23 @@ class ProjectAdvancePayment(Document):
 			purchase.cancel()
 
 
+@frappe.whitelist()
+def make_payment_request(source_name):
+	doc = frappe.get_doc("Project Advance Payment", source_name)
 
-	
+	pr = frappe.new_doc("Payment Request")
+	pr.payment_request_type = "Outward"
+	pr.transaction_date = nowdate()
+	pr.party_type = "Supplier"
+	pr.party = doc.contractor
+	pr.reference_doctype = "Project Advance Payment"
+	pr.reference_name = doc.name
+	pr.grand_total = doc.advance_amount
+	pr.currency = doc.currency
+	# pr.party_account_currency = doc.currency
+	pr.cost_center = doc.cost_center
 
+	return pr
 
 
 @frappe.whitelist()
@@ -109,6 +123,7 @@ def make_payment_entry(source_name):
 	doc = frappe.get_doc("Project Advance Payment", source_name)
 
 	pe = frappe.new_doc("Payment Entry")
+	pe.company = doc.company
 	pe.payment_type = "Pay"
 	pe.party_type = "Supplier"
 	pe.party = doc.contractor
@@ -136,8 +151,8 @@ def make_payment_entry(source_name):
 			row.tax_amount = pe.paid_amount * tax.rate / 100 
 			row.total = pe.paid_amount + (pe.paid_amount * tax.rate / 100)
 
-
 	return pe
+
 
 @frappe.whitelist()
 def make_purchase_invoice(source_name, payment_term, rate):
