@@ -67,7 +67,10 @@ fixtures = [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
                             "Employee-custom_leave_increment_period-Label","Employee-reports_to-hidden",
-                            "Employee Grievance-description-fieldtype",  "Salary Structure Assignment-base-fetch_from"
+                            "Employee Grievance-description-fieldtype",  "Salary Structure Assignment-base-fetch_from",
+                            "Salary Structure-earnings-allow_on_submit", "Salary Structure-deductions-allow_on_submit", 
+                            "Salary Structure-total_earning-allow_on_submit", "Salary Structure-total_deduction-allow_on_submit", 
+                            "Salary Structure-net_pay-allow_on_submit"
                             
             ]]
         ]
