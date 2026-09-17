@@ -5,9 +5,6 @@ from frappe.utils import flt, nowdate
 from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import get_accounting_dimensions
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry, get_party_account, get_account_currency
 from erpnext.accounts.doctype.payment_request.payment_request import PaymentRequest
-from erpnext.accounts.doctype.payment_request.payment_request import (
-    get_currency_precision,
-)
 
 logger = frappe.logger("payment_request")
 
@@ -229,63 +226,3 @@ class CustomPaymentRequest(PaymentRequest):
             frappe.log_error(frappe.get_traceback(), _("Error while creating Payment Entry from Payment Request"))
             raise
 
-def get_amount(ref_doc, payment_account=None):
-        grand_total = 0
-
-        dt = ref_doc.doctype
-
-        if dt in ["Sales Order", "Purchase Order"]:
-            advance_amount = flt(ref_doc.advance_paid)
-
-            if ref_doc.party_account_currency != ref_doc.currency:
-                advance_amount = flt(
-                    flt(ref_doc.advance_paid) / ref_doc.conversion_rate
-                )
-
-            grand_total = (
-                flt(ref_doc.rounded_total) or flt(ref_doc.grand_total)
-            ) - advance_amount
-
-        elif dt in ["Sales Invoice", "Purchase Invoice"]:
-            if (
-                dt == "Sales Invoice"
-                and ref_doc.is_pos
-                and ref_doc.payments
-                and any(
-                    payment.type == "Phone"
-                    and payment.account == payment_account
-                    for payment in ref_doc.payments
-                )
-            ):
-                grand_total = sum(
-                    payment.amount
-                    for payment in ref_doc.payments
-                    if payment.type == "Phone"
-                    and payment.account == payment_account
-                )
-            else:
-                if ref_doc.party_account_currency == ref_doc.currency:
-                    grand_total = flt(ref_doc.outstanding_amount)
-                else:
-                    grand_total = flt(
-                        flt(ref_doc.outstanding_amount)
-                        / ref_doc.conversion_rate
-                    )
-
-        elif dt == "POS Invoice":
-            for pay in ref_doc.payments:
-                if pay.type == "Phone" and pay.account == payment_account:
-                    grand_total = pay.amount
-                    break
-
-        elif dt == "Fees":
-            grand_total = ref_doc.outstanding_amount
-
-        elif dt == "Project Advance Payment":
-            grand_total = flt(ref_doc.advance_amount)
-
-        return (
-            flt(grand_total, get_currency_precision())
-            if grand_total > 0
-            else 0
-        )

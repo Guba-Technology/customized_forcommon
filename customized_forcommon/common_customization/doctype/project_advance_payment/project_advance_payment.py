@@ -108,9 +108,8 @@ def make_payment_request(source_name):
 	pr.transaction_date = nowdate()
 	pr.party_type = "Supplier"
 	pr.party = doc.contractor
-	pr.reference_doctype = "Project Advance Payment"
-	pr.reference_name = doc.name
 	pr.grand_total = doc.advance_amount
+	pr.custom_project_advance_payment = doc.name
 	pr.currency = doc.currency
 	# pr.party_account_currency = doc.currency
 	pr.cost_center = doc.cost_center
