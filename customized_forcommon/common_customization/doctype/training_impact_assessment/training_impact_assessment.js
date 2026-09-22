@@ -86,17 +86,17 @@ function fetch_and_apply_employees(frm) {
 		args: {filters: filters},
 		callback: function (r) {
 			const employees = r.message || [];
-
 			// Table always mirrors the current filter result set.
 			frm.clear_table("assigned_employees");
 
 			employees.forEach((emp) => {
+				console.log(emp);
 				const row = frm.add_child("assigned_employees");
 				row.employee = emp.employee;
 				row.employee_name = emp.employee_name;
 				row.department = emp.department;
 				row.designation = emp.designation;
-				// row.manager = emp.manager;
+				row.manager = emp.manager;
 			});
 
 			frm.refresh_field("assigned_employees");

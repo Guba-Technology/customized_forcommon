@@ -11,29 +11,36 @@ class TrainingImpactAssessmentReport(Document):
 	pass
 
 
-def _average(values):
-	values = [v for v in values if v not in (None, "")]
+def _calculate_cs(values):
+	values = [float(v) for v in values if v not in (None, "")]
 	if not values:
 		return None
-	return sum(values) / len(values)
+	
+	te = len(values)
+	ms = 5
+	
+	if te == 0 or ms == 0:
+		return 0.0
+		
+	return sum(values) / (te * ms) * 100
+
+
+def _calculate_combined_average(score1, score2):
+	if score1 is None and score2 is None:
+		return None
+	
+	s1 = score1 if score1 is not None else 0.0
+	s2 = score2 if score2 is not None else 0.0
+	
+	return (s1 + s2) / 2.0
 
 
 def generate_report(training_impact_assessment):
-	"""
-	Consolidate all SUBMITTED Training Assessment Response records for the given
-	Training Impact Assessment into a single Training Impact Assessment Report,
-	per the Business Rules:
-	  - results are calculated per Training Impact Assessment (not per employee)
-	  - only submitted trainee/manager responses are used
-	  - the report is created if missing, or updated in place if it already exists
-	"""
 	if not training_impact_assessment:
 		return
 
 	tia = frappe.get_doc("Training Impact Assessment", training_impact_assessment)
 
-	# Criteria order comes from the Assessment Template so the report layout is stable
-	# even if responses were created/edited in a different order.
 	criteria_order = []
 	if tia.assessment_template:
 		template = frappe.get_doc("Training Assessment Template", tia.assessment_template)
@@ -45,25 +52,22 @@ def generate_report(training_impact_assessment):
 		fields=["name", "evaluator_type"],
 	)
 
-	# collected[criteria_text] = {"trainee_before": [...], "trainee_after": [...],
-	#                              "manager_before": [...], "manager_after": [...]}
 	collected = {}
 	for c in criteria_order:
 		collected[c] = {"trainee_before": [], "trainee_after": [], "manager_before": [], "manager_after": []}
 
 	for resp in responses:
-		evaluator_type = resp.evaluator_type  # "Trainee" or "Manager"
+		evaluator_type = resp.evaluator_type
 		rows = frappe.get_all(
 			"Training Assessment Response Criteria",
 			filters={"parent": resp.name, "parenttype": "Training Assessment Response"},
 			fields=["criteria", "before_training", "after_training"],
 			order_by="idx",
 		)
+		
 		for row in rows:
 			key = row.criteria
 			if key not in collected:
-				# Response used criteria text not (or no longer) present in the template;
-				# still capture it so no data is silently dropped from the report.
 				collected[key] = {
 					"trainee_before": [],
 					"trainee_after": [],
@@ -79,22 +83,20 @@ def generate_report(training_impact_assessment):
 				collected[key][f"{bucket}_after"].append(row.after_training)
 
 	result_rows = []
-	overall_averages = {"trainee_before": [], "trainee_after": [], "manager_before": [], "manager_after": []}
 
 	for criteria in criteria_order:
 		data = collected[criteria]
+		
+		trainee_before = _calculate_cs(data["trainee_before"])
+		trainee_after = _calculate_cs(data["trainee_after"])
+		manager_before = _calculate_cs(data["manager_before"])
+		manager_after = _calculate_cs(data["manager_after"])
 
-		trainee_before = _average(data["trainee_before"])
-		trainee_after = _average(data["trainee_after"])
-		manager_before = _average(data["manager_before"])
-		manager_after = _average(data["manager_after"])
-
-		average_before = _average([v for v in (trainee_before, manager_before) if v is not None])
-		average_after = _average([v for v in (trainee_after, manager_after) if v is not None])
-		difference = (
-			(average_after - average_before) if (average_after is not None and average_before is not None) else None
-		)
-
+		avg_before = _calculate_combined_average(trainee_before, manager_before)
+		avg_after = _calculate_combined_average(trainee_after, manager_after)
+		
+		diff = (avg_after - avg_before) if (avg_after is not None and avg_before is not None) else None
+		
 		result_rows.append(
 			{
 				"criteria": criteria,
@@ -102,34 +104,26 @@ def generate_report(training_impact_assessment):
 				"trainee_after": trainee_after,
 				"manager_before": manager_before,
 				"manager_after": manager_after,
-				"average_before": average_before,
-				"average_after": average_after,
-				"difference": difference,
+				"average_before": avg_before,
+				"average_after": avg_after,
+				"difference": diff,
 			}
 		)
 
-		if trainee_before is not None:
-			overall_averages["trainee_before"].append(trainee_before)
-		if trainee_after is not None:
-			overall_averages["trainee_after"].append(trainee_after)
-		if manager_before is not None:
-			overall_averages["manager_before"].append(manager_before)
-		if manager_after is not None:
-			overall_averages["manager_after"].append(manager_after)
-
-	# Trailing "Overall Average" row, mirroring the aggregate row in the source template.
 	if result_rows:
-		o_trainee_before = _average(overall_averages["trainee_before"])
-		o_trainee_after = _average(overall_averages["trainee_after"])
-		o_manager_before = _average(overall_averages["manager_before"])
-		o_manager_after = _average(overall_averages["manager_after"])
-		o_average_before = _average([v for v in (o_trainee_before, o_manager_before) if v is not None])
-		o_average_after = _average([v for v in (o_trainee_after, o_manager_after) if v is not None])
-		o_difference = (
-			(o_average_after - o_average_before)
-			if (o_average_after is not None and o_average_before is not None)
-			else None
-		)
+		t_befores = [r["trainee_before"] for r in result_rows if r["trainee_before"] is not None]
+		t_afters = [r["trainee_after"] for r in result_rows if r["trainee_after"] is not None]
+		m_befores = [r["manager_before"] for r in result_rows if r["manager_before"] is not None]
+		m_afters = [r["manager_after"] for r in result_rows if r["manager_after"] is not None]
+		
+		o_trainee_before = sum(t_befores) / len(t_befores) if t_befores else 0.0
+		o_trainee_after = sum(t_afters) / len(t_afters) if t_afters else 0.0
+		o_manager_before = sum(m_befores) / len(m_befores) if m_befores else 0.0
+		o_manager_after = sum(m_afters) / len(m_afters) if m_afters else 0.0
+		
+		o_average_before = (o_trainee_before + o_manager_before) / 2.0
+		o_average_after = (o_trainee_after + o_manager_after) / 2.0
+		o_difference = o_average_after - o_average_before
 
 		result_rows.append(
 			{
