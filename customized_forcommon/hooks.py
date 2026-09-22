@@ -324,6 +324,8 @@ doc_events = {
 
 permission_query_conditions = {
     "User": "customized_forcommon.doc_events.user_access_restriction.user_query_condition",
+    "Training Assessment Response": "customized_forcommon.common_customization.doctype.training_assessment_response.training_assessment_response.get_permission_query_conditions",
+
 }
 
 scheduler_events = {
@@ -507,6 +509,9 @@ override_doctype_dashboards = {
 # Template Overriding
 override_template_map = {
     "templates/includes/footer/footer_powered.html": "customized_forcommon/templates/includes/footer/footer_powered.html"
+}
+has_permission = {
+	"Training Assessment Response": "customized_forcommon.common_customization.doctype.training_assessment_response.training_assessment_response.has_permission",
 }
 # migrations = [
 #     "customization_manager.migrations.changing_fetch_from_attribute_of_advance_account_in_employee_advance"
