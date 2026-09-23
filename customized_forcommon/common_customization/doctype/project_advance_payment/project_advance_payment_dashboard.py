@@ -6,12 +6,12 @@ def get_data():
         "transactions": [
             {
                 "label": _("Payment for Project Advance"),
-                "items": ["Payment Entry"],
-                
+                "items": ["Payment Entry", "Payment Request"],
             },
             {
                 "label": _("Payment Term Invoice"),
                 "items": ["Purchase Invoice",],
             },
+            
         ],
     }

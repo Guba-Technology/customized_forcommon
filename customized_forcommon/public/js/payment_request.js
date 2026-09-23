@@ -1,4 +1,14 @@
 frappe.ui.form.on("Payment Request", {
+    refresh(frm) {
+        frm.fields_dict.custom_advance_taxes_and_charges.grid.grid_rows.forEach(
+            (grid_row) => {
+                grid_row.toggle_editable(
+                    "tax_amount",
+                    grid_row.doc.charge_type === "Actual"
+                );
+            }
+        );
+    },
     setup(frm) {
         frm.set_query("custom_sales_taxes_and_charges_template", function () {
             return {
@@ -287,5 +297,42 @@ frappe.ui.form.on("Payment Request", {
         }
 
         return tax_amount;
+    },
+});
+
+
+frappe.ui.form.on("Advance Taxes and Charges", {
+
+    rate: function (frm) {
+        frm.events.apply_taxes(frm);
+    },
+
+    tax_amount: function (frm) {
+        frm.events.apply_taxes(frm);
+    },
+
+    row_id: function (frm) {
+        frm.events.apply_taxes(frm);
+    },
+
+    taxes_remove: function (frm) {
+        frm.events.apply_taxes(frm);
+    },
+
+    included_in_paid_amount: function (frm) {
+        frm.events.apply_taxes(frm);
+    },
+
+    charge_type(frm, cdt, cdn) {
+        const row = frappe.get_doc(cdt, cdn);
+        const grid_row =
+            frm.fields_dict.custom_advance_taxes_and_charges.grid.get_row(cdn);
+
+        grid_row.toggle_editable(
+            "tax_amount",
+            row.charge_type === "Actual"
+        );
+
+        frm.events.apply_taxes(frm);
     },
 });
