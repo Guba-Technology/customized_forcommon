@@ -59,6 +59,6 @@ far.prepare_chart_data = cfar.prepare_chart_data
 
 
 # Moneky Patch Payment Request (get_amount method)
-# import erpnext.accounts.doctype.payment_request.payment_request as pr
-# import customized_forcommon.overrides.payment_request as custom_pr
-# pr.get_amount = custom_pr.get_amount
+import erpnext.accounts.doctype.payment_request.payment_request as pr
+import customized_forcommon.overrides.payment_request as custom_pr
+pr.get_amount = custom_pr.get_amount

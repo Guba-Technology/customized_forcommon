@@ -111,9 +111,29 @@ def make_payment_request(source_name):
 	pr.grand_total = doc.advance_amount
 	pr.custom_project_advance_payment = doc.name
 	pr.currency = doc.currency
+	pr.reference_doctype = "Project Advance Payment"
+	pr.reference_name = doc.name
 	# pr.party_account_currency = doc.currency
 	pr.cost_center = doc.cost_center
 
+	if doc.purchase_tax_template:
+			pr.custom_purchase_taxes_and_charges_template = doc.purchase_tax_template
+	
+			template = frappe.get_doc(
+				"Purchase Taxes and Charges Template",
+				doc.purchase_tax_template
+			)
+			for tax in template.taxes:
+				row = pr.append("custom_advance_taxes_and_charges", {})
+				row.add_deduct_tax = "Add"
+				row.charge_type = "On Paid Amount"
+				row.account_head = tax.account_head
+				row.description = tax.description
+				row.rate = tax.rate
+				row.tax_amount = pr.grand_total * tax.rate / 100 
+				row.tax_amount = pr.grand_total * tax.rate / 100 
+				row.total = pr.grand_total + (pr.grand_total * tax.rate / 100)
+	
 	return pr
 
 

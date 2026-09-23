@@ -43,7 +43,8 @@ fixtures = [
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
                           "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
-                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation", "Accounts Settings", "Account"
+                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation", "Accounts Settings", "Account",
+                          "Payment Request"
                         ]
             ],
         ]
@@ -320,6 +321,9 @@ doc_events = {
     },
     "Period Closing Voucher": {
         "before_submit": "customized_forcommon.doc_events.fiscal_year_closing.process_profit_tax_provision"
+    },
+    "Payment Request": {
+        "validate": "customized_forcommon.doc_events.payment_request.apply_taxes"
     }
 }
 
@@ -445,6 +449,7 @@ doctype_js = {
     "Payroll Entry": "public/js/payroll_entry.js",    "Workstation": "public/js/workstation.js",
     "Job Card": "public/js/job_card.js",
     "Full and Final Statement": "public/js/full_and_final_statement.js",
+    "Payment Request": "public/js/payment_request.js"
 
     
 

@@ -101,17 +101,6 @@
  {
   "docstatus": 0,
   "doctype": "Client Script",
-  "dt": "Material Request",
-  "enabled": 1,
-  "modified": "2025-06-04 16:11:27.537199",
-  "module": "Common Customization",
-  "name": "Adding \"Material Cost\" option in Purpose",
-  "script": "frappe.ui.form.on('Material Request', {\n\tonload: function(frm) {\n        const field = frm.fields_dict.material_request_type;\n        const new_option = 'Material Cost';\n\n        if (!field.df.options.includes(new_option)) {\n            field.df.options += '\\n' + new_option;\n            field.refresh();\n        }\n      \n    }\n})",
-  "view": "Form"
- },
- {
-  "docstatus": 0,
-  "doctype": "Client Script",
   "dt": "Leave Application",
   "enabled": 1,
   "modified": "2025-07-02 15:19:56.821320",
