@@ -160,6 +160,7 @@ class CustomPaymentRequest(PaymentRequest):
                     "allocated_amount": party_amount,
                     "payment_request": self.name,
                 })
+                self._add_taxes_to_payment_entry(payment_entry)
 
             elif self.reference_doctype == "Project Advance Payment":
                 payment_type = "Pay" if self.payment_request_type == "Outward" else "Receive"
@@ -211,7 +212,7 @@ class CustomPaymentRequest(PaymentRequest):
 
                     for tax in template.taxes:
                         row = payment_entry.append("taxes", {})
-                        row.add_deduct_tax = "Add"
+                        row.add_deduct_tax = tax.add_deduct_tax
                         row.charge_type = "On Paid Amount"
                         row.account_head = tax.account_head
                         row.description = tax.description
@@ -227,6 +228,7 @@ class CustomPaymentRequest(PaymentRequest):
                     bank_amount=bank_amount,
                     created_from_payment_request=True,
                 )
+                self._add_taxes_to_payment_entry(payment_entry)
                 payment_entry.update({
                     "mode_of_payment": self.mode_of_payment,
                     "reference_no": self.name,
@@ -260,6 +262,18 @@ class CustomPaymentRequest(PaymentRequest):
         except Exception as e:
             self.log_error("Error while creating Payment Entry", e)
             raise
+
+    def _add_taxes_to_payment_entry(self, payment_entry):
+        for tax in self.custom_advance_taxes_and_charges:
+            row = payment_entry.append("taxes", {})
+
+            row.add_deduct_tax = tax.add_deduct_tax or "Add"
+            row.charge_type = tax.charge_type
+            row.account_head = tax.account_head
+            row.description = tax.description
+            row.rate = tax.rate
+            row.tax_amount = tax.tax_amount
+            row.total = tax.total
 
     def _get_party_account_from_reference(self, ref_doc):
         if self.reference_doctype in ["Sales Invoice", "POS Invoice"]:
