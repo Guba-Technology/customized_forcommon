@@ -1,6 +1,38 @@
 [
  {
   "default_value": null,
+  "doc_type": "Journal Entry",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "cheque_no",
+  "is_system_generated": 0,
+  "modified": "2026-09-24 15:20:18.039350",
+  "module": "Common Customization",
+  "name": "Journal Entry-cheque_no-reqd",
+  "property": "reqd",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Journal Entry",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "cheque_no",
+  "is_system_generated": 0,
+  "modified": "2026-09-24 15:20:25.937745",
+  "module": "Common Customization",
+  "name": "Journal Entry-cheque_no-unique",
+  "property": "unique",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
   "doc_type": "Employee",
   "docstatus": 0,
   "doctype": "Property Setter",
