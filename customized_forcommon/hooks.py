@@ -66,7 +66,8 @@ fixtures = [
         "filters": [
             ["name", "in", ["Workstation Type-workstation_type-Label", "Workstation-description-type", "Quality Inspection-status-reqd",   
                             "Leave Application-main-mandatory_depends_on", "Training Event-section_break_18-depends_on", 
-                            "Employee-custom_leave_increment_period-Label", "Shareholder-main-autoname", "Shareholder-naming_series-hidden"
+                            "Employee-custom_leave_increment_period-Label", "Shareholder-main-autoname", "Shareholder-naming_series-hidden",
+                            "Shareholder-title-reqd", "Shareholder-title-hidden", "Shareholder-main-allow_import", "Shareholder-main-title_field"
                                 
                             
             ]]
