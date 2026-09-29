@@ -823,7 +823,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-12-25 10:49:16.852351",
+  "modified": "2026-09-29 09:26:40.588664",
   "module": "Buying",
   "name": "Procurement",
   "number_cards": [],
@@ -4172,7 +4172,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-12 13:03:34.890298",
+  "modified": "2026-09-29 09:26:41.405220",
   "module": "Selling",
   "name": "Sales and Marketing",
   "number_cards": [],
@@ -4634,7 +4634,7 @@
     "type": "Link"
    }
   ],
-  "modified": "2025-08-13 09:16:43.924082",
+  "modified": "2026-09-29 09:26:41.009117",
   "module": "Assets",
   "name": "Fixed Assets",
   "number_cards": [],
