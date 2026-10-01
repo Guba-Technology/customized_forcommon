@@ -7,6 +7,9 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
     get_payment_entry, get_party_account, get_account_currency
 )
 from erpnext.accounts.doctype.payment_request.payment_request import PaymentRequest
+from erpnext.accounts.doctype.payment_request.payment_request import (
+    get_currency_precision,
+)
 
 logger = frappe.logger("payment_request")
 
@@ -157,6 +160,65 @@ class CustomPaymentRequest(PaymentRequest):
                     "allocated_amount": party_amount,
                     "payment_request": self.name,
                 })
+                self._add_taxes_to_payment_entry(payment_entry)
+
+            elif self.reference_doctype == "Project Advance Payment":
+                payment_type = "Pay" if self.payment_request_type == "Outward" else "Receive"
+
+                advance_payment = frappe.get_doc(
+                    "Project Advance Payment",
+                    self.reference_name
+                )
+
+                payment_entry = frappe.new_doc("Payment Entry")
+
+                payment_entry.update({
+                    "company": advance_payment.company,
+                    "payment_type": payment_type,
+                    "party_type": "Supplier",
+                    "party": advance_payment.contractor,
+                    "paid_amount": party_amount,
+                    "received_amount": bank_amount,
+                    "paid_from_account_currency": advance_payment.currency,
+                    "paid_to_account_currency": advance_payment.currency,
+                    "paid_to": advance_payment.account_for_advance,
+                    "mode_of_payment": self.mode_of_payment,
+                    "reference_no": self.name,
+                    "reference_date": nowdate(),
+                    "remarks": f"Payment Entry from Payment Request {self.name}",
+                    "project": self.get("project"),
+                    "cost_center": self.get("cost_center"),
+                    "custom_project_advance_payment": advance_payment.name,
+                })
+
+                payment_entry.append("references", {
+                    "reference_doctype": "Payment Request",
+                    "reference_name": self.name,
+                    "total_amount": self.grand_total,
+                    "outstanding_amount": self.outstanding_amount,
+                    "allocated_amount": party_amount,
+                    "payment_request": self.name,
+                })
+
+                if advance_payment.purchase_tax_template:
+                    payment_entry.purchase_taxes_and_charges_template = (
+                        advance_payment.purchase_tax_template
+                    )
+
+                    template = frappe.get_doc(
+                        "Purchase Taxes and Charges Template",
+                        advance_payment.purchase_tax_template
+                    )
+
+                    for tax in template.taxes:
+                        row = payment_entry.append("taxes", {})
+                        row.add_deduct_tax = tax.add_deduct_tax
+                        row.charge_type = "On Paid Amount"
+                        row.account_head = tax.account_head
+                        row.description = tax.description
+                        row.rate = tax.rate
+                        row.tax_amount = party_amount * tax.rate / 100
+                        row.total = party_amount + (party_amount * tax.rate / 100)
             else:
                 payment_entry = get_payment_entry(
                     self.reference_doctype,
@@ -166,6 +228,7 @@ class CustomPaymentRequest(PaymentRequest):
                     bank_amount=bank_amount,
                     created_from_payment_request=True,
                 )
+                self._add_taxes_to_payment_entry(payment_entry)
                 payment_entry.update({
                     "mode_of_payment": self.mode_of_payment,
                     "reference_no": self.name,
@@ -200,9 +263,84 @@ class CustomPaymentRequest(PaymentRequest):
             self.log_error("Error while creating Payment Entry", e)
             raise
 
+    def _add_taxes_to_payment_entry(self, payment_entry):
+        for tax in self.custom_advance_taxes_and_charges:
+            row = payment_entry.append("taxes", {})
+
+            row.add_deduct_tax = tax.add_deduct_tax or "Add"
+            row.charge_type = tax.charge_type
+            row.account_head = tax.account_head
+            row.description = tax.description
+            row.rate = tax.rate
+            row.tax_amount = tax.tax_amount
+            row.total = tax.total
+
     def _get_party_account_from_reference(self, ref_doc):
         if self.reference_doctype in ["Sales Invoice", "POS Invoice"]:
             return ref_doc.debit_to
         elif self.reference_doctype == "Purchase Invoice":
             return ref_doc.credit_to
         return get_party_account("Customer", ref_doc.get("customer"), ref_doc.company)
+
+
+    
+def get_amount(ref_doc, payment_account=None):
+    grand_total = 0
+
+    dt = ref_doc.doctype
+
+    if dt in ["Sales Order", "Purchase Order"]:
+        advance_amount = flt(ref_doc.advance_paid)
+
+        if ref_doc.party_account_currency != ref_doc.currency:
+            advance_amount = flt(
+                flt(ref_doc.advance_paid) / ref_doc.conversion_rate
+            )
+
+        grand_total = (
+            flt(ref_doc.rounded_total) or flt(ref_doc.grand_total)
+        ) - advance_amount
+
+    elif dt in ["Sales Invoice", "Purchase Invoice"]:
+        if (
+            dt == "Sales Invoice"
+            and ref_doc.is_pos
+            and ref_doc.payments
+            and any(
+                payment.type == "Phone"
+                and payment.account == payment_account
+                for payment in ref_doc.payments
+            )
+        ):
+            grand_total = sum(
+                payment.amount
+                for payment in ref_doc.payments
+                if payment.type == "Phone"
+                and payment.account == payment_account
+            )
+        else:
+            if ref_doc.party_account_currency == ref_doc.currency:
+                grand_total = flt(ref_doc.outstanding_amount)
+            else:
+                grand_total = flt(
+                    flt(ref_doc.outstanding_amount)
+                    / ref_doc.conversion_rate
+                )
+
+    elif dt == "POS Invoice":
+        for pay in ref_doc.payments:
+            if pay.type == "Phone" and pay.account == payment_account:
+                grand_total = pay.amount
+                break
+
+    elif dt == "Fees":
+        grand_total = ref_doc.outstanding_amount
+
+    elif dt == "Project Advance Payment":
+        grand_total = flt(ref_doc.advance_amount)
+
+    return (
+        flt(grand_total, get_currency_precision())
+        if grand_total > 0
+        else 0
+    )

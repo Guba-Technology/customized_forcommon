@@ -9,8 +9,13 @@ class CustomMaterialRequest(ERPNextMaterialRequest):
         super().before_validate()
 
     def _allow_custom_request_type(self):
-        if self.material_request_type == "Material Cost":
+        if self.material_request_type in ["Material Cost", "Transport Request"]:
             meta = frappe.get_meta("Material Request")
             field = meta.get_field("material_request_type")
-            if field and "Material Cost" not in field.options.split("\n"):
-                field.options += "\nMaterial Cost"
+
+            if field:
+                options = field.options.split("\n")
+
+                if self.material_request_type not in options:
+                    options.append(self.material_request_type)
+                    field.options = "\n".join(options)

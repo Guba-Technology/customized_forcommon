@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import flt, nowdate
 
 class ProjectAdvancePayment(Document):
 	def validate(self):
@@ -99,9 +99,42 @@ class ProjectAdvancePayment(Document):
 			purchase.cancel()
 
 
+@frappe.whitelist()
+def make_payment_request(source_name):
+	doc = frappe.get_doc("Project Advance Payment", source_name)
 
+	pr = frappe.new_doc("Payment Request")
+	pr.payment_request_type = "Outward"
+	pr.transaction_date = nowdate()
+	pr.party_type = "Supplier"
+	pr.party = doc.contractor
+	pr.grand_total = doc.advance_amount
+	pr.custom_project_advance_payment = doc.name
+	pr.currency = doc.currency
+	pr.reference_doctype = "Project Advance Payment"
+	pr.reference_name = doc.name
+	# pr.party_account_currency = doc.currency
+	pr.cost_center = doc.cost_center
+
+	if doc.purchase_tax_template:
+			pr.custom_purchase_taxes_and_charges_template = doc.purchase_tax_template
 	
-
+			template = frappe.get_doc(
+				"Purchase Taxes and Charges Template",
+				doc.purchase_tax_template
+			)
+			for tax in template.taxes:
+				row = pr.append("custom_advance_taxes_and_charges", {})
+				row.add_deduct_tax = "Add"
+				row.charge_type = "On Paid Amount"
+				row.account_head = tax.account_head
+				row.description = tax.description
+				row.rate = tax.rate
+				row.tax_amount = pr.grand_total * tax.rate / 100 
+				row.tax_amount = pr.grand_total * tax.rate / 100 
+				row.total = pr.grand_total + (pr.grand_total * tax.rate / 100)
+	
+	return pr
 
 
 @frappe.whitelist()
@@ -109,6 +142,7 @@ def make_payment_entry(source_name):
 	doc = frappe.get_doc("Project Advance Payment", source_name)
 
 	pe = frappe.new_doc("Payment Entry")
+	pe.company = doc.company
 	pe.payment_type = "Pay"
 	pe.party_type = "Supplier"
 	pe.party = doc.contractor
@@ -136,8 +170,8 @@ def make_payment_entry(source_name):
 			row.tax_amount = pe.paid_amount * tax.rate / 100 
 			row.total = pe.paid_amount + (pe.paid_amount * tax.rate / 100)
 
-
 	return pe
+
 
 @frappe.whitelist()
 def make_purchase_invoice(source_name, payment_term, rate):

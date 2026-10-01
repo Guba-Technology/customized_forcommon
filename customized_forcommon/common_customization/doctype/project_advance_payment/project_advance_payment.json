@@ -8,6 +8,7 @@
  "field_order": [
   "company",
   "currency",
+  "party_account_currency",
   "contractor",
   "project",
   "contract_value",
@@ -22,6 +23,7 @@
   "account_for_advance",
   "purchase_item",
   "purchase_tax_template",
+  "cost_center",
   "section_break_glur",
   "recovery_details",
   "amended_from",
@@ -180,11 +182,25 @@
    "fieldtype": "Link",
    "label": "Purchase Tax Template",
    "options": "Purchase Taxes and Charges Template"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fetch_from": "company.default_currency",
+   "fieldname": "party_account_currency",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Party Account Currency",
+   "options": "Currency"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-28 09:52:17.964562",
+ "modified": "2026-09-16 11:43:51.517392",
  "modified_by": "Administrator",
  "module": "Common Customization",
  "name": "Project Advance Payment",

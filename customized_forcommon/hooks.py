@@ -43,7 +43,8 @@ fixtures = [
                           "Employee Promotion","Employee Transfer", "Employee Onboarding", "Appraisal Template", "Appraisal Template Goal",
                           "Employee Feedback Criteria", "KRA","Employee Feedback Rating", "Sales Order", "Customer", "Item", "Address", 
                           "Journal Entry",  "Additional Salary", "HR Settings","Shift Schedule Assignment", "Item Default",
-                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation", "Accounts Settings", "Account"
+                          "Employee Education", "Payroll Entry", "Salary Slip", "Salary Component","Workstation", "Accounts Settings", "Account",
+                          "Payment Request"
                         ]
             ],
         ]
@@ -124,7 +125,8 @@ after_migrate = [
     "customized_forcommon.after_migrate.rename_workspaces.run",
     "customized_forcommon.patches.remove_job_card_summary.execute",
     "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs",
-    "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields"
+    "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields",
+    "customized_forcommon.after_migrate.delete_old_client_scripts.delete_old_material_request_client_scripts"
 
 
 ]
@@ -319,6 +321,9 @@ doc_events = {
     },
     "Period Closing Voucher": {
         "before_submit": "customized_forcommon.doc_events.fiscal_year_closing.process_profit_tax_provision"
+    },
+    "Payment Request": {
+        "validate": "customized_forcommon.doc_events.payment_request.apply_taxes"
     }
 }
 
@@ -446,6 +451,7 @@ doctype_js = {
     "Payroll Entry": "public/js/payroll_entry.js",    "Workstation": "public/js/workstation.js",
     "Job Card": "public/js/job_card.js",
     "Full and Final Statement": "public/js/full_and_final_statement.js",
+    "Payment Request": "public/js/payment_request.js"
 
     
 

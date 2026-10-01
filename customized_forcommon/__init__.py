@@ -56,3 +56,9 @@ from customized_forcommon.overrides.reports import fixed_asset_register as cfar
 
 # Only override the unsafe chart function
 far.prepare_chart_data = cfar.prepare_chart_data
+
+
+# Moneky Patch Payment Request (get_amount method)
+import erpnext.accounts.doctype.payment_request.payment_request as pr
+import customized_forcommon.overrides.payment_request as custom_pr
+pr.get_amount = custom_pr.get_amount
