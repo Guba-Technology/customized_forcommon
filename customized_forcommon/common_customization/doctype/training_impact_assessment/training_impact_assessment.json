@@ -1,0 +1,179 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TIA-{#####}",
+ "creation": "2026-01-01 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "training_title",
+  "training_place",
+  "training_date",
+  "column_break_1",
+  "trainer",
+  "trainer_name",
+  "assessment_template",
+  "employee_filter_section",
+  "company",
+  "designation",
+  "column_break_pbqi",
+  "branch",
+  "grade",
+  "column_break_sxsr",
+  "department",
+  "shift",
+  "section_break_1",
+  "assigned_employees"
+ ],
+ "fields": [
+  {
+   "fieldname": "training_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Training Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_place",
+   "fieldtype": "Data",
+   "label": "Training Place"
+  },
+  {
+   "fieldname": "training_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Training Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trainer",
+   "fieldtype": "Link",
+   "label": "Trainer",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "assessment_template",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Assessment Template",
+   "options": "Training Assessment Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Assigned Employees"
+  },
+  {
+   "fieldname": "assigned_employees",
+   "fieldtype": "Table",
+   "label": "Assigned Employees",
+   "options": "Training Impact Assessment Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "trainer.employee_name",
+   "fieldname": "trainer_name",
+   "fieldtype": "Data",
+   "label": "Trainer Name"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "employee_filter_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Filter"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "column_break_pbqi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "column_break_sxsr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-21 10:29:03.385399",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Training Impact Assessment",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

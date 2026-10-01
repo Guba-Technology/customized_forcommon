@@ -1,0 +1,182 @@
+{
+ "actions": [],
+ "autoname": "format:TAR-{####}",
+ "creation": "2026-01-01 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "training_impact_assessment",
+  "training_title",
+  "evaluator_type",
+  "column_break_1",
+  "trainee_name",
+  "trainee_namee",
+  "evaluator",
+  "evaluator_name",
+  "section_break_1",
+  "assessment_date",
+  "status",
+  "section_break_2",
+  "assessment_criteria",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "training_impact_assessment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Training Impact Assessment",
+   "options": "Training Impact Assessment",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "training_impact_assessment.training_title",
+   "fieldname": "training_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Training Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trainee_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Trainee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Trainee",
+   "fieldname": "evaluator_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Evaluator Type",
+   "options": "Trainee\nManager",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evaluator",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Evaluator",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "assessment_date",
+   "fieldtype": "Date",
+   "label": "Assessment Date"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nPending\nSubmitted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Assessment Criteria"
+  },
+  {
+   "fieldname": "assessment_criteria",
+   "fieldtype": "Table",
+   "label": "Assessment Criteria",
+   "options": "Training Assessment Response Criteria",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Training Assessment Response",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "trainee_name.employee_name",
+   "fieldname": "trainee_namee",
+   "fieldtype": "Data",
+   "label": "Trainee Name"
+  },
+  {
+   "fetch_from": "evaluator.employee_name",
+   "fieldname": "evaluator_name",
+   "fieldtype": "Data",
+   "label": "Evaluator Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-09-21 15:59:09.677520",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Training Assessment Response",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

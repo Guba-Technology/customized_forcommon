@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "criteria",
+  "trainee_before",
+  "trainee_after",
+  "manager_before",
+  "manager_after",
+  "average_before",
+  "average_after",
+  "difference"
+ ],
+ "fields": [
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Criteria",
+   "read_only": 1
+  },
+  {
+   "fieldname": "trainee_before",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Trainee Before",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "trainee_after",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Trainee After",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "manager_before",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Manager Before",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "manager_after",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Manager After",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_before",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Average Before",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_after",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Average After",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "difference",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Difference",
+   "precision": "2",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module":"Common Customization",
+ "name": "Training Impact Assessment Report Result",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
