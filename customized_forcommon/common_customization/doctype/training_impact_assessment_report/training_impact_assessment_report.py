@@ -1,6 +1,9 @@
 # Copyright (c) 2026, Guba Technology
 # License: MIT
 
+from aabte_customization.custom_report import report
+import responses
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -145,6 +148,12 @@ def generate_report(training_impact_assessment):
 		report.training_impact_assessment = training_impact_assessment
 
 	report.set("results", [])
+	report.responded_count = sum(1 for r in responses if r.get("evaluator_type") == "Trainee")
+	report.assigned_count = len(tia.assigned_employees)
+
+	report.manager_responded_count = sum(1 for r in responses if r.get("evaluator_type") == "Manager")
+	report.manager_assigned_count = len(tia.assigned_employees)   
+		
 	for row in result_rows:
 		report.append("results", row)
 	report.last_generated_on = now_datetime()
