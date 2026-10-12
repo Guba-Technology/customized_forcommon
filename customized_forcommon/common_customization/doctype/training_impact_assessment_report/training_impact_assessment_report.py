@@ -1,8 +1,6 @@
 # Copyright (c) 2026, Guba Technology
 # License: MIT
 
-from aabte_customization.custom_report import report
-import responses
 
 import frappe
 from frappe import _
