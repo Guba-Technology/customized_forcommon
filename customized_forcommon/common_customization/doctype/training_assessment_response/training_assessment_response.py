@@ -93,8 +93,8 @@ class TrainingAssessmentResponse(Document):
 	def validate_score_ranges(self):
 		for row in self.assessment_criteria:
 			for fieldname, label in (
-				("before_training", _("Before Training")),
-				("after_training", _("After Training")),
+				 ("before_training", _("Before Training")),
+				# ("after_training", _("After Training")),
 			):
 				value = row.get(fieldname)
 				if value in (None, ""):
@@ -131,6 +131,10 @@ class TrainingAssessmentResponse(Document):
 					_("Row #{0}: Both Before Training and After Training scores are required before submitting").format(
 						row.idx
 					)
+				)
+			if row.after_training in (None, 0):
+				frappe.throw(
+					_("Row #{0}: After Training score must be greater than 0 before submitting").format(row.idx)
 				)
 
 

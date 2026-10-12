@@ -1,15 +1,20 @@
 {
  "actions": [],
- "allow_rename": 0,
  "autoname": "field:training_impact_assessment",
- "creation": "2026-01-01 00:00:00.000000",
+ "creation": "2026-01-01 00:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "training_impact_assessment",
   "training_title",
+  "responded_count",
+  "assigned_count",
   "column_break_1",
   "last_generated_on",
+  "manager_responded_count",
+  "manager_assigned_count",
+  "section_break_yzcs",
+  "report_remark",
   "section_break_1",
   "results"
  ],
@@ -54,14 +59,50 @@
    "label": "Result",
    "options": "Training Impact Assessment Report Result",
    "read_only": 1
+  },
+  {
+   "fieldname": "report_remark",
+   "fieldtype": "HTML",
+   "label": "Remark"
+  },
+  {
+   "fieldname": "responded_count",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Responded Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_count",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Assigned Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "manager_responded_count",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Manager Responded Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "manager_assigned_count",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Manager Assigned Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_yzcs",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 0,
  "links": [],
- "modified": "2026-01-01 00:00:00.000000",
+ "modified": "2026-10-12 11:54:36.629466",
  "modified_by": "Administrator",
- "module":"Common Customization",
+ "module": "Common Customization",
  "name": "Training Impact Assessment Report",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
@@ -95,6 +136,7 @@
    "role": "HR User"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
