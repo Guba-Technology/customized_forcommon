@@ -3,6 +3,9 @@ frappe.ui.form.on("Landed Cost Voucher", {
 
     onload_post_render(frm) {
 
+        // Do not update submitted documents 
+        if (frm.doc.docstatus !== 0) { return; }
+
         if (!frm.doc.purchase_receipts ||
             !frm.doc.purchase_receipts.length) {
             return;
