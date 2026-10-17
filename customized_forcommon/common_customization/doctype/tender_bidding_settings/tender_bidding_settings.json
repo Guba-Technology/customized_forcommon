@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "creation": "2026-10-17 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_weighting",
+  "spec_weight_percent",
+  "price_weight_percent",
+  "column_break_weighting",
+  "bidding_envelope_type",
+  "minimum_spec_score",
+  "section_break_bid_portal",
+  "auto_create_supplier",
+  "default_supplier_group"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_weighting",
+   "fieldtype": "Section Break",
+   "label": "Award Weighting & Bidding"
+  },
+  {
+   "default": "40",
+   "description": "Weight given to the specification (technical) score when awarding. Must add up to 100 with the price weight.",
+   "fieldname": "spec_weight_percent",
+   "fieldtype": "Percent",
+   "label": "Specification Weight %"
+  },
+  {
+   "default": "60",
+   "description": "Weight given to the price score when awarding. Must add up to 100 with the specification weight.",
+   "fieldname": "price_weight_percent",
+   "fieldtype": "Percent",
+   "label": "Price Weight %"
+  },
+  {
+   "fieldname": "column_break_weighting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "One Envelope",
+   "description": "One Envelope: both specification and price are considered together. Two Envelope: price of suppliers below the minimum specification score is ignored.",
+   "fieldname": "bidding_envelope_type",
+   "fieldtype": "Select",
+   "label": "Bidding Envelope Type",
+   "options": "One Envelope\nTwo Envelope"
+  },
+  {
+   "default": "0",
+   "description": "Used for Two Envelope bidding. Suppliers scoring below this specification % are disqualified and their price is ignored.",
+   "fieldname": "minimum_spec_score",
+   "fieldtype": "Percent",
+   "label": "Minimum Specification Score %"
+  },
+  {
+   "fieldname": "section_break_bid_portal",
+   "fieldtype": "Section Break",
+   "label": "Bid Portal Defaults"
+  },
+  {
+   "default": "1",
+   "description": "Automatically create a Supplier record when a bidder submits a bid and no matching supplier exists.",
+   "fieldname": "auto_create_supplier",
+   "fieldtype": "Check",
+   "label": "Auto Create Supplier"
+  },
+  {
+   "description": "Supplier Group assigned to suppliers created automatically from the bid portal.",
+   "fieldname": "default_supplier_group",
+   "fieldtype": "Link",
+   "label": "Default Supplier Group",
+   "options": "Supplier Group"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-10-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Tender Bidding Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
