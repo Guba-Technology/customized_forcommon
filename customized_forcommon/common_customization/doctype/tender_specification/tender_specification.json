@@ -1,0 +1,121 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TS-{#####}",
+ "creation": "2026-10-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "request_for_quotation",
+  "status",
+  "column_break_1",
+  "get_template_items",
+  "section_break_criteria",
+  "criteria",
+  "section_break_committee",
+  "committee_members"
+ ],
+ "fields": [
+  {
+   "fieldname": "request_for_quotation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Request for Quotation",
+   "options": "Request for Quotation",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nOpen for Scoring\nLocked",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Pull the criteria of every RFQ item from its standard Item Specification Template. Items without a standard template are added as blank rows so you can fill them in.",
+   "fieldname": "get_template_items",
+   "fieldtype": "Button",
+   "label": "Get Items and Templates"
+  },
+  {
+   "fieldname": "section_break_criteria",
+   "fieldtype": "Section Break",
+   "label": "Criteria"
+  },
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Table",
+   "label": "Criteria",
+   "options": "Tender Specification Criteria",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_committee",
+   "fieldtype": "Section Break",
+   "label": "Scoring Committee"
+  },
+  {
+   "fieldname": "committee_members",
+   "fieldtype": "Table MultiSelect",
+   "label": "Committee Members",
+   "options": "Tender Specification Committee Member"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Tender Specification",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
