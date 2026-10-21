@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "creation": "2026-10-21 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "procurement_type",
+  "procurement_method",
+  "column_break_1",
+  "coverage",
+  "section_break_amount",
+  "minimum_amount",
+  "maximum_amount",
+  "column_break_amount",
+  "currency",
+  "section_break_condition",
+  "special_condition"
+ ],
+ "fields": [
+  {
+   "fieldname": "procurement_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Procurement Type",
+   "options": "Procurement Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "procurement_method",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Procurement Method",
+   "options": "Procurement Method",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "National (NCB)",
+   "fieldname": "coverage",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Coverage",
+   "options": "National (NCB)\nInternational (ICB)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_amount",
+   "fieldtype": "Section Break",
+   "label": "Amount Range"
+  },
+  {
+   "default": "0",
+   "fieldname": "minimum_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Minimum Amount",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "maximum_amount",
+   "fieldtype": "Currency",
+   "label": "Maximum Amount",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_amount",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "section_break_condition",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Describe exceptions / special handling that make this rule apply outside the amount range.",
+   "fieldname": "special_condition",
+   "fieldtype": "Small Text",
+   "label": "Special Condition"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-21 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Procurement Rule",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

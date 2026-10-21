@@ -1,0 +1,136 @@
+{
+ "actions": [],
+ "creation": "2026-10-21 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_security",
+  "bid_security_percent",
+  "bid_security_amount",
+  "column_break_security",
+  "po_performance_security_percent",
+  "maximum_forfeiture_percent",
+  "section_break_timeline",
+  "waiting_period_days",
+  "complaint_window_days",
+  "column_break_timeline",
+  "clarification_cutoff_days",
+  "bid_validity_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_security",
+   "fieldtype": "Section Break",
+   "label": "Guarantees & Security"
+  },
+  {
+   "default": "2",
+   "description": "Default Bid Security percentage when the tender uses a percentage. Set per tender.",
+   "fieldname": "bid_security_percent",
+   "fieldtype": "Percent",
+   "label": "Bid Security %"
+  },
+  {
+   "description": "Default Bid Security as a fixed amount when the tender uses a fixed amount.",
+   "fieldname": "bid_security_amount",
+   "fieldtype": "Currency",
+   "label": "Bid Security Fixed Amount"
+  },
+  {
+   "fieldname": "column_break_security",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "description": "PO Performance Security as a percentage of the total Purchase Order value. Directive default is 10%.",
+   "fieldname": "po_performance_security_percent",
+   "fieldtype": "Percent",
+   "label": "PO Performance Security %"
+  },
+  {
+   "default": "10",
+   "description": "Forfeiture of a guarantee may never exceed this percentage of the PO value.",
+   "fieldname": "maximum_forfeiture_percent",
+   "fieldtype": "Percent",
+   "label": "Maximum Forfeiture %"
+  },
+  {
+   "fieldname": "section_break_timeline",
+   "fieldtype": "Section Break",
+   "label": "Directive Time Limits"
+  },
+  {
+   "default": "7",
+   "description": "Days to wait after award before a Purchase Order can be created.",
+   "fieldname": "waiting_period_days",
+   "fieldtype": "Int",
+   "label": "Waiting Period Before Purchase Order (days)",
+   "non_negative": 1
+  },
+  {
+   "default": "7",
+   "description": "Days after a result notice during which a bidder may file a complaint.",
+   "fieldname": "complaint_window_days",
+   "fieldtype": "Int",
+   "label": "Complaint Window (days)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_timeline",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "3",
+   "description": "Days before closing after which clarification requests are blocked.",
+   "fieldname": "clarification_cutoff_days",
+   "fieldtype": "Int",
+   "label": "Clarification Cut-off (days before closing)",
+   "non_negative": 1
+  },
+  {
+   "default": "90",
+   "fieldname": "bid_validity_days",
+   "fieldtype": "Int",
+   "label": "Default Bid Validity (days)",
+   "non_negative": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-10-21 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Procurement Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

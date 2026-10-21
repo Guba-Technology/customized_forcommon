@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:procurement_type",
+ "creation": "2026-10-21 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "procurement_type",
+  "column_break_main",
+  "sub_type",
+  "section_break_line",
+  "tender_line_basis",
+  "column_break_line",
+  "default_evaluation_method"
+ ],
+ "fields": [
+  {
+   "fieldname": "procurement_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Procurement Type",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Only used for Services: Consulting (ምክር) or Non-consulting.",
+   "fieldname": "sub_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Sub-type",
+   "options": "\nConsulting\nNon-consulting"
+  },
+  {
+   "fieldname": "section_break_line",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Item + Specification Template",
+   "description": "What a tender line looks like for this type: Items, a Service line (scope/ToR) or a BOQ line.",
+   "fieldname": "tender_line_basis",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Tender Line Is",
+   "options": "Item + Specification Template\nService Line (Scope / ToR)\nBOQ Line (Work Item, Qty, Unit)"
+  },
+  {
+   "fieldname": "column_break_line",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Merit Point",
+   "description": "Evaluation method used by default when this procurement type is chosen.",
+   "fieldname": "default_evaluation_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Default Evaluation Method",
+   "options": "Merit Point\nCompliance"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-21 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Procurement Type",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

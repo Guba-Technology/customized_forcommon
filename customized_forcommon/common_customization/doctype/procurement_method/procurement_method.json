@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:method_name",
+ "creation": "2026-10-21 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "method_name",
+  "who_can_bid",
+  "column_break_1",
+  "advertised_on_portal",
+  "document_sale_required",
+  "document_sale_optional",
+  "section_break_envelope",
+  "number_of_envelopes",
+  "two_stage",
+  "column_break_envelope",
+  "bid_security_required",
+  "single_source",
+  "section_break_rules",
+  "minimum_days_on_air",
+  "minimum_suppliers",
+  "column_break_rules",
+  "default_evaluation_method",
+  "allowed_procurement_types",
+  "section_break_reasons",
+  "direct_purchase_reasons"
+ ],
+ "fields": [
+  {
+   "fieldname": "method_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Method Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Invited only",
+   "fieldname": "who_can_bid",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Who Can Bid",
+   "options": "Any eligible registered supplier\nInvited only\nOne supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Publish on the public supplier portal.",
+   "fieldname": "advertised_on_portal",
+   "fieldtype": "Check",
+   "label": "Advertised on Portal"
+  },
+  {
+   "default": "0",
+   "fieldname": "document_sale_required",
+   "fieldtype": "Check",
+   "label": "Document Sale Required"
+  },
+  {
+   "default": "0",
+   "description": "Bid is allowed only after the document purchase is verified (when required).",
+   "fieldname": "document_sale_optional",
+   "fieldtype": "Check",
+   "label": "Document Sale Optional"
+  },
+  {
+   "fieldname": "section_break_envelope",
+   "fieldtype": "Section Break",
+   "label": "Envelopes & Security"
+  },
+  {
+   "default": "2",
+   "description": "2 = Technical + Financial. 1 = Spec + Price together. 0 = none.",
+   "fieldname": "number_of_envelopes",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Number of Envelopes",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "two_stage",
+   "fieldtype": "Check",
+   "label": "Two Stage"
+  },
+  {
+   "fieldname": "column_break_envelope",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "bid_security_required",
+   "fieldtype": "Check",
+   "label": "Bid Security Required"
+  },
+  {
+   "default": "0",
+   "fieldname": "single_source",
+   "fieldtype": "Check",
+   "label": "Single Source (Direct Purchase)"
+  },
+  {
+   "fieldname": "section_break_rules",
+   "fieldtype": "Section Break",
+   "label": "Directive Rules"
+  },
+  {
+   "default": "0",
+   "description": "Closing Date must be at least this many days after Publish Date.",
+   "fieldname": "minimum_days_on_air",
+   "fieldtype": "Int",
+   "label": "Minimum Days on Air",
+   "non_negative": 1
+  },
+  {
+   "default": "0",
+   "description": "Minimum number of bidders required (e.g. RFQ = 3).",
+   "fieldname": "minimum_suppliers",
+   "fieldtype": "Int",
+   "label": "Minimum Suppliers",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_rules",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Merit Point",
+   "fieldname": "default_evaluation_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Default Evaluation Method",
+   "options": "Merit Point\nCompliance\nLowest compliant price\nJustification + approval"
+  },
+  {
+   "fieldname": "allowed_procurement_types",
+   "fieldtype": "Table MultiSelect",
+   "label": "Allowed Procurement Types",
+   "options": "Procurement Method Type"
+  },
+  {
+   "fieldname": "section_break_reasons",
+   "fieldtype": "Section Break",
+   "label": "Direct Purchase Reasons",
+   "depends_on": "single_source"
+  },
+  {
+   "fieldname": "direct_purchase_reasons",
+   "fieldtype": "Table MultiSelect",
+   "label": "Direct Purchase Reasons",
+   "options": "Procurement Method Reason",
+   "depends_on": "single_source"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-21 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Common Customization",
+ "name": "Procurement Method",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

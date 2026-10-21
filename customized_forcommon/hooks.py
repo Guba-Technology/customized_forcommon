@@ -126,7 +126,8 @@ after_migrate = [
     "customized_forcommon.patches.remove_job_card_summary.execute",
     "customized_forcommon.after_migrate.clear_module_onboarding.clear_onboarding_docs",
     "customized_forcommon.after_migrate.remove_custom_fields.delete_custom_fields",
-    "customized_forcommon.after_migrate.delete_old_client_scripts.delete_old_material_request_client_scripts"
+    "customized_forcommon.after_migrate.delete_old_client_scripts.delete_old_material_request_client_scripts",
+    "customized_forcommon.after_migrate.tender_masters.run"
 
 
 ]
@@ -324,6 +325,12 @@ doc_events = {
     },
     "Payment Request": {
         "validate": "customized_forcommon.doc_events.payment_request.apply_taxes"
+    },
+    "Supplier Quotation": {
+        "validate": "customized_forcommon.doc_events.tender_lock.validate_supplier_quotation"
+    },
+    "Supplier Specification Score": {
+        "validate": "customized_forcommon.doc_events.tender_lock.validate_supplier_specification_score"
     }
 }
 
@@ -721,7 +728,7 @@ override_whitelisted_methods = {
 # Request Events
 # ----------------
 # before_request = ["customization_manager.utils.before_request"]
-# after_request = ["customization_manager.utils.after_request"]
+after_request = ["customized_forcommon.www.submit_bid.after_request"]
 
 # Job Events
 # ----------
